@@ -23,6 +23,16 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
+app.get('/health', (req, res) => {
+    const mongoose = require('mongoose');
+    res.status(200).json({
+        status: 'UP',
+        uptime: process.uptime(),
+        timestamp: new Date(),
+        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    });
+});
+
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

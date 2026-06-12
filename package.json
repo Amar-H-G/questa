@@ -1,0 +1,18 @@
+{
+  "name": "questa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "npm run dev --prefix backend",
+    "client": "npm run dev --prefix frontend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

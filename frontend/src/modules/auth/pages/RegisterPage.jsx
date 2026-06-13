@@ -33,6 +33,9 @@ export const RegisterPage = () => {
           <TextField label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <TextField label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           <TextField label="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          <p className="-mt-2 text-xs text-slate-500 font-medium">
+            Password must be at least 8 characters, with 1 uppercase, 1 lowercase, 1 number, and 1 special character.
+          </p>
           <label className="block">
             <span className="mb-2 block text-sm font-semibold text-slate-700">Role</span>
             <select

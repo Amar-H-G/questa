@@ -10,7 +10,7 @@ const registerSchema = z.object({
       .min(8)
       .max(128)
       .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
         'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
       ),
     role: z.enum(Object.values(ROLES)).optional(),
@@ -58,7 +58,7 @@ const resetPasswordSchema = z.object({
       .min(8)
       .max(128)
       .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
         'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
       ),
   }),

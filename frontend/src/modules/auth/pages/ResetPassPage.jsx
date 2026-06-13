@@ -90,7 +90,7 @@ export const ResetPassPage = () => {
             <div className="text-center">
               <h2 className="text-2xl font-bold tracking-tight">Set new password</h2>
               <p className="mt-2 text-sm text-slate-500 font-medium">
-                Choose a strong password containing at least 8 characters.
+                Choose a strong password containing at least 8 characters, with 1 uppercase, 1 lowercase, 1 number, and 1 special character.
               </p>
             </div>
 

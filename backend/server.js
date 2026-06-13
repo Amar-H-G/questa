@@ -1,40 +1,25 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const connectDB = require('./src/config/db');
-const { errorHandler } = require('./src/middlewares/errorMiddleware');
+const { createServer } = require('http');
+const app = require('./src/app');
+const connectDatabase = require('./src/database/connect');
+const env = require('./src/config/env');
 
-dotenv.config();
+const server = createServer(app);
 
-connectDB();
+const start = async () => {
+  await connectDatabase();
 
-const app = express();
+  server.listen(env.PORT, () => {
+    console.log(`SurCodex API listening on port ${env.PORT}`);
+  });
+};
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// Routes (Placeholder for now)
-app.use('/api/auth', require('./src/routes/authRoutes'));
-app.use('/api/quizzes', require('./src/routes/quizRoutes'));
-
-
-app.get('/', (req, res) => {
-    res.send('API is running...');
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled rejection', reason);
+  server.close(() => process.exit(1));
 });
 
-app.get('/health', (req, res) => {
-    const mongoose = require('mongoose');
-    res.status(200).json({
-        status: 'UP',
-        uptime: process.uptime(),
-        timestamp: new Date(),
-        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
-    });
+process.on('SIGTERM', () => {
+  server.close(() => process.exit(0));
 });
 
-app.use(errorHandler);
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+start();

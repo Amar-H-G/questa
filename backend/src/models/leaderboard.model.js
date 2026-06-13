@@ -13,5 +13,18 @@ const leaderboardSchema = new mongoose.Schema(
 );
 
 leaderboardSchema.index({ scope: 1, entityId: 1, rank: 1 });
+leaderboardSchema.index({ scope: 1, entityId: 1, user: 1 }, { unique: true, sparse: true });
+
+leaderboardSchema.virtual('id').get(function getId() {
+  return this._id.toString();
+});
+
+leaderboardSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform(_doc, ret) {
+    delete ret._id;
+  },
+});
 
 module.exports = mongoose.model('Leaderboard', leaderboardSchema);

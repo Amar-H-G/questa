@@ -7,17 +7,21 @@ import { useAuthStore } from '../../../store/authStore';
 export const RegisterPage = () => {
   const navigate = useNavigate();
   const register = useAuthStore((state) => state.register);
+  const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student' });
   const [error, setError] = useState('');
 
   const submit = async (event) => {
     event.preventDefault();
     setError('');
+    setSubmitting(true);
     try {
       await register(form);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to register');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -42,7 +46,9 @@ export const RegisterPage = () => {
             </select>
           </label>
           {error ? <p className="text-sm text-rose-300">{error}</p> : null}
-          <Button className="w-full" type="submit">Create account</Button>
+          <Button className="w-full" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Creating...' : 'Create account'}
+          </Button>
         </form>
         <p className="mt-5 text-center text-sm text-slate-400">
           Already registered? <Link className="text-cyan-200" to="/login">Sign in</Link>

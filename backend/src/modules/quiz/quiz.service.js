@@ -5,6 +5,9 @@ const repository = require('./quiz.repository');
 
 const makeSlug = (title) => `${slugify(title, { lower: true, strict: true })}-${Date.now().toString(36)}`;
 
+const removeUndefined = (payload) =>
+  Object.fromEntries(Object.entries(payload).filter(([, value]) => value !== undefined));
+
 const mapQuestions = (quizId, questions = []) =>
   questions.map((question, index) => ({
     ...question,
@@ -45,12 +48,12 @@ const updateQuiz = async (id, payload, user) => {
   if (!quiz) throw new ApiError(404, 'Quiz not found');
   if (quiz.owner.toString() !== user.id && user.role !== 'admin') throw new ApiError(403, 'Cannot edit this quiz');
 
-  const updated = await repository.updateQuiz(id, {
+  const updated = await repository.updateQuiz(id, removeUndefined({
     title: payload.title,
     description: payload.description,
     durationMinutes: payload.durationMinutes,
     passingScore: payload.passingScore,
-  });
+  }));
 
   if (payload.questions) {
     await repository.replaceQuestions(id, mapQuestions(id, payload.questions));

@@ -8,7 +8,7 @@ const schemas = require('./coding.validation');
 const router = express.Router();
 
 router.use(authenticate);
-router.get('/problems', controller.listProblems);
+router.get('/problems', validate(schemas.listProblemsSchema), controller.listProblems);
 router.post('/problems', authorize(ROLES.ADMIN, ROLES.TEACHER), validate(schemas.createProblemSchema), controller.createProblem);
 router.post('/problems/:id/submissions', validate(schemas.submitSchema), controller.submit);
 

@@ -16,7 +16,17 @@ export const useAuthStore = create(
         const { data } = await apiClient.post('/auth/register', payload);
         set(data.data);
       },
-      logout: () => set({ user: null, accessToken: null, refreshToken: null }),
+      logout: async () => {
+        const refreshToken = useAuthStore.getState().refreshToken;
+        set({ user: null, accessToken: null, refreshToken: null });
+        if (refreshToken) {
+          try {
+            await apiClient.post('/auth/logout', { refreshToken });
+          } catch {
+            // Local logout should still succeed if the token was already invalid.
+          }
+        }
+      },
     }),
     {
       name: 'surcodex-auth',
@@ -28,3 +38,7 @@ export const useAuthStore = create(
     }
   )
 );
+
+window.addEventListener('surcodex:unauthorized', () => {
+  useAuthStore.setState({ user: null, accessToken: null, refreshToken: null });
+});

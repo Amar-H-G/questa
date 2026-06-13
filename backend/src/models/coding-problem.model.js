@@ -27,4 +27,16 @@ const codingProblemSchema = new mongoose.Schema(
 
 codingProblemSchema.index({ title: 'text', prompt: 'text' });
 
+codingProblemSchema.virtual('id').get(function getId() {
+  return this._id.toString();
+});
+
+codingProblemSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform(_doc, ret) {
+    delete ret._id;
+  },
+});
+
 module.exports = mongoose.model('CodingProblem', codingProblemSchema);

@@ -13,4 +13,16 @@ const notificationSchema = new mongoose.Schema(
 
 notificationSchema.index({ user: 1, readAt: 1, createdAt: -1 });
 
+notificationSchema.virtual('id').get(function getId() {
+  return this._id.toString();
+});
+
+notificationSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform(_doc, ret) {
+    delete ret._id;
+  },
+});
+
 module.exports = mongoose.model('Notification', notificationSchema);

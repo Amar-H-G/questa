@@ -1,4 +1,5 @@
 const { z } = require('zod');
+const { objectIdSchema } = require('../../utils/object-id');
 
 const optionSchema = z.object({
   label: z.string().min(1).max(300),
@@ -34,16 +35,16 @@ const updateQuizSchema = z.object({
 });
 
 const idParamSchema = z.object({
-  params: z.object({ id: z.string().min(12) }),
+  params: z.object({ id: objectIdSchema }),
 });
 
 const submitAttemptSchema = z.object({
-  params: z.object({ id: z.string().min(12) }),
+  params: z.object({ id: objectIdSchema }),
   body: z.object({
     answers: z.array(
       z.object({
-        question: z.string().min(12),
-        selectedOptions: z.array(z.string().min(12)).default([]),
+        question: objectIdSchema,
+        selectedOptions: z.array(objectIdSchema).default([]),
       })
     ),
   }),

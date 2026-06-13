@@ -8,17 +8,21 @@ import { useAuthStore } from '../../../store/authStore';
 export const LoginPage = () => {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+  const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
 
   const submit = async (event) => {
     event.preventDefault();
     setError('');
+    setSubmitting(true);
     try {
       await login(form);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to sign in');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -38,7 +42,9 @@ export const LoginPage = () => {
           <TextField label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           <TextField label="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
           {error ? <p className="text-sm text-rose-300">{error}</p> : null}
-          <Button className="w-full" type="submit">Sign in</Button>
+          <Button className="w-full" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Signing in...' : 'Sign in'}
+          </Button>
         </form>
         <p className="mt-5 text-center text-sm text-slate-400">
           New to SurCodex? <Link className="text-cyan-200" to="/register">Create an account</Link>

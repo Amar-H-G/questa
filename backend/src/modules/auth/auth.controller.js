@@ -17,7 +17,7 @@ const refresh = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  await service.logout(req.body.refreshToken);
+  await service.logout(req.validated.body.refreshToken);
   res.status(204).send();
 });
 

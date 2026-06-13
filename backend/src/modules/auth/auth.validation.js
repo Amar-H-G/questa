@@ -23,10 +23,12 @@ const refreshSchema = z.object({
   }),
 });
 
+const logoutSchema = refreshSchema;
+
 const passwordResetRequestSchema = z.object({
   body: z.object({
     email: z.string().email(),
   }),
 });
 
-module.exports = { registerSchema, loginSchema, refreshSchema, passwordResetRequestSchema };
+module.exports = { registerSchema, loginSchema, refreshSchema, logoutSchema, passwordResetRequestSchema };

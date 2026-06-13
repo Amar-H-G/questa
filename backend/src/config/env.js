@@ -23,4 +23,13 @@ if (!parsed.success) {
   process.exit(1);
 }
 
+if (
+  parsed.data.NODE_ENV === 'production' &&
+  (parsed.data.JWT_ACCESS_SECRET.includes('change-this') ||
+    parsed.data.JWT_REFRESH_SECRET.includes('change-this'))
+) {
+  console.error('Production JWT secrets must be explicitly configured');
+  process.exit(1);
+}
+
 module.exports = parsed.data;

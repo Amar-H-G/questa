@@ -1,5 +1,7 @@
-import { BarChart3, Code2, Gauge, LogOut, Medal, Plus, UserRound } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { BarChart3, Bell, Code2, Gauge, LogOut, Medal, Plus, UserRound } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { apiClient } from '../../services/api/client';
 import { useAuthStore } from '../../store/authStore';
 
 const navigation = [
@@ -13,6 +15,11 @@ const navigation = [
 
 export const AppLayout = () => {
   const { user, logout } = useAuthStore();
+  const { data: notifications } = useQuery({
+    queryKey: ['notifications'],
+    queryFn: async () => (await apiClient.get('/notifications?limit=5')).data.data,
+  });
+  const unread = notifications?.meta?.unread || 0;
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -25,6 +32,10 @@ export const AppLayout = () => {
           <div>
             <p className="text-sm font-semibold tracking-wide">SurCodex</p>
             <p className="text-xs text-slate-400">Assessment operations</p>
+          </div>
+          <div className="ml-auto grid h-9 w-9 place-items-center rounded-lg bg-white/10 text-slate-300" title="Unread notifications">
+            <Bell className="h-4 w-4" />
+            {unread ? <span className="absolute ml-5 mb-5 h-2 w-2 rounded-full bg-cyan-300" /> : null}
           </div>
         </div>
 
@@ -64,9 +75,15 @@ export const AppLayout = () => {
       <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/70 px-4 py-3 backdrop-blur-xl lg:hidden">
         <div className="flex items-center justify-between">
           <span className="text-sm font-semibold">SurCodex</span>
-          <button onClick={logout} className="rounded-lg bg-white/10 p-2">
+          <div className="flex items-center gap-2">
+            <div className="relative grid h-9 w-9 place-items-center rounded-lg bg-white/10">
+              <Bell className="h-4 w-4" />
+              {unread ? <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-cyan-300" /> : null}
+            </div>
+            <button onClick={logout} className="rounded-lg bg-white/10 p-2">
             <LogOut className="h-4 w-4" />
-          </button>
+            </button>
+          </div>
         </div>
         <nav className="mt-3 flex gap-2 overflow-x-auto pb-1">
           {navigation.map((item) => (

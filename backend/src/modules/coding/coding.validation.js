@@ -1,4 +1,5 @@
 const { z } = require('zod');
+const { objectIdSchema } = require('../../utils/object-id');
 
 const createProblemSchema = z.object({
   body: z.object({
@@ -20,12 +21,20 @@ const createProblemSchema = z.object({
   }),
 });
 
+const listProblemsSchema = z.object({
+  query: z.object({
+    difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
+    page: z.string().optional(),
+    limit: z.string().optional(),
+  }),
+});
+
 const submitSchema = z.object({
-  params: z.object({ id: z.string().min(12) }),
+  params: z.object({ id: objectIdSchema }),
   body: z.object({
     language: z.enum(['javascript', 'python', 'cpp', 'java']),
     sourceCode: z.string().min(10).max(50000),
   }),
 });
 
-module.exports = { createProblemSchema, submitSchema };
+module.exports = { createProblemSchema, listProblemsSchema, submitSchema };

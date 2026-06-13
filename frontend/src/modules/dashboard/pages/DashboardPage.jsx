@@ -1,7 +1,9 @@
 import { Activity, BarChart3, Clock3, Code2, Trophy, Users } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { MetricCard } from '../../../components/ui/MetricCard';
 import { useGsapReveal } from '../../../hooks/useGsapReveal';
+import { apiClient } from '../../../services/api/client';
 
 const modules = [
   { title: 'Quiz Studio', copy: 'Draft, publish, and evaluate timed assessments.', href: '/quizzes', icon: Clock3 },
@@ -11,6 +13,11 @@ const modules = [
 
 export const DashboardPage = () => {
   const scope = useGsapReveal();
+  const { data } = useQuery({
+    queryKey: ['analytics-overview'],
+    queryFn: async () => (await apiClient.get('/analytics/overview')).data.data,
+  });
+  const overview = data || { quizzes: 0, submissions: 0, averageScore: 0 };
 
   return (
     <div ref={scope} className="page-shell space-y-8">
@@ -51,9 +58,9 @@ export const DashboardPage = () => {
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <MetricCard label="Assessments" value="128" trend="+18% this month" icon={BarChart3} />
-        <MetricCard label="Submissions" value="8.4k" trend="99.2% queued cleanly" icon={Code2} />
-        <MetricCard label="Top percentile" value="12%" trend="Candidate cohort growth" icon={Trophy} />
+        <MetricCard label="Assessments" value={overview.quizzes} trend="Drafts and published" icon={BarChart3} />
+        <MetricCard label="Submissions" value={overview.submissions} trend="Judge queue ready" icon={Code2} />
+        <MetricCard label="Average score" value={`${overview.averageScore}%`} trend="Evaluated attempts" icon={Trophy} />
       </section>
 
       <section className="grid gap-4 lg:grid-cols-3">

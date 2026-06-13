@@ -6,4 +6,9 @@ const list = asyncHandler(async (req, res) => {
   res.json({ success: true, data });
 });
 
-module.exports = { list };
+const recalculate = asyncHandler(async (req, res) => {
+  const result = await service.recalculateGlobalStandings();
+  res.json({ success: true, message: 'Standings recalculated successfully', data: result });
+});
+
+module.exports = { list, recalculate };

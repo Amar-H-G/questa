@@ -100,14 +100,45 @@ const submitAttempt = async (quizId, answers, user) => {
     return { question: question.id, selectedOptions: selected, isCorrect, pointsAwarded };
   });
 
+  const warningsCount = payload.warningsCount || 0;
+  const antiCheatLogs = payload.antiCheatLogs || [];
+  let cheated = false;
+  const suspiciousActivityFlags = [];
+
+  if (antiCheatLogs.length !== warningsCount) {
+    suspiciousActivityFlags.push('Warning counts and timestamps logs mismatch');
+  }
+
+  const startTime = Date.now() - (quiz.durationMinutes * 60 * 1000 + 120000);
+  for (const log of antiCheatLogs) {
+    const timestamp = new Date(log).getTime();
+    if (isNaN(timestamp) || timestamp < startTime || timestamp > Date.now() + 10000) {
+      suspiciousActivityFlags.push(`Invalid focus-loss timestamp detected: ${log}`);
+      cheated = true;
+    }
+  }
+
+  if (warningsCount >= 3) {
+    cheated = true;
+    suspiciousActivityFlags.push('Focus warnings threshold (3) exceeded');
+  }
+
+  const finalStatus = cheated ? 'suspended' : 'evaluated';
+  const finalScore = cheated ? 0 : score;
+  const finalPercentage = cheated ? 0 : (maxScore ? Math.round((score / maxScore) * 100) : 0);
+
   const attempt = await repository.createAttempt({
     quiz: quizId,
     user: user.id,
     answers: evaluated,
-    status: 'evaluated',
-    score,
-    percentage: maxScore ? Math.round((score / maxScore) * 100) : 0,
+    status: finalStatus,
+    score: finalScore,
+    percentage: finalPercentage,
     submittedAt: new Date(),
+    warningsCount,
+    antiCheatLogs,
+    cheated,
+    suspiciousActivityFlags,
   });
 
   const appEmitter = require('../../utils/events');

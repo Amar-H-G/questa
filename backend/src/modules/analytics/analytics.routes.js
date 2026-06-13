@@ -7,5 +7,6 @@ const router = express.Router();
 
 router.use(authenticate, authorize(ROLES.ADMIN, ROLES.TEACHER, ROLES.RECRUITER));
 router.get('/overview', controller.overview);
+router.get('/export', controller.exportCsv);
 
 module.exports = router;

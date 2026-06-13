@@ -122,6 +122,8 @@ const resetPassword = async (token, newPassword) => {
   user.resetPasswordTokenExpiresAt = undefined;
   await user.save();
 
+  await repository.revokeAllUserRefreshTokens(user.id);
+
   return { success: true, message: 'Password has been reset successfully.' };
 };
 

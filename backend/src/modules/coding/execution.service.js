@@ -1,5 +1,24 @@
 const CodingSubmission = require('../../models/coding-submission.model');
 
+const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.status === 429 || response.status >= 500) {
+        console.warn(`Retryable error status ${response.status} from ${url}. Retrying attempt ${i + 1}/${retries}...`);
+        await new Promise((r) => setTimeout(r, delay * Math.pow(2, i)));
+        continue;
+      }
+      return response;
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      console.warn(`Network error fetching ${url}. Retrying attempt ${i + 1}/${retries}...`);
+      await new Promise((r) => setTimeout(r, delay * Math.pow(2, i)));
+    }
+  }
+  return fetch(url, options);
+};
+
 // Judge0 language ID maps (RapidAPI CE version / default CE values)
 const LANGUAGE_ID_MAP = {
   javascript: 93, // Node.js 18.15.0
@@ -69,7 +88,7 @@ const runJudge0Execution = async (submission, testCases, languageId, judge0Url, 
   }));
 
   const url = `${judge0Url}/submissions/batch?base64_encoded=true&wait=false`;
-  const response = await fetch(url, {
+  const response = await fetchWithRetry(url, {
     method: 'POST',
     headers,
     body: JSON.stringify({ submissions: submissionsPayload }),
@@ -92,7 +111,7 @@ const runJudge0Execution = async (submission, testCases, languageId, judge0Url, 
     pollAttempts++;
 
     const pollUrl = `${judge0Url}/submissions/batch?tokens=${tokens.join(',')}&base64_encoded=true&fields=status_id,status,stdout,stderr,compile_output,time,memory`;
-    const pollResponse = await fetch(pollUrl, { method: 'GET', headers });
+    const pollResponse = await fetchWithRetry(pollUrl, { method: 'GET', headers });
 
     if (!pollResponse.ok) {
       console.error(`Polling Judge0 returned ${pollResponse.status}`);

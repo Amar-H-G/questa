@@ -77,6 +77,7 @@ export const CodingWorkspacePage = () => {
   const [running, setRunning] = useState(false);
   const [runResult, setRunResult] = useState(null);
   const [history, setHistory] = useState([]);
+  const [selectedHistory, setSelectedHistory] = useState(null);
 
   const containerRef = useRef(null);
 
@@ -340,20 +341,26 @@ export const CodingWorkspacePage = () => {
               <div className="space-y-3">
                 {history.length ? (
                   history.map((sub, idx) => (
-                    <div key={sub._id || idx} className="glass-panel rounded-lg p-4 flex justify-between items-center text-xs">
-                      <div>
-                        <span className="block font-semibold capitalize text-slate-200">Submission #{history.length - idx}</span>
-                        <span className="block text-[10px] text-slate-500 mt-0.5">{sub.language?.toUpperCase()} • {new Date(sub.createdAt || Date.now()).toLocaleTimeString()}</span>
+                    <button
+                      key={sub._id || idx}
+                      onClick={() => setSelectedHistory(sub)}
+                      className="w-full text-left focus:outline-none focus:ring-1 focus:ring-cyan-400 rounded-lg block"
+                    >
+                      <div className="glass-panel rounded-lg p-4 flex justify-between items-center text-xs hover:bg-white/[0.04] transition border border-white/5">
+                        <div>
+                          <span className="block font-semibold capitalize text-slate-200">Submission #{history.length - idx}</span>
+                          <span className="block text-[10px] text-slate-500 mt-0.5">{sub.language?.toUpperCase()} • {new Date(sub.createdAt || Date.now()).toLocaleDateString()} {new Date(sub.createdAt || Date.now()).toLocaleTimeString()}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <span className="font-semibold font-mono text-cyan-300">{sub.score}% Score</span>
+                          <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${
+                            sub.status === 'accepted' ? 'bg-emerald-500/10 text-emerald-300' : 'bg-rose-500/10 text-rose-300'
+                          }`}>
+                            {sub.status}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <span className="font-semibold font-mono text-cyan-300">{sub.score}% Score</span>
-                        <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${
-                          sub.status === 'accepted' ? 'bg-emerald-500/10 text-emerald-300' : 'bg-rose-500/10 text-rose-300'
-                        }`}>
-                          {sub.status}
-                        </span>
-                      </div>
-                    </div>
+                    </button>
                   ))
                 ) : (
                   <div className="flex flex-col items-center justify-center py-16 text-slate-500 text-center space-y-2">
@@ -410,6 +417,51 @@ export const CodingWorkspacePage = () => {
           </footer>
         </section>
       </div>
+
+      {selectedHistory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm">
+          <div className="glass-panel w-full max-w-2xl rounded-2xl p-6 space-y-6 flex flex-col justify-between max-h-[90vh] border border-white/10">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                <div>
+                  <h3 className="text-lg font-bold">Submission Details</h3>
+                  <p className="text-xs text-slate-400 mt-1 capitalize">{selectedHistory.language} • {new Date(selectedHistory.createdAt || Date.now()).toLocaleString()}</p>
+                </div>
+                <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${
+                  selectedHistory.status === 'accepted' ? 'bg-emerald-500/10 text-emerald-300' : 'bg-rose-500/10 text-rose-300'
+                }`}>
+                  {selectedHistory.status}
+                </span>
+              </div>
+
+              <div>
+                <span className="block text-xs font-semibold text-slate-300 mb-2">Submitted Source Code:</span>
+                <pre className="font-mono bg-slate-950/80 p-4 rounded-xl border border-white/10 text-slate-300 text-xs overflow-auto max-h-[300px] whitespace-pre select-text">
+                  {selectedHistory.sourceCode || selectedHistory.code || '// No source code cached'}
+                </pre>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-4 border-t border-white/10 mt-4">
+              <Button onClick={() => setSelectedHistory(null)} variant="secondary" className="flex-1">
+                Close
+              </Button>
+              <Button
+                onClick={() => {
+                  setCode(selectedHistory.sourceCode || selectedHistory.code || '');
+                  if (selectedHistory.language) {
+                    setLanguage(selectedHistory.language);
+                  }
+                  setSelectedHistory(null);
+                }}
+                className="flex-1 bg-cyan-300 text-slate-950 hover:bg-cyan-200"
+              >
+                Restore Code to Editor
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

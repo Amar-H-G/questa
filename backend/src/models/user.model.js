@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
     passwordHash: { type: String, required: true, select: false },
     role: { type: String, enum: Object.values(ROLES), default: ROLES.STUDENT, index: true },
-    status: { type: String, enum: ['active', 'invited', 'suspended'], default: 'active', index: true },
+    status: { type: String, enum: ['active', 'invited', 'suspended', 'banned'], default: 'active', index: true },
     emailVerifiedAt: { type: Date },
     verificationToken: { type: String, select: false },
     verificationTokenExpiresAt: { type: Date, select: false },

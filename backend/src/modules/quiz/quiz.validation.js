@@ -47,6 +47,8 @@ const submitAttemptSchema = z.object({
         selectedOptions: z.array(objectIdSchema).default([]),
       })
     ),
+    warningsCount: z.number().min(0).optional(),
+    antiCheatLogs: z.array(z.string()).optional(),
   }),
 });
 

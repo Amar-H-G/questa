@@ -5,4 +5,9 @@ const list = ({ scope, skip, limit }) =>
 
 const count = (scope) => Leaderboard.countDocuments({ scope });
 
-module.exports = { list, count };
+const deleteScope = (scope, entityId) =>
+  Leaderboard.deleteMany({ scope, ...(entityId && { entityId }) });
+
+const bulkWriteStandings = (standings) => Leaderboard.insertMany(standings);
+
+module.exports = { list, count, deleteScope, bulkWriteStandings };

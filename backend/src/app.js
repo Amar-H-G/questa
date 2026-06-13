@@ -14,6 +14,7 @@ const { notFound, errorHandler } = require('./middlewares/error.middleware');
 
 // Boot decoupled event subscribers
 require('./modules/notifications/notification.service');
+require('./modules/leaderboard/leaderboard.service');
 
 const app = express();
 

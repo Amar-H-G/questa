@@ -15,6 +15,7 @@ export const QuizAttemptPage = () => {
   const [answers, setAnswers] = useState({}); // { questionId: [selectedOptionId] }
   const [timeLeft, setTimeLeft] = useState(null);
   const [warningCount, setWarningCount] = useState(0);
+  const [antiCheatLogs, setAntiCheatLogs] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
@@ -58,6 +59,9 @@ export const QuizAttemptPage = () => {
           if (parsed.warningCount !== undefined) {
             setWarningCount(parsed.warningCount);
           }
+          if (parsed.antiCheatLogs !== undefined) {
+            setAntiCheatLogs(parsed.antiCheatLogs);
+          }
         } catch (e) {
           console.error('Failed to parse saved progress:', e);
         }
@@ -72,10 +76,10 @@ export const QuizAttemptPage = () => {
     if (quiz && timeLeft !== null && !isSubmitted) {
       localStorage.setItem(
         `surcodex-quiz-attempt-${id}`,
-        JSON.stringify({ answers, timeLeft, warningCount })
+        JSON.stringify({ answers, timeLeft, warningCount, antiCheatLogs })
       );
     }
-  }, [answers, timeLeft, warningCount, quiz, id, isSubmitted]);
+  }, [answers, timeLeft, warningCount, antiCheatLogs, quiz, id, isSubmitted]);
 
   // Timer countdown
   useEffect(() => {
@@ -98,35 +102,44 @@ export const QuizAttemptPage = () => {
     if (isSubmitted || !quiz) return;
 
     const handleFocusLoss = () => {
-      setWarningCount((prev) => {
-        const next = prev + 1;
-        if (next >= 3) {
-          triggerAutoSubmit('Multiple security violations (focus loss / tab switching).');
-          return next;
-        }
-        return next;
+      const logTime = new Date().toISOString();
+      setAntiCheatLogs((prev) => {
+        const nextLogs = [...prev, logTime];
+        setWarningCount((wPrev) => {
+          const nextCount = wPrev + 1;
+          if (nextCount >= 3) {
+            triggerAutoSubmit('Multiple security violations (focus loss / tab switching).', nextCount, nextLogs);
+          }
+          return nextCount;
+        });
+        return nextLogs;
       });
     };
 
-    window.addEventListener('blur', handleFocusLoss);
-    document.addEventListener('visibilitychange', () => {
+    const handleVisibilityChange = () => {
       if (document.hidden) {
         handleFocusLoss();
       }
-    });
+    };
+
+    window.addEventListener('blur', handleFocusLoss);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     const handleFullscreenChange = () => {
       const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
       setIsFullscreen(isFull);
       if (!isFull && !isSubmitted) {
-        // Exiting fullscreen triggers focus warnings
-        setWarningCount((prev) => {
-          const next = prev + 1;
-          if (next >= 3) {
-            triggerAutoSubmit('Multiple security violations (exiting full-screen mode).');
-            return next;
-          }
-          return next;
+        const logTime = new Date().toISOString();
+        setAntiCheatLogs((prev) => {
+          const nextLogs = [...prev, logTime];
+          setWarningCount((wPrev) => {
+            const nextCount = wPrev + 1;
+            if (nextCount >= 3) {
+              triggerAutoSubmit('Multiple security violations (exiting full-screen mode).', nextCount, nextLogs);
+            }
+            return nextCount;
+          });
+          return nextLogs;
         });
       }
     };
@@ -135,10 +148,10 @@ export const QuizAttemptPage = () => {
 
     return () => {
       window.removeEventListener('blur', handleFocusLoss);
-      document.removeEventListener('visibilitychange', handleFocusLoss);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
-  }, [isSubmitted, quiz]);
+  }, [isSubmitted, quiz, antiCheatLogs]);
 
   // Keyboard navigation shortcuts
   useEffect(() => {
@@ -211,17 +224,21 @@ export const QuizAttemptPage = () => {
         question: questionId,
         selectedOptions,
       })),
+      warningsCount: warningCount,
+      antiCheatLogs,
     };
     submitMutation.mutate(payload);
   };
 
-  const triggerAutoSubmit = (reason) => {
+  const triggerAutoSubmit = (reason, forcedCount, forcedLogs) => {
     if (isSubmitted) return;
     const payload = {
       answers: Object.entries(answers).map(([questionId, selectedOptions]) => ({
         question: questionId,
         selectedOptions,
       })),
+      warningsCount: forcedCount !== undefined ? forcedCount : warningCount,
+      antiCheatLogs: forcedLogs !== undefined ? forcedLogs : antiCheatLogs,
     };
     submitMutation.mutate(payload);
     alert(`Assessment Auto-Submitted: ${reason}`);

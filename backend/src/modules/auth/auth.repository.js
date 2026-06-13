@@ -15,6 +15,9 @@ const findUserByVerificationToken = (token) =>
 const findUserByResetToken = (token) =>
   User.findOne({ resetPasswordToken: token }).select('+resetPasswordToken +resetPasswordTokenExpiresAt');
 
+const revokeAllUserRefreshTokens = (userId) =>
+  RefreshToken.updateMany({ user: userId, revokedAt: { $exists: false } }, { revokedAt: new Date() });
+
 module.exports = {
   findUserByEmailWithPassword,
   findUserById,
@@ -24,4 +27,5 @@ module.exports = {
   revokeRefreshToken,
   findUserByVerificationToken,
   findUserByResetToken,
+  revokeAllUserRefreshTokens,
 };

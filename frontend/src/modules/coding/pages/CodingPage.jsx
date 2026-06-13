@@ -16,11 +16,11 @@ export const CodingPage = () => {
   const problems = data?.items || [];
 
   return (
-    <div className="page-shell space-y-6">
-      <div className="glass-panel rounded-lg p-6">
-        <p className="text-sm text-cyan-200">Coding evaluations</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Judge-ready problem workspace</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
+    <div className="page-shell space-y-6 text-[#0f172a]">
+      <div className="border border-slate-200 bg-white rounded-xl p-8 shadow-sm">
+        <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Coding evaluations</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-800">Judge-ready problem workspace</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 font-medium">
           Submissions are modeled independently from execution providers, so Judge0 can be attached without leaking provider logic into controllers.
         </p>
       </div>
@@ -29,10 +29,12 @@ export const CodingPage = () => {
           const icons = [SquareTerminal, Cpu, Code2];
           const Icon = icons[index];
           return (
-            <div key={title} className="glass-panel rounded-lg p-5">
-              <Icon className="h-5 w-5 text-cyan-200" />
-              <h2 className="mt-5 text-lg font-semibold">{title}</h2>
-              <p className="mt-2 text-sm text-slate-400">{languages[index] || languages.join(', ')}</p>
+            <div key={title} className="border border-slate-200 bg-white rounded-xl p-6 shadow-sm">
+              <div className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-blue-600">
+                <Icon className="h-5 w-5" />
+              </div>
+              <h2 className="mt-5 text-lg font-bold text-slate-700">{title}</h2>
+              <p className="mt-2 text-sm text-slate-500 font-semibold">{languages[index] || languages.join(', ')}</p>
             </div>
           );
         })}
@@ -46,23 +48,27 @@ export const CodingPage = () => {
       ) : problems.length ? (
         <div className="grid gap-4">
           {problems.map((problem) => (
-            <article key={problem.id} className="glass-panel rounded-lg p-5">
+            <article key={problem.id} className="border border-slate-200 bg-white rounded-xl p-5 shadow-sm">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-lg font-semibold">{problem.title}</h2>
-                  <p className="mt-1 text-sm capitalize text-slate-400">{problem.difficulty}</p>
+                  <h2 className="text-lg font-bold text-slate-750">{problem.title}</h2>
+                  <p className={`mt-1 text-xs font-bold uppercase tracking-wider ${
+                    problem.difficulty === 'easy' ? 'text-emerald-600' :
+                    problem.difficulty === 'medium' ? 'text-amber-600' :
+                    'text-rose-600'
+                  }`}>{problem.difficulty}</p>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex flex-wrap gap-2">
                     {problem.supportedLanguages?.map((language) => (
-                      <span key={language} className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-300">
+                      <span key={language} className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600 font-semibold border border-slate-200/50">
                         {language}
                       </span>
                     ))}
                   </div>
                   <Link
                     to={`/coding/${problem.id}`}
-                    className="inline-flex h-9 items-center justify-center rounded-lg bg-cyan-300 px-4 text-xs font-semibold text-slate-950 hover:bg-cyan-200 transition"
+                    className="inline-flex h-9 items-center justify-center rounded-lg bg-blue-600 px-4 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/10 transition"
                   >
                     Solve Challenge
                   </Link>

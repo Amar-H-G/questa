@@ -26,17 +26,17 @@ export const RegisterPage = () => {
   };
 
   return (
-    <main className="grid min-h-screen place-items-center bg-slate-950 px-4 text-white">
-      <section className="w-full max-w-lg rounded-lg border border-white/10 bg-white/[0.06] p-6 shadow-2xl backdrop-blur-xl">
-        <h1 className="text-2xl font-semibold tracking-tight">Create your SurCodex workspace</h1>
+    <main className="grid min-h-screen place-items-center bg-[#f8fafc] px-4 text-[#0f172a]">
+      <section className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-100/80">
+        <h1 className="text-2xl font-bold tracking-tight">Create your SurCodex account</h1>
         <form onSubmit={submit} className="mt-6 space-y-4">
           <TextField label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <TextField label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           <TextField label="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
           <label className="block">
-            <span className="mb-2 block text-sm text-slate-300">Role</span>
+            <span className="mb-2 block text-sm font-semibold text-slate-700">Role</span>
             <select
-              className="h-11 w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 text-sm text-white outline-none focus:border-cyan-300"
+              className="h-11 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3 text-sm text-slate-800 outline-none transition focus:border-blue-600"
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
             >
@@ -45,13 +45,13 @@ export const RegisterPage = () => {
               <option value="recruiter">Recruiter</option>
             </select>
           </label>
-          {error ? <p className="text-sm text-rose-300">{error}</p> : null}
-          <Button className="w-full" type="submit" disabled={isSubmitting}>
+          {error ? <p className="text-sm text-rose-600 font-semibold">{error}</p> : null}
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-600/10" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Creating...' : 'Create account'}
           </Button>
         </form>
-        <p className="mt-5 text-center text-sm text-slate-400">
-          Already registered? <Link className="text-cyan-200" to="/login">Sign in</Link>
+        <p className="mt-5 text-center text-sm text-slate-500 font-medium">
+          Already registered? <Link className="text-blue-600 hover:underline font-bold" to="/login">Sign in</Link>
         </p>
       </section>
     </main>

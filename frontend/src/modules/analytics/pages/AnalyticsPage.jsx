@@ -40,11 +40,11 @@ export const AnalyticsPage = () => {
   };
 
   return (
-    <div className="page-shell space-y-6 text-white">
+    <div className="page-shell space-y-6 text-[#0f172a]">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <p className="text-sm text-cyan-200">Recruiter insights</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Performance analytics</h1>
+          <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Recruiter insights</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-800">Performance analytics</h1>
         </div>
       </div>
       
@@ -65,34 +65,34 @@ export const AnalyticsPage = () => {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Completion Trend Graph */}
-        <section className="glass-panel rounded-lg p-6">
-          <h2 className="text-lg font-semibold">Completion trend</h2>
+        <section className="border border-slate-200 bg-white rounded-xl p-8 shadow-sm">
+          <h2 className="text-lg font-bold text-slate-700">Completion trend</h2>
           <div className="mt-6 flex h-56 items-end gap-3">
             {(overview.trend?.length ? overview.trend : [{ label: 'No data', averageScore: 0 }]).map((point) => (
               <div key={point.label} className="flex flex-1 flex-col items-center gap-2">
-                <div className="w-full rounded-t-lg bg-cyan-300/80" style={{ height: `${Math.max(point.averageScore, 4)}%` }} />
-                <span className="text-xs text-slate-500">{point.label}</span>
+                <div className="w-full rounded-t-lg bg-blue-600/80" style={{ height: `${Math.max(point.averageScore, 4)}%` }} />
+                <span className="text-xs text-slate-500 font-semibold">{point.label}</span>
               </div>
             ))}
           </div>
         </section>
 
         {/* Analytical Exports Console */}
-        <section className="glass-panel rounded-lg p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
-            <Download className="h-5 w-5 text-cyan-300" />
+        <section className="border border-slate-200 bg-white rounded-xl p-8 shadow-sm space-y-4">
+          <h2 className="text-lg font-bold text-slate-700 flex items-center gap-2">
+            <Download className="h-5 w-5 text-blue-600" />
             Report Export Center
           </h2>
-          <p className="text-xs text-slate-400">Generate formatted spreadsheets or signature PDF reports containing assessment outcomes, candidate marks, and integrity indicators.</p>
+          <p className="text-xs text-slate-500 font-medium">Generate formatted spreadsheets or signature PDF reports containing assessment outcomes, candidate marks, and integrity indicators.</p>
           
           <div className="space-y-3 pt-2">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Filter by Quiz</label>
+                <label className="text-[11px] font-bold text-slate-500 block mb-1">Filter by Quiz</label>
                 <select
                   value={selectedQuiz}
                   onChange={(e) => setSelectedQuiz(e.target.value)}
-                  className="w-full bg-slate-900 border border-white/10 text-xs rounded p-2 text-slate-300 outline-none focus:border-cyan-400"
+                  className="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg p-2.5 text-slate-700 outline-none focus:border-blue-600"
                 >
                   <option value="">All Quizzes</option>
                   {quizzes.map((q) => (
@@ -101,11 +101,11 @@ export const AnalyticsPage = () => {
                 </select>
               </div>
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Cheated Telemetry Status</label>
+                <label className="text-[11px] font-bold text-slate-500 block mb-1">Cheated Telemetry Status</label>
                 <select
                   value={cheatedOnly}
                   onChange={(e) => setCheatedOnly(e.target.value)}
-                  className="w-full bg-slate-900 border border-white/10 text-xs rounded p-2 text-slate-300 outline-none focus:border-cyan-400"
+                  className="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg p-2.5 text-slate-700 outline-none focus:border-blue-600"
                 >
                   <option value="">All Candidates</option>
                   <option value="true">Cheating Flagged</option>
@@ -115,27 +115,27 @@ export const AnalyticsPage = () => {
             </div>
 
             <div>
-              <label className="text-[11px] text-slate-400 block mb-1">Minimum score threshold (%)</label>
+              <label className="text-[11px] font-bold text-slate-500 block mb-1">Minimum score threshold (%)</label>
               <input
                 type="number"
                 placeholder="e.g. 50"
                 value={minScore}
                 onChange={(e) => setMinScore(e.target.value)}
-                className="w-full bg-slate-900 border border-white/10 text-xs rounded p-2 text-slate-300 outline-none focus:border-cyan-400"
+                className="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg p-2.5 text-slate-700 outline-none focus:border-blue-600"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3 pt-3">
               <Button
                 onClick={() => handleExport('csv')}
-                className="flex items-center justify-center gap-2 text-xs h-10 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/20"
+                className="flex items-center justify-center gap-2 text-xs h-10 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-250 font-bold"
               >
                 <FileSpreadsheet className="h-4 w-4" />
                 Export CSV Spreadsheet
               </Button>
               <Button
                 onClick={() => handleExport('pdf')}
-                className="flex items-center justify-center gap-2 text-xs h-10 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20"
+                className="flex items-center justify-center gap-2 text-xs h-10 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-250 font-bold"
               >
                 <FileText className="h-4 w-4" />
                 Export PDF Standings

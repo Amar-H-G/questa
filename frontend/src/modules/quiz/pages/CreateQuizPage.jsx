@@ -67,34 +67,35 @@ export const CreateQuizPage = () => {
   };
 
   return (
-    <div className="page-shell max-w-3xl">
-      <div className="glass-panel rounded-lg p-6">
-        <p className="text-sm text-cyan-200">Quiz studio</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Create assessment</h1>
+    <div className="page-shell max-w-3xl text-[#0f172a]">
+      <div className="border border-slate-200 bg-white rounded-2xl p-8 shadow-sm">
+        <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Quiz studio</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-800">Create assessment</h1>
         <form onSubmit={submit} className="mt-6 grid gap-4">
           <TextField label="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           <label className="block">
-            <span className="mb-2 block text-sm text-slate-300">Description</span>
+            <span className="mb-2 block text-sm font-semibold text-slate-700">Description</span>
             <textarea
-              className="min-h-28 w-full rounded-lg border border-white/10 bg-slate-950/70 p-3 text-sm text-white outline-none focus:border-cyan-300"
+              className="min-h-28 w-full rounded-lg border border-slate-200 bg-slate-50/50 p-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-600"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
+              placeholder="Provide a detailed description of the assessment scope and expectations."
             />
           </label>
           <div className="grid gap-4 sm:grid-cols-2">
             <TextField label="Duration minutes" type="number" value={form.durationMinutes} onChange={(e) => setForm({ ...form, durationMinutes: e.target.value })} />
             <TextField label="Passing score" type="number" value={form.passingScore} onChange={(e) => setForm({ ...form, passingScore: e.target.value })} />
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 mt-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Questions</h2>
-              <Button type="button" variant="secondary" onClick={() => setQuestions([...questions, blankQuestion()])}>
+              <h2 className="text-lg font-bold text-slate-800">Questions</h2>
+              <Button type="button" variant="secondary" className="border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold" onClick={() => setQuestions([...questions, blankQuestion()])}>
                 <Plus className="h-4 w-4" />
                 Add
               </Button>
             </div>
             {questions.map((question, questionIndex) => (
-              <div key={questionIndex} className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
+              <div key={questionIndex} className="rounded-xl border border-slate-200 bg-slate-50/50 p-6 space-y-4">
                 <div className="grid gap-4 sm:grid-cols-[1fr_140px_90px_auto]">
                   <TextField
                     label={`Question ${questionIndex + 1}`}
@@ -102,9 +103,9 @@ export const CreateQuizPage = () => {
                     onChange={(e) => updateQuestion(questionIndex, { prompt: e.target.value })}
                   />
                   <label className="block">
-                    <span className="mb-2 block text-sm text-slate-300">Type</span>
+                    <span className="mb-2 block text-sm font-semibold text-slate-700">Type</span>
                     <select
-                      className="h-11 w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 text-sm text-white outline-none focus:border-cyan-300"
+                      className="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-750 outline-none transition focus:border-blue-600"
                       value={question.type}
                       onChange={(e) => updateQuestion(questionIndex, { type: e.target.value })}
                     >
@@ -122,20 +123,21 @@ export const CreateQuizPage = () => {
                   <button
                     type="button"
                     aria-label="Remove question"
-                    className="mt-7 grid h-11 w-11 place-items-center rounded-lg bg-white/10 text-slate-300 transition hover:bg-rose-400/20 hover:text-rose-100"
+                    className="mt-7 grid h-11 w-11 place-items-center rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition"
                     onClick={() => setQuestions(questions.filter((_, index) => index !== questionIndex))}
                     disabled={questions.length === 1}
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2">
                   {question.options.map((option, optionIndex) => (
-                    <label key={optionIndex} className="flex items-center gap-3 rounded-lg bg-slate-950/50 p-3">
+                    <label key={optionIndex} className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3 hover:bg-slate-50/50 transition">
                       <input
                         type={question.type === 'multi_select' ? 'checkbox' : 'radio'}
                         name={`correct-${questionIndex}`}
                         checked={option.isCorrect}
+                        className="accent-blue-600 h-4 w-4"
                         onChange={(e) => {
                           if (question.type === 'multi_select') {
                             updateOption(questionIndex, optionIndex, { isCorrect: e.target.checked });
@@ -147,7 +149,7 @@ export const CreateQuizPage = () => {
                         }}
                       />
                       <input
-                        className="h-10 min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-slate-600"
+                        className="h-10 min-w-0 flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
                         placeholder={`Option ${optionIndex + 1}`}
                         value={option.label}
                         onChange={(e) => updateOption(questionIndex, optionIndex, { label: e.target.value })}
@@ -158,8 +160,8 @@ export const CreateQuizPage = () => {
               </div>
             ))}
           </div>
-          {mutation.error ? <p className="text-sm text-rose-300">{mutation.error.response?.data?.message || 'Unable to create quiz'}</p> : null}
-          <Button type="submit" disabled={mutation.isPending}>{mutation.isPending ? 'Creating...' : 'Create quiz'}</Button>
+          {mutation.error ? <p className="text-sm text-rose-600 font-bold">{mutation.error.response?.data?.message || 'Unable to create quiz'}</p> : null}
+          <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-600/10 mt-4" disabled={mutation.isPending}>{mutation.isPending ? 'Creating...' : 'Create quiz'}</Button>
         </form>
       </div>
     </div>

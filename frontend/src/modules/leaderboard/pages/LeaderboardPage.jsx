@@ -13,10 +13,10 @@ export const LeaderboardPage = () => {
   const rows = data?.items || [];
 
   return (
-    <div className="page-shell space-y-6">
+    <div className="page-shell space-y-6 text-[#0f172a]">
       <div>
-        <p className="text-sm text-cyan-200">Performance tracking</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Leaderboard</h1>
+        <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Performance tracking</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-800">Leaderboard</h1>
       </div>
       {error ? <InlineAlert>Leaderboard data could not be loaded.</InlineAlert> : null}
       {isLoading ? (
@@ -24,23 +24,23 @@ export const LeaderboardPage = () => {
           {[1, 2, 3, 4].map((item) => <SkeletonBlock key={item} className="h-16" />)}
         </div>
       ) : rows.length ? (
-        <div className="overflow-hidden rounded-lg border border-white/10">
-          <table className="w-full border-collapse bg-white/[0.04] text-left text-sm">
-            <thead className="bg-white/[0.06] text-slate-400">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <table className="w-full border-collapse text-left text-sm">
+            <thead className="bg-slate-55 border-b border-slate-200 text-slate-500">
               <tr>
-                <th className="px-4 py-3">Rank</th>
-                <th className="px-4 py-3">Candidate</th>
-                <th className="px-4 py-3">Signal</th>
-                <th className="px-4 py-3">Score</th>
+                <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider">Rank</th>
+                <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider">Candidate</th>
+                <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider">Signal</th>
+                <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider">Score</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100">
               {rows.map((row) => (
-                <tr key={row.id} className="border-t border-white/10">
-                  <td className="px-4 py-4 text-cyan-200">#{row.rank}</td>
-                  <td className="px-4 py-4 font-medium">{row.user?.name || 'Anonymous'}</td>
-                  <td className="px-4 py-4 text-slate-400">{row.metadata?.signal || row.scope}</td>
-                  <td className="px-4 py-4">{row.score}</td>
+                <tr key={row.id} className="hover:bg-slate-50/50 transition">
+                  <td className="px-4 py-4 text-blue-600 font-bold font-mono">#{row.rank}</td>
+                  <td className="px-4 py-4 font-bold text-slate-800">{row.user?.name || 'Anonymous'}</td>
+                  <td className="px-4 py-4 text-slate-500 font-medium">{row.metadata?.signal || row.scope}</td>
+                  <td className="px-4 py-4 font-bold text-slate-700 font-mono">{row.score}</td>
                 </tr>
               ))}
             </tbody>

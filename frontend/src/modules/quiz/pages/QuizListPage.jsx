@@ -18,13 +18,13 @@ export const QuizListPage = () => {
   const quizzes = data?.items || [];
 
   return (
-    <div className="page-shell space-y-6">
+    <div className="page-shell space-y-6 text-[#0f172a]">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <p className="text-sm text-cyan-200">Quiz operations</p>
-          <h1 className="text-3xl font-semibold tracking-tight">Assessment library</h1>
+          <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Quiz operations</p>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-800">Assessment library</h1>
         </div>
-        <Link className="inline-flex h-10 items-center gap-2 rounded-lg bg-cyan-300 px-4 text-sm font-semibold text-slate-950" to="/quizzes/new">
+        <Link className="inline-flex h-10 items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 text-sm font-bold shadow-md shadow-blue-600/10 transition" to="/quizzes/new">
           <Plus className="h-4 w-4" />
           New quiz
         </Link>
@@ -32,28 +32,28 @@ export const QuizListPage = () => {
 
       <div className="grid gap-4">
         {error ? (
-          <div className="rounded-lg border border-rose-300/20 bg-rose-400/10 p-4 text-sm text-rose-100">
+          <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm font-bold text-rose-600">
             Quiz library could not be loaded.
           </div>
         ) : null}
         {isLoading ? (
-          <div className="glass-panel h-28 animate-pulse rounded-lg" />
+          <div className="border border-slate-200 bg-white h-28 animate-pulse rounded-xl" />
         ) : quizzes.length ? (
           quizzes.map((quiz) => (
-            <article key={quiz.id} className="glass-panel rounded-lg p-5">
+            <article key={quiz.id} className="glass-panel rounded-xl p-5">
               <div className="flex items-start gap-4">
-                <div className="grid h-10 w-10 place-items-center rounded-lg bg-white/10">
-                  <FileText className="h-5 w-5 text-cyan-200" />
+                <div className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-blue-600">
+                  <FileText className="h-5 w-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-lg font-semibold">{quiz.title}</h2>
-                  <p className="mt-1 text-sm text-slate-400">{quiz.description || 'No description provided.'}</p>
+                  <h2 className="text-lg font-bold text-slate-700">{quiz.title}</h2>
+                  <p className="mt-1 text-sm text-slate-500 font-medium">{quiz.description || 'No description provided.'}</p>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-xs capitalize text-slate-300">{quiz.status}</span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs capitalize text-slate-600 font-semibold border border-slate-200/50">{quiz.status}</span>
                   {quiz.status === 'draft' ? (
                     <Button
-                      className="h-8 px-3 text-xs"
+                      className="h-8 px-3 text-xs bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-bold"
                       onClick={() => publishMutation.mutate(quiz.id)}
                       disabled={publishMutation.isPending}
                     >
@@ -62,7 +62,7 @@ export const QuizListPage = () => {
                   ) : null}
                   {quiz.status === 'published' ? (
                     <Link
-                      className="inline-flex h-8 items-center justify-center rounded-lg bg-cyan-300 px-3 text-xs font-semibold text-slate-950 hover:bg-cyan-200 transition"
+                      className="inline-flex h-8 items-center justify-center rounded-lg bg-blue-600 px-3 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/10 transition"
                       to={`/quizzes/${quiz.id}/attempt`}
                     >
                       Attempt
@@ -73,9 +73,9 @@ export const QuizListPage = () => {
             </article>
           ))
         ) : (
-          <div className="glass-panel rounded-lg p-8 text-center">
-            <p className="text-lg font-semibold">No quizzes yet</p>
-            <p className="mt-2 text-sm text-slate-400">Create the first assessment for your workspace.</p>
+          <div className="glass-panel rounded-xl p-8 text-center">
+            <p className="text-lg font-bold text-slate-700">No quizzes yet</p>
+            <p className="mt-2 text-sm text-slate-500 font-medium">Create the first assessment for your workspace.</p>
           </div>
         )}
       </div>

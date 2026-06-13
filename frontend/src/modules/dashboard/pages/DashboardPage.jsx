@@ -101,41 +101,43 @@ export const DashboardPage = () => {
   const hero = getRoleHeroText();
 
   return (
-    <div ref={scope} className="page-shell space-y-8">
+    <div ref={scope} className="page-shell space-y-8 text-[#0f172a]">
       <section className="grid gap-6 lg:grid-cols-[1.4fr_0.6fr]">
-        <div className="glass-panel rounded-lg p-6 lg:p-8" data-reveal>
-          <p className="text-sm font-medium text-cyan-200">{hero.subtitle}</p>
-          <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight text-white lg:text-5xl">
+        <div className="glass-panel rounded-xl p-6 lg:p-8" data-reveal>
+          <p className="text-xs font-bold uppercase tracking-wider text-blue-600">{hero.subtitle}</p>
+          <h1 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-800 lg:text-5xl">
             {hero.title}
           </h1>
-          <p className="mt-5 max-w-2xl text-sm leading-6 text-slate-300">
+          <p className="mt-5 max-w-2xl text-sm leading-6 text-slate-500 font-medium">
             {hero.description}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link className="rounded-lg bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-200 transition" to={hero.cta1Href}>
+            <Link className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/10 transition" to={hero.cta1Href}>
               {hero.cta1}
             </Link>
-            <Link className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15 transition" to={hero.cta2Href}>
+            <Link className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-200/80 border border-slate-100 transition" to={hero.cta2Href}>
               {hero.cta2}
             </Link>
           </div>
         </div>
 
-        <div className="glass-panel rounded-lg p-6" data-reveal>
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-400">Platform Health status</p>
-            <Activity className="h-4 w-4 text-emerald-300" />
+        <div className="glass-panel rounded-xl p-6 flex flex-col justify-between" data-reveal>
+          <div>
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Platform Health status</p>
+              <Activity className="h-4 w-4 text-emerald-500" />
+            </div>
+            <p className="mt-4 text-5xl font-bold text-slate-800">98%</p>
           </div>
-          <p className="mt-6 text-5xl font-semibold">98%</p>
-          <div className="mt-6 space-y-3">
+          <div className="space-y-3 mt-6">
             {['Compiler Uptime', 'RBAC security check', 'SMTP Mail Service'].map((item, index) => (
               <div key={item}>
-                <div className="mb-2 flex justify-between text-xs text-slate-400">
+                <div className="mb-2 flex justify-between text-xs font-semibold text-slate-500">
                   <span>{item}</span>
                   <span>{95 + index * 2}%</span>
                 </div>
-                <div className="h-2 rounded-full bg-white/10">
-                  <div className="h-2 rounded-full bg-cyan-300" style={{ width: `${95 + index * 2}%` }} />
+                <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                  <div className="h-2 rounded-full bg-blue-600" style={{ width: `${95 + index * 2}%` }} />
                 </div>
               </div>
             ))}
@@ -153,10 +155,12 @@ export const DashboardPage = () => {
       {/* Action Modules Section */}
       <section className="grid gap-4 lg:grid-cols-3">
         {modules.map((item) => (
-          <Link key={item.title} to={item.href} className="glass-panel rounded-lg p-5 transition hover:-translate-y-1 hover:border-cyan-200/40" data-reveal>
-            <item.icon className="h-5 w-5 text-cyan-200" />
-            <h2 className="mt-5 text-lg font-semibold">{item.title}</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">{item.copy}</p>
+          <Link key={item.title} to={item.href} className="glass-panel rounded-xl p-6 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-md hover:shadow-blue-50/50" data-reveal>
+            <div className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-blue-600">
+              <item.icon className="h-5 w-5" />
+            </div>
+            <h2 className="mt-5 text-lg font-bold text-slate-700">{item.title}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500 font-medium">{item.copy}</p>
           </Link>
         ))}
       </section>

@@ -151,7 +151,7 @@ export const CodingWorkspacePage = () => {
 
   if (isLoading) {
     return (
-      <div className="page-shell space-y-6 py-6 px-4 text-white">
+      <div className="page-shell space-y-6 py-6 px-4 text-[#0f172a]">
         <SkeletonBlock className="h-10 w-1/4" />
         <div className="grid gap-6 lg:grid-cols-2">
           <SkeletonBlock className="h-[500px]" />
@@ -163,30 +163,30 @@ export const CodingWorkspacePage = () => {
 
   if (error || !problem) {
     return (
-      <div className="page-shell py-8 px-4 text-white">
+      <div className="page-shell py-8 px-4 text-[#0f172a]">
         <InlineAlert>Problem library could not be loaded. Please ensure this challenge exists.</InlineAlert>
       </div>
     );
   }
 
   return (
-    <div ref={containerRef} className="page-shell min-h-[calc(100vh-100px)] flex flex-col gap-4 py-4 px-4 text-white select-none">
+    <div ref={containerRef} className="page-shell min-h-[calc(100vh-100px)] flex flex-col gap-4 py-4 px-4 text-[#0f172a] select-none">
       {/* Workspace Header */}
-      <header className="flex items-center justify-between glass-panel rounded-xl px-4 py-3">
+      <header className="flex items-center justify-between border border-slate-200 bg-white rounded-xl px-4 py-3 shadow-sm">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/coding')}
-            className="grid h-8 w-8 place-items-center rounded-lg bg-white/5 text-slate-400 hover:text-white transition"
+            className="grid h-8 w-8 place-items-center rounded-lg bg-slate-100 text-slate-500 hover:text-slate-800 transition"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight">{problem.title}</h1>
+            <h1 className="text-lg font-bold tracking-tight text-slate-800">{problem.title}</h1>
             <div className="flex items-center gap-2 mt-0.5">
               <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                problem.difficulty === 'easy' ? 'bg-emerald-500/20 text-emerald-300' :
-                problem.difficulty === 'medium' ? 'bg-amber-500/20 text-amber-300' :
-                'bg-rose-500/20 text-rose-300'
+                problem.difficulty === 'easy' ? 'bg-emerald-50 text-emerald-600' :
+                problem.difficulty === 'medium' ? 'bg-amber-50 text-amber-600' :
+                'bg-rose-50 text-rose-600'
               }`}>
                 {problem.difficulty}
               </span>
@@ -195,11 +195,11 @@ export const CodingWorkspacePage = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <label className="block text-xs text-slate-400">Language:</label>
+          <label className="block text-xs font-semibold text-slate-500">Language:</label>
           <select
             value={language}
             onChange={(e) => handleLanguageChange(e.target.value)}
-            className="h-9 rounded-lg border border-white/10 bg-slate-900 px-3 text-xs text-white outline-none focus:border-cyan-300"
+            className="h-9 rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs text-slate-700 outline-none focus:border-blue-600"
           >
             {problem.supportedLanguages?.map((lang) => (
               <option key={lang} value={lang}>
@@ -213,16 +213,16 @@ export const CodingWorkspacePage = () => {
       {/* Workspace Dual Pane Panels */}
       <div className="grid gap-4 lg:grid-cols-2 flex-1">
         {/* Left Pane - Descriptions / Details */}
-        <section className="glass-panel rounded-xl flex flex-col justify-between overflow-hidden" data-reveal>
-          <div className="flex border-b border-white/10 bg-slate-900/40">
+        <section className="border border-slate-200 bg-white rounded-xl flex flex-col justify-between overflow-hidden shadow-sm" data-reveal>
+          <div className="flex border-b border-slate-200 bg-slate-50/50">
             {['description', 'output', 'history'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-5 py-3 text-xs font-semibold capitalize border-b-2 transition ${
+                className={`px-5 py-3 text-xs font-bold capitalize border-b-2 transition ${
                   activeTab === tab
-                    ? 'border-cyan-400 text-cyan-200 bg-white/[0.02]'
-                    : 'border-transparent text-slate-400 hover:text-white'
+                    ? 'border-blue-600 text-blue-600 bg-white'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
                 }`}
               >
                 {tab}
@@ -234,33 +234,33 @@ export const CodingWorkspacePage = () => {
             {activeTab === 'description' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-300">Problem Statement</h3>
-                  <p className="text-sm text-slate-300 leading-relaxed mt-2 whitespace-pre-wrap">{problem.prompt}</p>
+                  <h3 className="text-sm font-bold text-slate-700">Problem Statement</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed mt-2 whitespace-pre-wrap">{problem.prompt}</p>
                 </div>
 
                 {problem.constraints?.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-300">Constraints</h3>
-                    <ul className="list-disc list-inside text-xs text-slate-400 mt-2 space-y-1">
+                    <h3 className="text-sm font-bold text-slate-700">Constraints</h3>
+                    <ul className="list-disc list-inside text-xs text-slate-500 mt-2 space-y-1">
                       {problem.constraints.map((c, i) => <li key={i}>{c}</li>)}
                     </ul>
                   </div>
                 )}
 
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-300">Sample Test Cases</h3>
+                  <h3 className="text-sm font-bold text-slate-700">Sample Test Cases</h3>
                   <div className="grid gap-3 mt-3">
                     {problem.testCases?.map((tc, idx) => (
-                      <div key={tc._id || idx} className="rounded-lg bg-slate-950/60 border border-white/5 p-4 text-xs font-mono">
-                        <span className="block text-[10px] text-cyan-300 uppercase font-semibold mb-2">Case {idx + 1}</span>
+                      <div key={tc._id || idx} className="rounded-lg bg-slate-50 border border-slate-200/80 p-4 text-xs font-mono">
+                        <span className="block text-[10px] text-blue-600 uppercase font-bold mb-2">Case {idx + 1}</span>
                         <div className="grid gap-2 sm:grid-cols-2">
                           <div>
-                            <span className="text-slate-500 block">Input:</span>
-                            <pre className="text-slate-300 whitespace-pre-wrap">{tc.input}</pre>
+                            <span className="text-slate-400 block font-semibold">Input:</span>
+                            <pre className="text-slate-700 whitespace-pre-wrap">{tc.input}</pre>
                           </div>
                           <div>
-                            <span className="text-slate-500 block">Expected Output:</span>
-                            <pre className="text-slate-300 whitespace-pre-wrap">{tc.expectedOutput}</pre>
+                            <span className="text-slate-400 block font-semibold">Expected Output:</span>
+                            <pre className="text-slate-700 whitespace-pre-wrap">{tc.expectedOutput}</pre>
                           </div>
                         </div>
                       </div>
@@ -274,49 +274,49 @@ export const CodingWorkspacePage = () => {
               <div className="space-y-4">
                 {running ? (
                   <div className="flex flex-col items-center justify-center py-16 space-y-4">
-                    <Loader2 className="h-10 w-10 text-cyan-300 animate-spin" />
-                    <span className="text-xs text-slate-400">Compiling and running against test cases...</span>
+                    <Loader2 className="h-10 w-10 text-blue-600 animate-spin" />
+                    <span className="text-xs text-slate-500 font-medium">Compiling and running against test cases...</span>
                   </div>
                 ) : runResult ? (
                   <div className="space-y-5">
                     <div className="flex items-center gap-3">
                       {runResult.status === 'accepted' ? (
-                        <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs font-semibold">
+                        <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 text-xs font-semibold">
                           <CheckCircle2 className="h-4 w-4" />
                           Accepted
                         </div>
                       ) : (
-                        <div className="flex items-center gap-2 text-rose-400 bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20 text-xs font-semibold">
+                        <div className="flex items-center gap-2 text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100 text-xs font-semibold">
                           <XCircle className="h-4 w-4" />
                           {runResult.status?.replace('_', ' ').toUpperCase()}
                         </div>
                       )}
-                      <span className="text-xs text-slate-400">Score: {runResult.score}%</span>
+                      <span className="text-xs text-slate-500 font-semibold">Score: {runResult.score}%</span>
                     </div>
 
                     <div className="space-y-3">
-                      <h3 className="text-sm font-semibold text-slate-300">Test Cases Details</h3>
+                      <h3 className="text-sm font-bold text-slate-700">Test Cases Details</h3>
                       {runResult.executionResults?.length ? (
                         <div className="space-y-3">
                           {runResult.executionResults.map((res, idx) => (
-                            <div key={res._id || idx} className="rounded-lg bg-slate-950/60 border border-white/5 p-4 text-xs font-mono space-y-2">
+                            <div key={res._id || idx} className="rounded-lg bg-slate-50 border border-slate-200/80 p-4 text-xs font-mono space-y-2">
                               <div className="flex justify-between items-center">
-                                <span className="text-[10px] text-cyan-300 uppercase font-semibold">Case {idx + 1}</span>
-                                <span className={`text-[10px] uppercase font-semibold ${res.status === 'accepted' ? 'text-emerald-400' : 'text-rose-400'}`}>{res.status}</span>
+                                <span className="text-[10px] text-blue-600 uppercase font-bold">Case {idx + 1}</span>
+                                <span className={`text-[10px] uppercase font-bold ${res.status === 'accepted' ? 'text-emerald-600' : 'text-rose-600'}`}>{res.status}</span>
                               </div>
                               {res.stdout && (
                                 <div>
-                                  <span className="text-slate-500 block text-[10px]">Stdout:</span>
-                                  <pre className="text-slate-300 whitespace-pre-wrap">{res.stdout}</pre>
+                                  <span className="text-slate-400 block text-[10px] font-semibold">Stdout:</span>
+                                  <pre className="text-slate-700 whitespace-pre-wrap">{res.stdout}</pre>
                                 </div>
                               )}
                               {res.stderr && (
                                 <div>
-                                  <span className="text-rose-400 block text-[10px]">Error/Stderr:</span>
-                                  <pre className="text-rose-300 whitespace-pre-wrap">{res.stderr}</pre>
+                                  <span className="text-rose-500 block text-[10px] font-semibold">Error/Stderr:</span>
+                                  <pre className="text-rose-600 whitespace-pre-wrap">{res.stderr}</pre>
                                 </div>
                               )}
-                              <div className="flex justify-between text-[10px] text-slate-500 border-t border-white/5 pt-2 mt-2">
+                              <div className="flex justify-between text-[10px] text-slate-400 border-t border-slate-200/60 pt-2 mt-2 font-semibold">
                                 <span>Runtime: {res.runtimeMs}ms</span>
                                 <span>Memory: {Math.round(res.memoryKb / 1024 * 10) / 10}MB</span>
                               </div>
@@ -324,14 +324,14 @@ export const CodingWorkspacePage = () => {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-xs text-slate-500">No output details available.</p>
+                        <p className="text-xs text-slate-400 font-semibold">No output details available.</p>
                       )}
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-16 text-slate-500 text-center space-y-2">
-                    <Info className="h-8 w-8 text-slate-600" />
-                    <span className="text-xs">Execute code or submit a solution to view output logs here.</span>
+                  <div className="flex flex-col items-center justify-center py-16 text-slate-400 text-center space-y-2">
+                    <Info className="h-8 w-8 text-slate-300" />
+                    <span className="text-xs font-medium">Execute code or submit a solution to view output logs here.</span>
                   </div>
                 )}
               </div>
@@ -344,17 +344,17 @@ export const CodingWorkspacePage = () => {
                     <button
                       key={sub._id || idx}
                       onClick={() => setSelectedHistory(sub)}
-                      className="w-full text-left focus:outline-none focus:ring-1 focus:ring-cyan-400 rounded-lg block"
+                      className="w-full text-left focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-lg block"
                     >
-                      <div className="glass-panel rounded-lg p-4 flex justify-between items-center text-xs hover:bg-white/[0.04] transition border border-white/5">
+                      <div className="rounded-lg p-4 flex justify-between items-center text-xs hover:bg-slate-50 transition border border-slate-200 bg-white shadow-sm shadow-slate-100/30">
                         <div>
-                          <span className="block font-semibold capitalize text-slate-200">Submission #{history.length - idx}</span>
-                          <span className="block text-[10px] text-slate-500 mt-0.5">{sub.language?.toUpperCase()} • {new Date(sub.createdAt || Date.now()).toLocaleDateString()} {new Date(sub.createdAt || Date.now()).toLocaleTimeString()}</span>
+                          <span className="block font-bold text-slate-700">Submission #{history.length - idx}</span>
+                          <span className="block text-[10px] text-slate-400 font-semibold mt-0.5">{sub.language?.toUpperCase()} • {new Date(sub.createdAt || Date.now()).toLocaleDateString()} {new Date(sub.createdAt || Date.now()).toLocaleTimeString()}</span>
                         </div>
                         <div className="flex items-center gap-4">
-                          <span className="font-semibold font-mono text-cyan-300">{sub.score}% Score</span>
+                          <span className="font-bold font-mono text-blue-600">{sub.score}% Score</span>
                           <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${
-                            sub.status === 'accepted' ? 'bg-emerald-500/10 text-emerald-300' : 'bg-rose-500/10 text-rose-300'
+                            sub.status === 'accepted' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
                           }`}>
                             {sub.status}
                           </span>
@@ -363,9 +363,9 @@ export const CodingWorkspacePage = () => {
                     </button>
                   ))
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-16 text-slate-500 text-center space-y-2">
-                    <RefreshCw className="h-8 w-8 text-slate-600 animate-pulse" />
-                    <span className="text-xs">No submission history found for this session.</span>
+                  <div className="flex flex-col items-center justify-center py-16 text-slate-400 text-center space-y-2">
+                    <RefreshCw className="h-8 w-8 text-slate-300" />
+                    <span className="text-xs font-medium">No submission history found for this session.</span>
                   </div>
                 )}
               </div>
@@ -374,11 +374,11 @@ export const CodingWorkspacePage = () => {
         </section>
 
         {/* Right Pane - Monaco Code Editor & Actions */}
-        <section className="glass-panel rounded-xl flex flex-col justify-between overflow-hidden" data-reveal>
+        <section className="border border-slate-200 bg-white rounded-xl flex flex-col justify-between overflow-hidden shadow-sm" data-reveal>
           <div className="flex-1 min-h-[350px]">
             <Editor
               height="100%"
-              theme="vs-dark"
+              theme="light"
               language={language === 'cpp' ? 'cpp' : language}
               value={code}
               onChange={(v) => setCode(v || '')}
@@ -393,22 +393,22 @@ export const CodingWorkspacePage = () => {
             />
           </div>
 
-          <footer className="flex items-center justify-between bg-slate-950 px-5 py-4 border-t border-white/10">
-            <span className="text-xs text-slate-500 font-mono">Boilerplate code active</span>
+          <footer className="flex items-center justify-between bg-slate-50 px-5 py-4 border-t border-slate-200">
+            <span className="text-xs text-slate-400 font-mono font-semibold">Boilerplate code active</span>
             <div className="flex gap-2">
               <Button
                 onClick={() => handleExecute(false)}
                 disabled={running}
                 variant="secondary"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 border border-slate-200 hover:bg-slate-100"
               >
-                {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4 text-cyan-300" />}
+                {running ? <Loader2 className="h-4 w-4 animate-spin text-slate-600" /> : <Play className="h-4 w-4 text-slate-600" />}
                 Run Code
               </Button>
               <Button
                 onClick={() => handleExecute(true)}
                 disabled={running}
-                className="flex items-center gap-2 bg-cyan-300 text-slate-950 hover:bg-cyan-200"
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-600/10"
               >
                 {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 Submit Solution
@@ -419,31 +419,31 @@ export const CodingWorkspacePage = () => {
       </div>
 
       {selectedHistory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm">
-          <div className="glass-panel w-full max-w-2xl rounded-2xl p-6 space-y-6 flex flex-col justify-between max-h-[90vh] border border-white/10">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-2xl rounded-2xl p-8 space-y-6 flex flex-col justify-between max-h-[90vh] border border-slate-200 bg-white shadow-2xl">
             <div className="space-y-4">
-              <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-4">
                 <div>
-                  <h3 className="text-lg font-bold">Submission Details</h3>
-                  <p className="text-xs text-slate-400 mt-1 capitalize">{selectedHistory.language} • {new Date(selectedHistory.createdAt || Date.now()).toLocaleString()}</p>
+                  <h3 className="text-lg font-bold text-slate-800">Submission Details</h3>
+                  <p className="text-xs text-slate-400 mt-1 capitalize font-semibold">{selectedHistory.language} • {new Date(selectedHistory.createdAt || Date.now()).toLocaleString()}</p>
                 </div>
                 <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${
-                  selectedHistory.status === 'accepted' ? 'bg-emerald-500/10 text-emerald-300' : 'bg-rose-500/10 text-rose-300'
+                  selectedHistory.status === 'accepted' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
                 }`}>
                   {selectedHistory.status}
                 </span>
               </div>
 
               <div>
-                <span className="block text-xs font-semibold text-slate-300 mb-2">Submitted Source Code:</span>
-                <pre className="font-mono bg-slate-950/80 p-4 rounded-xl border border-white/10 text-slate-300 text-xs overflow-auto max-h-[300px] whitespace-pre select-text">
+                <span className="block text-xs font-semibold text-slate-500 mb-2">Submitted Source Code:</span>
+                <pre className="font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-700 text-xs overflow-auto max-h-[300px] whitespace-pre select-text">
                   {selectedHistory.sourceCode || selectedHistory.code || '// No source code cached'}
                 </pre>
               </div>
             </div>
 
-            <div className="flex gap-3 pt-4 border-t border-white/10 mt-4">
-              <Button onClick={() => setSelectedHistory(null)} variant="secondary" className="flex-1">
+            <div className="flex gap-3 pt-4 border-t border-slate-100 mt-4">
+              <Button onClick={() => setSelectedHistory(null)} variant="secondary" className="flex-1 border border-slate-200 hover:bg-slate-50">
                 Close
               </Button>
               <Button
@@ -454,7 +454,7 @@ export const CodingWorkspacePage = () => {
                   }
                   setSelectedHistory(null);
                 }}
-                className="flex-1 bg-cyan-300 text-slate-950 hover:bg-cyan-200"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-600/10"
               >
                 Restore Code to Editor
               </Button>

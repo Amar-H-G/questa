@@ -56,14 +56,13 @@ export const ResetPassPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(239,68,68,0.12),transparent_45%)]" />
+    <div className="flex min-h-screen items-center justify-center bg-[#f8fafc] px-4 text-[#0f172a]">
       <div
         ref={cardRef}
-        className="glass-panel w-full max-w-md rounded-2xl p-8"
+        className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-100/80"
       >
         <div className="flex justify-center mb-6">
-          <div className="grid h-12 w-12 place-items-center rounded-xl bg-cyan-400 text-sm font-black text-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.35)]">
+          <div className="grid h-12 w-12 place-items-center rounded-xl bg-blue-50 text-sm font-bold text-blue-600">
             S
           </div>
         </div>
@@ -71,16 +70,16 @@ export const ResetPassPage = () => {
         {success ? (
           <div className="space-y-4 text-center animate-fade-in">
             <div className="flex justify-center">
-              <CheckCircle2 className="h-14 w-14 text-emerald-400" />
+              <CheckCircle2 className="h-14 w-14 text-emerald-500" />
             </div>
             <h2 className="text-2xl font-bold tracking-tight">Password Reset!</h2>
-            <p className="text-sm text-slate-300">
+            <p className="text-sm text-slate-500 font-medium">
               Your password has been reset successfully. You can now log in using your new password.
             </p>
             <div className="pt-4">
               <Link
                 to="/login"
-                className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-cyan-300 px-4 text-sm font-semibold text-slate-950 hover:bg-cyan-200 transition"
+                className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-600/10 transition text-sm"
               >
                 Sign In
               </Link>
@@ -90,20 +89,20 @@ export const ResetPassPage = () => {
           <div className="space-y-6">
             <div className="text-center">
               <h2 className="text-2xl font-bold tracking-tight">Set new password</h2>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-slate-500 font-medium">
                 Choose a strong password containing at least 8 characters.
               </p>
             </div>
 
             {error && (
-              <div className="rounded-lg border border-rose-300/20 bg-rose-400/10 p-3 text-sm text-rose-200">
+              <div className="rounded-lg border border-rose-100 bg-rose-50 p-3 text-sm text-rose-600 font-medium">
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-300 mb-2" htmlFor="password">
+                <label className="block text-sm font-semibold text-slate-700 mb-2" htmlFor="password">
                   New Password
                 </label>
                 <div className="relative">
@@ -115,14 +114,14 @@ export const ResetPassPage = () => {
                     disabled={!token}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="h-11 w-full rounded-lg border border-white/10 bg-slate-950/70 pl-10 pr-3 text-sm text-white outline-none focus:border-cyan-300 transition"
+                    className="h-11 w-full rounded-lg border border-slate-200 bg-slate-50/50 pl-10 pr-3 text-sm text-slate-800 outline-none focus:border-blue-600 transition"
                   />
-                  <Lock className="absolute left-3 top-3.5 h-4 w-4 text-slate-500" />
+                  <Lock className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm text-slate-300 mb-2" htmlFor="confirmPassword">
+                <label className="block text-sm font-semibold text-slate-700 mb-2" htmlFor="confirmPassword">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -134,16 +133,16 @@ export const ResetPassPage = () => {
                     disabled={!token}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="h-11 w-full rounded-lg border border-white/10 bg-slate-950/70 pl-10 pr-3 text-sm text-white outline-none focus:border-cyan-300 transition"
+                    className="h-11 w-full rounded-lg border border-slate-200 bg-slate-50/50 pl-10 pr-3 text-sm text-slate-800 outline-none focus:border-blue-600 transition"
                   />
-                  <KeyRound className="absolute left-3 top-3.5 h-4 w-4 text-slate-500" />
+                  <KeyRound className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
                 </div>
               </div>
 
               <button
                 type="submit"
                 disabled={loading || !token}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-cyan-300 px-4 text-sm font-semibold text-slate-950 hover:bg-cyan-200 disabled:opacity-50 transition"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-600/10 disabled:opacity-50 transition text-sm"
               >
                 {loading ? (
                   <>

@@ -86,27 +86,27 @@ export const UsersAdminPage = () => {
   };
 
   return (
-    <div className="page-shell space-y-6 text-white">
+    <div className="page-shell space-y-6 text-[#0f172a]">
       {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 glass-panel rounded-xl p-6">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-slate-200 bg-white rounded-xl p-6 shadow-sm">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Security & Governance Console</h1>
-          <p className="text-xs text-slate-400 mt-1">Audit platform activity, toggle candidate roles, and manage access clearances.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-800">Security & Governance Console</h1>
+          <p className="text-xs text-slate-500 mt-1 font-semibold">Audit platform activity, toggle candidate roles, and manage access clearances.</p>
         </div>
-        <Button onClick={handleRefresh} variant="secondary" className="flex items-center gap-2 self-start sm:self-auto">
+        <Button onClick={handleRefresh} variant="secondary" className="flex items-center gap-2 self-start sm:self-auto border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold">
           <RefreshCw className="h-3.5 w-3.5" />
           Refresh Console
         </Button>
       </header>
 
       {/* Tabs */}
-      <div className="flex border-b border-white/10 gap-2">
+      <div className="flex border-b border-slate-200 gap-2">
         <button
           onClick={() => handleTabChange('users')}
-          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition ${
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold border-b-2 transition ${
             activeTab === 'users'
-              ? 'border-cyan-400 text-cyan-300'
-              : 'border-transparent text-slate-400 hover:text-slate-200'
+              ? 'border-blue-600 text-blue-600 font-bold'
+              : 'border-transparent text-slate-500 hover:text-slate-700'
           }`}
         >
           <Users className="h-4 w-4" />
@@ -114,10 +114,10 @@ export const UsersAdminPage = () => {
         </button>
         <button
           onClick={() => handleTabChange('audit-logs')}
-          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition ${
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold border-b-2 transition ${
             activeTab === 'audit-logs'
-              ? 'border-cyan-400 text-cyan-300'
-              : 'border-transparent text-slate-400 hover:text-slate-200'
+              ? 'border-blue-600 text-blue-600 font-bold'
+              : 'border-transparent text-slate-500 hover:text-slate-700'
           }`}
         >
           <ClipboardList className="h-4 w-4" />
@@ -128,7 +128,7 @@ export const UsersAdminPage = () => {
       {activeTab === 'users' ? (
         <>
           {/* Search bar */}
-          <section className="glass-panel rounded-xl p-4">
+          <section className="border border-slate-200 bg-white rounded-xl p-4 shadow-sm">
             <div className="relative">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
               <input
@@ -139,7 +139,7 @@ export const UsersAdminPage = () => {
                   setSearchTerm(e.target.value);
                   setPage(1);
                 }}
-                className="w-full h-10 rounded-lg border border-white/10 bg-slate-900/50 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-300 transition"
+                className="w-full h-10 rounded-lg border border-slate-200 bg-slate-50/50 pl-10 pr-4 text-sm text-slate-800 outline-none focus:border-blue-600 transition placeholder:text-slate-400"
               />
             </div>
           </section>
@@ -153,10 +153,10 @@ export const UsersAdminPage = () => {
           ) : usersError ? (
             <InlineAlert>Failed to query users credentials. Verify administrator permissions.</InlineAlert>
           ) : (
-            <div className="glass-panel rounded-xl overflow-x-auto border border-white/5">
+            <div className="border border-slate-200 bg-white rounded-xl overflow-x-auto shadow-sm">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-900/40 border-b border-white/10 text-slate-400">
+                  <tr className="bg-slate-50 border-b border-slate-200 text-slate-500">
                     <th className="p-4 font-semibold uppercase">Candidate Details</th>
                     <th className="p-4 font-semibold uppercase">Role</th>
                     <th className="p-4 font-semibold uppercase">Status</th>
@@ -164,19 +164,19 @@ export const UsersAdminPage = () => {
                     <th className="p-4 font-semibold uppercase text-right">Administrative Commands</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-slate-200">
                   {users.length > 0 ? (
                     users.map((user) => (
-                      <tr key={user.id} className="hover:bg-white/[0.02] transition">
+                      <tr key={user.id} className="hover:bg-slate-50/50 transition">
                         <td className="p-4">
-                          <p className="font-semibold text-white">{user.name}</p>
-                          <p className="text-slate-400 mt-0.5">{user.email}</p>
+                          <p className="font-bold text-slate-700">{user.name}</p>
+                          <p className="text-slate-500 mt-0.5 font-medium">{user.email}</p>
                         </td>
                         <td className="p-4">
                           <select
                             value={user.role}
                             onChange={(e) => roleMutation.mutate({ id: user.id, role: e.target.value })}
-                            className="bg-slate-900 border border-white/10 text-slate-200 text-xs rounded p-1 outline-none focus:border-cyan-400"
+                            className="bg-white border border-slate-200 text-slate-700 text-xs rounded-lg p-1.5 outline-none focus:border-blue-600 font-bold"
                           >
                             <option value="student">STUDENT</option>
                             <option value="teacher">TEACHER</option>
@@ -185,16 +185,16 @@ export const UsersAdminPage = () => {
                           </select>
                         </td>
                         <td className="p-4">
-                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                            user.status === 'active' ? 'bg-emerald-500/20 text-emerald-300' :
-                            user.status === 'suspended' ? 'bg-amber-500/20 text-amber-300' :
-                            user.status === 'banned' ? 'bg-rose-500/20 text-rose-300' :
-                            'bg-blue-500/20 text-blue-300'
+                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+                            user.status === 'active' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
+                            user.status === 'suspended' ? 'bg-amber-50 text-amber-600 border-amber-200' :
+                            user.status === 'banned' ? 'bg-rose-50 text-rose-600 border-rose-200' :
+                            'bg-blue-50 text-blue-600 border-blue-200'
                           }`}>
                             {user.status}
                           </span>
                         </td>
-                        <td className="p-4 text-slate-400">
+                        <td className="p-4 text-slate-500 font-medium">
                           {new Date(user.createdAt).toLocaleDateString()}
                         </td>
                         <td className="p-4 text-right space-x-2">
@@ -204,7 +204,7 @@ export const UsersAdminPage = () => {
                                 onClick={() => suspendMutation.mutate(user.id)}
                                 disabled={suspendMutation.isPending}
                                 variant="secondary"
-                                className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/20 h-8 text-[11px] px-2.5"
+                                className="bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-250 h-8 text-[11px] px-2.5 font-bold"
                               >
                                 <Shield className="h-3 w-3 mr-1" />
                                 Suspend
@@ -212,7 +212,7 @@ export const UsersAdminPage = () => {
                               <Button
                                 onClick={() => banMutation.mutate(user.id)}
                                 disabled={banMutation.isPending}
-                                className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border-rose-500/20 h-8 text-[11px] px-2.5"
+                                className="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-250 h-8 text-[11px] px-2.5 font-bold"
                               >
                                 <UserX className="h-3 w-3 mr-1" />
                                 Ban
@@ -222,7 +222,7 @@ export const UsersAdminPage = () => {
                             <Button
                               onClick={() => activateMutation.mutate(user.id)}
                               disabled={activateMutation.isPending}
-                              className="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/20 h-8 text-[11px] px-2.5"
+                              className="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-250 h-8 text-[11px] px-2.5 font-bold"
                             >
                               <UserCheck className="h-3 w-3 mr-1" />
                               Activate
@@ -233,7 +233,7 @@ export const UsersAdminPage = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="5" className="p-8 text-center text-slate-500">
+                      <td colSpan="5" className="p-8 text-center text-slate-500 font-semibold">
                         No candidates matched the current queries.
                       </td>
                     </tr>
@@ -254,10 +254,10 @@ export const UsersAdminPage = () => {
           ) : auditError ? (
             <InlineAlert>Failed to fetch platform security logs.</InlineAlert>
           ) : (
-            <div className="glass-panel rounded-xl overflow-x-auto border border-white/5">
+            <div className="border border-slate-200 bg-white rounded-xl overflow-x-auto shadow-sm">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-900/40 border-b border-white/10 text-slate-400">
+                  <tr className="bg-slate-50 border-b border-slate-200 text-slate-500">
                     <th className="p-4 font-semibold uppercase">Action Event</th>
                     <th className="p-4 font-semibold uppercase">Operator</th>
                     <th className="p-4 font-semibold uppercase">IP Address</th>
@@ -265,33 +265,35 @@ export const UsersAdminPage = () => {
                     <th className="p-4 font-semibold uppercase">Timestamp</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-slate-200">
                   {audits.length > 0 ? (
                     audits.map((log) => (
-                      <tr key={log._id} className="hover:bg-white/[0.02] transition">
+                      <tr key={log._id} className="hover:bg-slate-50/50 transition">
                         <td className="p-4">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                            log.action.startsWith('user') ? 'bg-cyan-500/20 text-cyan-300' : 'bg-slate-500/20 text-slate-300'
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${
+                            log.action.startsWith('user') ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-slate-50 text-slate-600 border-slate-250'
                           }`}>
                             {log.action}
                           </span>
                         </td>
                         <td className="p-4">
-                          <p className="font-semibold text-white">{log.user?.name || 'System / Guest'}</p>
-                          {log.user?.email && <p className="text-slate-400 mt-0.5">{log.user?.email}</p>}
+                          <p className="font-bold text-slate-700">{log.user?.name || 'System / Guest'}</p>
+                          {log.user?.email && <p className="text-slate-500 mt-0.5 font-medium">{log.user?.email}</p>}
                         </td>
-                        <td className="p-4 text-slate-400">{log.ip || '127.0.0.1'}</td>
-                        <td className="p-4 text-slate-300 font-mono text-[10px]">
-                          {JSON.stringify(log.details || {})}
+                        <td className="p-4 text-slate-500 font-medium">{log.ip || '127.0.0.1'}</td>
+                        <td className="p-4">
+                          <span className="text-slate-600 font-mono text-[10px] bg-slate-50 px-2 py-1.5 rounded-lg border border-slate-100 block max-w-md overflow-hidden text-ellipsis whitespace-nowrap">
+                            {JSON.stringify(log.details || {})}
+                          </span>
                         </td>
-                        <td className="p-4 text-slate-400">
+                        <td className="p-4 text-slate-500 font-medium">
                           {new Date(log.createdAt).toLocaleString()}
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="5" className="p-8 text-center text-slate-500">
+                      <td colSpan="5" className="p-8 text-center text-slate-500 font-semibold">
                         No security audit trails found.
                       </td>
                     </tr>
@@ -305,14 +307,14 @@ export const UsersAdminPage = () => {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <footer className="flex items-center justify-between glass-panel rounded-xl p-4">
-          <span className="text-slate-400 text-xs">Showing Page {page} of {totalPages} ({currentMeta.total} entries)</span>
+        <footer className="flex items-center justify-between border border-slate-200 bg-white rounded-xl p-4 shadow-sm">
+          <span className="text-slate-500 text-xs font-semibold">Showing Page {page} of {totalPages} ({currentMeta.total} entries)</span>
           <div className="flex gap-2">
             <Button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
               variant="secondary"
-              className="h-8 px-3"
+              className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold"
             >
               <ArrowLeft className="h-3.5 w-3.5 mr-1" />
               Prev
@@ -321,7 +323,7 @@ export const UsersAdminPage = () => {
               onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
               disabled={page === totalPages}
               variant="secondary"
-              className="h-8 px-3"
+              className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold"
             >
               Next
               <ArrowRight className="h-3.5 w-3.5 ml-1" />

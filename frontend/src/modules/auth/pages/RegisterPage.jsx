@@ -17,7 +17,7 @@ export const RegisterPage = () => {
     setSubmitting(true);
     try {
       await register(form);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to register');
     } finally {

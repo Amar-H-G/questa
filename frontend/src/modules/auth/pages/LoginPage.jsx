@@ -18,7 +18,7 @@ export const LoginPage = () => {
     setSubmitting(true);
     try {
       await login(form);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to sign in');
     } finally {

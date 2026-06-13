@@ -16,9 +16,11 @@ import { CreateQuizPage } from '../modules/quiz/pages/CreateQuizPage';
 import { QuizListPage } from '../modules/quiz/pages/QuizListPage';
 import { QuizAttemptPage } from '../modules/quiz/pages/QuizAttemptPage';
 import { UsersAdminPage } from '../modules/admin/pages/UsersAdminPage';
+import { LandingPage } from '../modules/dashboard/pages/LandingPage';
 
 export const App = () => (
   <Routes>
+    <Route path="/" element={<LandingPage />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<RegisterPage />} />
     <Route path="/verify-email" element={<VerifyEmailPage />} />
@@ -26,7 +28,7 @@ export const App = () => (
     <Route path="/reset-password" element={<ResetPassPage />} />
     <Route element={<ProtectedRoute />}>
       <Route element={<AppLayout />}>
-        <Route index element={<DashboardPage />} />
+        <Route path="dashboard" element={<DashboardPage />} />
         <Route path="quizzes" element={<QuizListPage />} />
         <Route path="quizzes/new" element={<CreateQuizPage />} />
         <Route path="quizzes/:id/attempt" element={<QuizAttemptPage />} />

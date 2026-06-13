@@ -6,7 +6,7 @@ import { apiClient } from '../../services/api/client';
 import { useAuthStore } from '../../store/authStore';
 
 const baseNavigation = [
-  { to: '/', label: 'Command', icon: Gauge },
+  { to: '/dashboard', label: 'Command', icon: Gauge },
   { to: '/quizzes', label: 'Quizzes', icon: Plus },
   { to: '/coding', label: 'Coding', icon: Code2 },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
@@ -137,7 +137,7 @@ export const AppLayout = () => {
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === '/'}
+              end={item.to === '/dashboard'}
               className={({ isActive }) =>
                 `flex h-11 items-center gap-3 rounded-lg px-3 text-sm transition ${
                   isActive

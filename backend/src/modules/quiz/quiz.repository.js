@@ -15,6 +15,7 @@ const replaceQuestions = async (quizId, questions) => {
   return questions.length ? Question.insertMany(questions) : [];
 };
 const findQuestionsWithAnswers = (quizId) => Question.find({ quiz: quizId }).select('+options.isCorrect').sort('order');
+const findQuestionsForQuiz = (quizId) => Question.find({ quiz: quizId }).sort('order');
 const createAttempt = (payload) => QuizAttempt.create(payload);
 
 module.exports = {
@@ -27,5 +28,6 @@ module.exports = {
   insertQuestions,
   replaceQuestions,
   findQuestionsWithAnswers,
+  findQuestionsForQuiz,
   createAttempt,
 };

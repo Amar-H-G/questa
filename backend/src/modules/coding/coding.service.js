@@ -37,8 +37,40 @@ const submit = async (problemId, payload, user) => {
     judgeProvider: 'judge0',
   });
 
-  const execution = await executionService.queueSubmission(submission);
+  const appEmitter = require('../../utils/events');
+  appEmitter.emit('submission.created', { submission, user, problem });
+
+  const execution = await executionService.queueSubmission(submission, problem);
   return { submission, execution };
 };
 
-module.exports = { createProblem, listProblems, submit };
+const getProblem = async (id, user) => {
+  const problem = await repository.findProblemById(id);
+  if (!problem) throw new ApiError(404, 'Coding problem not found');
+
+  if (problem.status !== 'published' && user.role !== 'admin' && user.role !== 'teacher') {
+    throw new ApiError(403, 'You do not have access to this problem');
+  }
+
+  const problemObj = problem.toJSON();
+
+  // If user is candidate (student/recruiter), hide hidden test cases
+  if (user.role === 'student' || user.role === 'recruiter') {
+    problemObj.testCases = problemObj.testCases.filter((tc) => !tc.isHidden);
+  }
+
+  return problemObj;
+};
+
+const getSubmission = async (id, user) => {
+  const submission = await repository.findSubmissionById(id);
+  if (!submission) throw new ApiError(404, 'Submission not found');
+
+  if (submission.user.toString() !== user.id && user.role !== 'admin' && user.role !== 'teacher') {
+    throw new ApiError(403, 'You do not have permission to view this submission');
+  }
+
+  return submission;
+};
+
+module.exports = { createProblem, listProblems, submit, getProblem, getSubmission };

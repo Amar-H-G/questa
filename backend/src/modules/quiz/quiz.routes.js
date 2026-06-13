@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.use(authenticate);
 router.get('/', controller.listQuizzes);
+router.get('/:id', validate(schemas.idParamSchema), controller.getQuiz);
 router.post('/', authorize(ROLES.ADMIN, ROLES.TEACHER), validate(schemas.createQuizSchema), controller.createQuiz);
 router.patch('/:id', authorize(ROLES.ADMIN, ROLES.TEACHER), validate(schemas.updateQuizSchema), controller.updateQuiz);
 router.post('/:id/publish', authorize(ROLES.ADMIN, ROLES.TEACHER), validate(schemas.idParamSchema), controller.publishQuiz);

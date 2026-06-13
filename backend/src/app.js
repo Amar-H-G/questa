@@ -12,6 +12,9 @@ const env = require('./config/env');
 const routes = require('./routes');
 const { notFound, errorHandler } = require('./middlewares/error.middleware');
 
+// Boot decoupled event subscribers
+require('./modules/notifications/notification.service');
+
 const app = express();
 
 app.set('trust proxy', 1);

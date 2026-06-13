@@ -9,6 +9,12 @@ const findRefreshToken = (tokenHash) => RefreshToken.findOne({ tokenHash, revoke
 const revokeRefreshToken = (tokenHash) =>
   RefreshToken.findOneAndUpdate({ tokenHash }, { revokedAt: new Date() }, { new: true });
 
+const findUserByVerificationToken = (token) =>
+  User.findOne({ verificationToken: token }).select('+verificationToken +verificationTokenExpiresAt');
+
+const findUserByResetToken = (token) =>
+  User.findOne({ resetPasswordToken: token }).select('+resetPasswordToken +resetPasswordTokenExpiresAt');
+
 module.exports = {
   findUserByEmailWithPassword,
   findUserById,
@@ -16,4 +22,6 @@ module.exports = {
   createRefreshToken,
   findRefreshToken,
   revokeRefreshToken,
+  findUserByVerificationToken,
+  findUserByResetToken,
 };

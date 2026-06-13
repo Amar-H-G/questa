@@ -10,4 +10,6 @@ const unreadCount = (userId) => Notification.countDocuments({ user: userId, read
 const markRead = (id, userId) =>
   Notification.findOneAndUpdate({ _id: id, user: userId }, { readAt: new Date() }, { new: true });
 
-module.exports = { listForUser, countForUser, unreadCount, markRead };
+const create = (payload) => Notification.create(payload);
+
+module.exports = { listForUser, countForUser, unreadCount, markRead, create };

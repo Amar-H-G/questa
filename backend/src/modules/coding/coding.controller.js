@@ -16,4 +16,14 @@ const submit = asyncHandler(async (req, res) => {
   res.status(202).json({ success: true, data: submission });
 });
 
-module.exports = { createProblem, listProblems, submit };
+const getProblem = asyncHandler(async (req, res) => {
+  const problem = await service.getProblem(req.params.id, req.user);
+  res.json({ success: true, data: problem });
+});
+
+const getSubmission = asyncHandler(async (req, res) => {
+  const submission = await service.getSubmission(req.params.id, req.user);
+  res.json({ success: true, data: submission });
+});
+
+module.exports = { createProblem, listProblems, submit, getProblem, getSubmission };

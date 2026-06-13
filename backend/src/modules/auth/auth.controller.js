@@ -30,8 +30,29 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   res.json({ success: true, data: result });
 });
 
-const verifyEmail = asyncHandler(async (_req, res) => {
-  res.json({ success: true, data: { message: 'Email verification endpoint ready for provider integration' } });
+const verifyEmail = asyncHandler(async (req, res) => {
+  const result = await service.verifyEmail(req.validated.body.token);
+  res.json({ success: true, data: result });
 });
 
-module.exports = { register, login, refresh, logout, me, requestPasswordReset, verifyEmail };
+const resetPassword = asyncHandler(async (req, res) => {
+  const result = await service.resetPassword(req.validated.body.token, req.validated.body.password);
+  res.json({ success: true, data: result });
+});
+
+const resendVerification = asyncHandler(async (req, res) => {
+  const result = await service.resendVerification(req.validated.body.email);
+  res.json({ success: true, data: result });
+});
+
+module.exports = {
+  register,
+  login,
+  refresh,
+  logout,
+  me,
+  requestPasswordReset,
+  verifyEmail,
+  resetPassword,
+  resendVerification,
+};

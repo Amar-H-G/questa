@@ -29,6 +29,9 @@ const createQuiz = async (payload, user) => {
     await repository.insertQuestions(mapQuestions(quiz.id, payload.questions));
   }
 
+  const appEmitter = require('../../utils/events');
+  appEmitter.emit('quiz.created', { quiz, user });
+
   return quiz;
 };
 
@@ -97,7 +100,7 @@ const submitAttempt = async (quizId, answers, user) => {
     return { question: question.id, selectedOptions: selected, isCorrect, pointsAwarded };
   });
 
-  return repository.createAttempt({
+  const attempt = await repository.createAttempt({
     quiz: quizId,
     user: user.id,
     answers: evaluated,
@@ -106,6 +109,30 @@ const submitAttempt = async (quizId, answers, user) => {
     percentage: maxScore ? Math.round((score / maxScore) * 100) : 0,
     submittedAt: new Date(),
   });
+
+  const appEmitter = require('../../utils/events');
+  appEmitter.emit('quiz.completed', { attempt, user, quiz });
+
+  return attempt;
 };
 
-module.exports = { createQuiz, listQuizzes, updateQuiz, publishQuiz, removeQuiz, submitAttempt };
+const getQuiz = async (quizId, user) => {
+  const quiz = await repository.findQuizById(quizId);
+  if (!quiz) throw new ApiError(404, 'Quiz not found');
+
+  const isTeacherOrAdmin = user.role === 'admin' || user.role === 'teacher' || quiz.owner.toString() === user.id;
+
+  let questions;
+  if (isTeacherOrAdmin) {
+    questions = await repository.findQuestionsWithAnswers(quizId);
+  } else {
+    if (quiz.status !== 'published') {
+      throw new ApiError(403, 'Quiz is not available');
+    }
+    questions = await repository.findQuestionsForQuiz(quizId);
+  }
+
+  return { quiz, questions };
+};
+
+module.exports = { createQuiz, listQuizzes, updateQuiz, publishQuiz, removeQuiz, submitAttempt, getQuiz };

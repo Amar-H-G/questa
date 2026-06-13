@@ -1,5 +1,6 @@
 import { Code2, Cpu, SquareTerminal } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { InlineAlert } from '../../../components/ui/InlineAlert';
 import { SkeletonBlock } from '../../../components/ui/SkeletonBlock';
@@ -51,12 +52,20 @@ export const CodingPage = () => {
                   <h2 className="text-lg font-semibold">{problem.title}</h2>
                   <p className="mt-1 text-sm capitalize text-slate-400">{problem.difficulty}</p>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {problem.supportedLanguages?.map((language) => (
-                    <span key={language} className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-300">
-                      {language}
-                    </span>
-                  ))}
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-wrap gap-2">
+                    {problem.supportedLanguages?.map((language) => (
+                      <span key={language} className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-300">
+                        {language}
+                      </span>
+                    ))}
+                  </div>
+                  <Link
+                    to={`/coding/${problem.id}`}
+                    className="inline-flex h-9 items-center justify-center rounded-lg bg-cyan-300 px-4 text-xs font-semibold text-slate-950 hover:bg-cyan-200 transition"
+                  >
+                    Solve Challenge
+                  </Link>
                 </div>
               </div>
             </article>

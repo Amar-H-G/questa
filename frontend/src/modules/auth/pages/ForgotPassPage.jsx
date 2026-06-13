@@ -1,0 +1,133 @@
+import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Mail, CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
+import { apiClient } from '../../../services/api/client';
+import gsap from 'gsap';
+
+export const ForgotPassPage = () => {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    gsap.from(cardRef.current, {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+    });
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      await apiClient.post('/auth/password-reset', { email });
+      setSuccess(true);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to send password reset email.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(244,114,182,0.12),transparent_45%)]" />
+      <div
+        ref={cardRef}
+        className="glass-panel w-full max-w-md rounded-2xl p-8"
+      >
+        <div className="flex justify-center mb-6">
+          <div className="grid h-12 w-12 place-items-center rounded-xl bg-cyan-400 text-sm font-black text-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.35)]">
+            S
+          </div>
+        </div>
+
+        {success ? (
+          <div className="space-y-4 text-center animate-fade-in">
+            <div className="flex justify-center">
+              <CheckCircle2 className="h-14 w-14 text-emerald-400" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">Email Sent!</h2>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              If an account is associated with <strong>{email}</strong>, you will receive an email containing a link to reset your password.
+            </p>
+            <div className="pt-4">
+              <Link
+                to="/login"
+                className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-cyan-300 px-4 text-sm font-semibold text-slate-950 hover:bg-cyan-200 transition"
+              >
+                Back to Sign In
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold tracking-tight">Reset your password</h2>
+              <p className="mt-2 text-sm text-slate-400">
+                Enter your email address and we'll send you a password reset link.
+              </p>
+            </div>
+
+            {error && (
+              <div className="rounded-lg border border-rose-300/20 bg-rose-400/10 p-3 text-sm text-rose-200">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm text-slate-300 mb-2" htmlFor="email">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    className="h-11 w-full rounded-lg border border-white/10 bg-slate-950/70 pl-10 pr-3 text-sm text-white outline-none focus:border-cyan-300 transition"
+                  />
+                  <Mail className="absolute left-3 top-3.5 h-4 w-4 text-slate-500" />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-cyan-300 px-4 text-sm font-semibold text-slate-950 hover:bg-cyan-200 disabled:opacity-50 transition"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Sending Link...
+                  </>
+                ) : (
+                  'Send Reset Link'
+                )}
+              </button>
+            </form>
+
+            <div className="text-center">
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition"
+              >
+                <ArrowLeft className="h-3 w-3" />
+                Back to Sign In
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

@@ -31,14 +31,29 @@ const register = async (payload, req) => {
   const existing = await repository.findUserByEmailWithPassword(payload.email);
   if (existing) throw new ApiError(409, 'An account already exists for this email');
 
+  const crypto = require('crypto');
+  const { sendVerificationEmail } = require('../../utils/email');
+  const verificationToken = crypto.randomBytes(32).toString('hex');
+
   const user = await repository.createUser({
     name: payload.name,
     email: payload.email,
     role: payload.role || ROLES.STUDENT,
     passwordHash: 'pending',
+    verificationToken,
+    verificationTokenExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
   });
   await user.setPassword(payload.password);
   await user.save();
+
+  const appEmitter = require('../../utils/events');
+  appEmitter.emit('user.registered', { user });
+
+  try {
+    await sendVerificationEmail(user.email, user.name, verificationToken);
+  } catch (err) {
+    console.error('Failed to send verification email during registration:', err);
+  }
 
   return buildAuthResponse(user, req);
 };
@@ -78,12 +93,81 @@ const logout = (refreshToken) => repository.revokeRefreshToken(hashToken(refresh
 
 const requestPasswordReset = async (email) => {
   const user = await repository.findUserByEmailWithPassword(email);
-  if (!user) return { delivered: true };
+  if (!user) {
+    // Return success to prevent email enumeration attacks
+    return { success: true, message: 'If that email exists, we sent a password reset link.' };
+  }
 
-  return {
-    delivered: true,
-    message: 'Password reset delivery is ready for email provider integration',
-  };
+  const crypto = require('crypto');
+  const { sendPasswordResetEmail } = require('../../utils/email');
+
+  const token = crypto.randomBytes(32).toString('hex');
+  user.resetPasswordToken = token;
+  user.resetPasswordTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+  await user.save();
+
+  await sendPasswordResetEmail(user.email, user.name, token);
+
+  return { success: true, message: 'Password reset email sent.' };
 };
 
-module.exports = { register, login, refresh, logout, requestPasswordReset };
+const resetPassword = async (token, newPassword) => {
+  const user = await repository.findUserByResetToken(token);
+  if (!user || !user.resetPasswordTokenExpiresAt || user.resetPasswordTokenExpiresAt < new Date()) {
+    throw new ApiError(400, 'Password reset token is invalid or has expired');
+  }
+
+  await user.setPassword(newPassword);
+  user.resetPasswordToken = undefined;
+  user.resetPasswordTokenExpiresAt = undefined;
+  await user.save();
+
+  return { success: true, message: 'Password has been reset successfully.' };
+};
+
+const verifyEmail = async (token) => {
+  const user = await repository.findUserByVerificationToken(token);
+  if (!user || !user.verificationTokenExpiresAt || user.verificationTokenExpiresAt < new Date()) {
+    throw new ApiError(400, 'Email verification token is invalid or has expired');
+  }
+
+  user.emailVerifiedAt = new Date();
+  user.verificationToken = undefined;
+  user.verificationTokenExpiresAt = undefined;
+  await user.save();
+
+  return { success: true, message: 'Email verified successfully.' };
+};
+
+const resendVerification = async (email) => {
+  const user = await repository.findUserByEmailWithPassword(email);
+  if (!user) {
+    throw new ApiError(404, 'User not found');
+  }
+  if (user.emailVerifiedAt) {
+    throw new ApiError(400, 'Email is already verified');
+  }
+
+  const crypto = require('crypto');
+  const { sendVerificationEmail } = require('../../utils/email');
+
+  const token = crypto.randomBytes(32).toString('hex');
+  user.verificationToken = token;
+  user.verificationTokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+  await user.save();
+
+  await sendVerificationEmail(user.email, user.name, token);
+
+  return { success: true, message: 'Verification email resent.' };
+};
+
+module.exports = {
+  register,
+  login,
+  refresh,
+  logout,
+  requestPasswordReset,
+  resetPassword,
+  verifyEmail,
+  resendVerification,
+};

@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: Object.values(ROLES), default: ROLES.STUDENT, index: true },
     status: { type: String, enum: ['active', 'invited', 'suspended'], default: 'active', index: true },
     emailVerifiedAt: { type: Date },
+    verificationToken: { type: String, select: false },
+    verificationTokenExpiresAt: { type: Date, select: false },
+    resetPasswordToken: { type: String, select: false },
+    resetPasswordTokenExpiresAt: { type: Date, select: false },
     profile: {
       headline: String,
       company: String,

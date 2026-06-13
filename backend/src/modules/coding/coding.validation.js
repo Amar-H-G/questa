@@ -37,4 +37,8 @@ const submitSchema = z.object({
   }),
 });
 
-module.exports = { createProblemSchema, listProblemsSchema, submitSchema };
+const idParamSchema = z.object({
+  params: z.object({ id: objectIdSchema }),
+});
+
+module.exports = { createProblemSchema, listProblemsSchema, submitSchema, idParamSchema };

@@ -60,6 +60,14 @@ export const QuizListPage = () => {
                       Publish
                     </Button>
                   ) : null}
+                  {quiz.status === 'published' ? (
+                    <Link
+                      className="inline-flex h-8 items-center justify-center rounded-lg bg-cyan-300 px-3 text-xs font-semibold text-slate-950 hover:bg-cyan-200 transition"
+                      to={`/quizzes/${quiz.id}/attempt`}
+                    >
+                      Attempt
+                    </Link>
+                  ) : null}
                 </div>
               </div>
             </article>

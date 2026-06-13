@@ -12,6 +12,8 @@ router.post('/refresh-token', validate(schemas.refreshSchema), controller.refres
 router.post('/logout', validate(schemas.logoutSchema), controller.logout);
 router.get('/me', authenticate, controller.me);
 router.post('/password-reset', validate(schemas.passwordResetRequestSchema), controller.requestPasswordReset);
-router.post('/verify-email', controller.verifyEmail);
+router.post('/verify-email', validate(schemas.verifyEmailSchema), controller.verifyEmail);
+router.post('/reset-password', validate(schemas.resetPasswordSchema), controller.resetPassword);
+router.post('/resend-verification', validate(schemas.resendVerificationSchema), controller.resendVerification);
 
 module.exports = router;

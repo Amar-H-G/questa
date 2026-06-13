@@ -41,6 +41,11 @@ export const LoginPage = () => {
         <form onSubmit={submit} className="space-y-4">
           <TextField label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           <TextField label="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          <div className="flex justify-end">
+            <Link className="text-xs text-cyan-200 hover:underline" to="/forgot-password">
+              Forgot password?
+            </Link>
+          </div>
           {error ? <p className="text-sm text-rose-300">{error}</p> : null}
           <Button className="w-full" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Signing in...' : 'Sign in'}

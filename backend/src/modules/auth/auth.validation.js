@@ -31,4 +31,32 @@ const passwordResetRequestSchema = z.object({
   }),
 });
 
-module.exports = { registerSchema, loginSchema, refreshSchema, logoutSchema, passwordResetRequestSchema };
+const verifyEmailSchema = z.object({
+  body: z.object({
+    token: z.string().min(10),
+  }),
+});
+
+const resendVerificationSchema = z.object({
+  body: z.object({
+    email: z.string().email(),
+  }),
+});
+
+const resetPasswordSchema = z.object({
+  body: z.object({
+    token: z.string().min(10),
+    password: z.string().min(8).max(128),
+  }),
+});
+
+module.exports = {
+  registerSchema,
+  loginSchema,
+  refreshSchema,
+  logoutSchema,
+  passwordResetRequestSchema,
+  verifyEmailSchema,
+  resendVerificationSchema,
+  resetPasswordSchema,
+};

@@ -5,7 +5,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { apiClient } from '../../services/api/client';
 import { useAuthStore } from '../../store/authStore';
 
-const navigation = [
+const baseNavigation = [
   { to: '/', label: 'Command', icon: Gauge },
   { to: '/quizzes', label: 'Quizzes', icon: Plus },
   { to: '/coding', label: 'Coding', icon: Code2 },
@@ -19,6 +19,10 @@ export const AppLayout = () => {
   const queryClient = useQueryClient();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
+
+  const navigation = user?.role === 'admin'
+    ? [...baseNavigation, { to: '/admin/users', label: 'Users', icon: UserRound }]
+    : baseNavigation;
 
   const { data: notifications } = useQuery({
     queryKey: ['notifications'],

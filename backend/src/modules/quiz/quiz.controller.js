@@ -27,7 +27,7 @@ const removeQuiz = asyncHandler(async (req, res) => {
 });
 
 const submitAttempt = asyncHandler(async (req, res) => {
-  const attempt = await service.submitAttempt(req.params.id, req.validated.body.answers, req.user);
+  const attempt = await service.submitAttempt(req.params.id, req.validated.body, req.user);
   res.status(201).json({ success: true, data: attempt });
 });
 

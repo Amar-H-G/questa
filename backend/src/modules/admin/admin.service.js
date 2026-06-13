@@ -25,10 +25,21 @@ const banUser = async (id) => {
   return user;
 };
 
+const AuditLog = require('../../models/audit-log.model');
+
 const changeUserRole = async (id, role) => {
   const user = await repository.updateUserRole(id, role);
   if (!user) throw new Error('User not found');
   return user;
 };
 
-module.exports = { listUsers, suspendUser, activateUser, banUser, changeUserRole };
+const getAuditLogs = async (query) => {
+  const { page, limit, skip } = getPagination(query);
+  const [items, total] = await Promise.all([
+    AuditLog.find({}).populate('user', 'name email').sort('-createdAt').skip(skip).limit(limit),
+    AuditLog.countDocuments(),
+  ]);
+  return { items, meta: { page, limit, total } };
+};
+
+module.exports = { listUsers, suspendUser, activateUser, banUser, changeUserRole, getAuditLogs };

@@ -70,6 +70,11 @@ const publishQuiz = async (id, user) => {
   if (!quiz) throw new ApiError(404, 'Quiz not found');
   if (quiz.owner.toString() !== user.id && user.role !== 'admin') throw new ApiError(403, 'Cannot publish this quiz');
 
+  const questions = await repository.findQuestionsForQuiz(id);
+  if (!questions || questions.length === 0) {
+    throw new ApiError(400, 'Cannot publish an empty quiz. Please add at least one question first.');
+  }
+
   return repository.updateQuiz(id, { status: 'published', publishedAt: new Date() });
 };
 
@@ -80,7 +85,8 @@ const removeQuiz = async (id, user) => {
   await repository.deleteQuiz(id);
 };
 
-const submitAttempt = async (quizId, answers, user) => {
+const submitAttempt = async (quizId, payload, user) => {
+  const { answers = [] } = payload;
   const quiz = await repository.findQuizById(quizId);
   if (!quiz || quiz.status !== 'published') throw new ApiError(404, 'Published quiz not found');
 

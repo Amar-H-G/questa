@@ -5,7 +5,10 @@ const ApiError = require('../utils/api-error');
 
 const authenticate = async (req, _res, next) => {
   const header = req.headers.authorization;
-  const token = header && header.startsWith('Bearer ') ? header.slice(7) : null;
+  let token = header && header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token && req.query.token) {
+    token = req.query.token;
+  }
 
   if (!token) return next(new ApiError(401, 'Authentication required'));
 

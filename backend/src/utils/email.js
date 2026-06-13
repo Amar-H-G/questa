@@ -1,12 +1,29 @@
 const nodemailer = require('nodemailer');
 const env = require('../config/env');
 
+const host = process.env.SMTP_HOST;
+const port = process.env.SMTP_PORT || 587;
+const user = process.env.SMTP_USER;
+const pass = process.env.SMTP_PASS;
+
+if (host && user && pass) {
+  const testTransporter = nodemailer.createTransport({
+    host,
+    port: Number(port),
+    secure: Number(port) === 465,
+    auth: { user, pass },
+  });
+  testTransporter.verify((error) => {
+    if (error) {
+      console.error('SMTP Production Validation Failure on boot:', error.message);
+    } else {
+      console.log('SMTP production server connection verified successfully.');
+    }
+  });
+}
+
 // Support optional SMTP credentials, fallback to console logger in development
 const getTransporter = async () => {
-  const host = process.env.SMTP_HOST;
-  const port = process.env.SMTP_PORT || 587;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
 
   if (host && user && pass) {
     return nodemailer.createTransport({

@@ -13,4 +13,10 @@ const exportCsv = asyncHandler(async (req, res) => {
   res.send(csv);
 });
 
-module.exports = { overview, exportCsv };
+const exportPdf = asyncHandler(async (req, res) => {
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=candidates-report.pdf');
+  await service.exportAttemptsPdf(req.query, res);
+});
+
+module.exports = { overview, exportCsv, exportPdf };

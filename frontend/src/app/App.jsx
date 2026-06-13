@@ -15,6 +15,7 @@ import { ProfilePage } from '../modules/profile/pages/ProfilePage';
 import { CreateQuizPage } from '../modules/quiz/pages/CreateQuizPage';
 import { QuizListPage } from '../modules/quiz/pages/QuizListPage';
 import { QuizAttemptPage } from '../modules/quiz/pages/QuizAttemptPage';
+import { UsersAdminPage } from '../modules/admin/pages/UsersAdminPage';
 
 export const App = () => (
   <Routes>
@@ -34,6 +35,7 @@ export const App = () => (
         <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="leaderboard" element={<LeaderboardPage />} />
         <Route path="profile" element={<ProfilePage />} />
+        <Route path="admin/users" element={<UsersAdminPage />} />
       </Route>
     </Route>
     <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,16 +1,41 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Activity, BarChart3, Code2, Users, Download, FileSpreadsheet, FileText } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Activity, BarChart3, Code2, Users, Download, FileSpreadsheet, FileText, ShieldAlert } from 'lucide-react';
 import { InlineAlert } from '../../../components/ui/InlineAlert';
 import { MetricCard } from '../../../components/ui/MetricCard';
 import { SkeletonBlock } from '../../../components/ui/SkeletonBlock';
 import { apiClient } from '../../../services/api/client';
 import { Button } from '../../../components/ui/Button';
+import { useAuthStore } from '../../../store/authStore';
 
 export const AnalyticsPage = () => {
+  const { user } = useAuthStore();
+  const isAuthorized = ['admin', 'teacher', 'recruiter'].includes(user?.role);
+
   const [selectedQuiz, setSelectedQuiz] = useState('');
   const [cheatedOnly, setCheatedOnly] = useState('');
   const [minScore, setMinScore] = useState('');
+
+  if (!isAuthorized) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center text-center px-4">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-500 mb-5 shadow-sm">
+          <ShieldAlert className="h-8 w-8" />
+        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-800">Restricted Access</h1>
+        <p className="mt-2 max-w-sm text-sm text-slate-500 font-medium leading-relaxed">
+          The performance analytics dashboard contains recruiter insights, test standings, and telemetry reports. It is restricted to administrators, teachers, and recruiters.
+        </p>
+        <Link
+          to="/dashboard"
+          className="mt-6 inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-5 text-sm font-bold text-white hover:bg-blue-700 transition shadow-md shadow-blue-600/10"
+        >
+          Return to Dashboard
+        </Link>
+      </div>
+    );
+  }
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['analytics-overview'],
@@ -22,7 +47,7 @@ export const AnalyticsPage = () => {
     queryFn: async () => (await apiClient.get('/quizzes')).data.data,
   });
 
-  const quizzes = quizzesData || [];
+  const quizzes = quizzesData?.items || [];
   const overview = data || { users: 0, quizzes: 0, attempts: 0, submissions: 0 };
 
   const handleExport = (type) => {
@@ -125,20 +150,20 @@ export const AnalyticsPage = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3 pt-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3">
               <Button
                 onClick={() => handleExport('csv')}
-                className="flex items-center justify-center gap-2 text-xs h-10 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-250 font-bold"
+                className="flex items-center justify-center gap-2 text-xs h-11 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold w-full"
               >
-                <FileSpreadsheet className="h-4 w-4" />
-                Export CSV Spreadsheet
+                <FileSpreadsheet className="h-4 w-4 shrink-0" />
+                <span>Export CSV Spreadsheet</span>
               </Button>
               <Button
                 onClick={() => handleExport('pdf')}
-                className="flex items-center justify-center gap-2 text-xs h-10 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-250 font-bold"
+                className="flex items-center justify-center gap-2 text-xs h-11 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold w-full"
               >
-                <FileText className="h-4 w-4" />
-                Export PDF Standings
+                <FileText className="h-4 w-4 shrink-0" />
+                <span>Export PDF Standings</span>
               </Button>
             </div>
           </div>

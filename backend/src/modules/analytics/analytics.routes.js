@@ -5,6 +5,10 @@ const controller = require('./analytics.controller');
 
 const router = express.Router();
 
+// Personal stats route accessible to any authenticated user (including students)
+router.get('/my-stats', authenticate, controller.myStats);
+
+// Admin, Teacher, Recruiter restricted routes
 router.use(authenticate, authorize(ROLES.ADMIN, ROLES.TEACHER, ROLES.RECRUITER));
 router.get('/overview', controller.overview);
 router.get('/export', controller.exportCsv);

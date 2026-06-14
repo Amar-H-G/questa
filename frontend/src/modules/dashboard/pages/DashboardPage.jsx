@@ -10,13 +10,21 @@ export const DashboardPage = () => {
   const scope = useGsapReveal();
   const { user } = useAuthStore();
   const role = user?.role || 'student';
+  const isStaff = ['admin', 'teacher', 'recruiter'].includes(role);
 
   const { data } = useQuery({
     queryKey: ['analytics-overview'],
     queryFn: async () => (await apiClient.get('/analytics/overview')).data.data,
+    enabled: isStaff,
+  });
+
+  const { data: myStatsData } = useQuery({
+    queryKey: ['my-stats'],
+    queryFn: async () => (await apiClient.get('/analytics/my-stats')).data.data,
   });
 
   const overview = data || { quizzes: 0, submissions: 0, averageScore: 0 };
+  const stats = myStatsData || {};
 
   // Define modules dynamically by role
   const getModulesByRole = () => {
@@ -147,9 +155,19 @@ export const DashboardPage = () => {
 
       {/* Metrics Section */}
       <section className="grid gap-4 md:grid-cols-3">
-        <MetricCard label="Assessments" value={overview.quizzes} trend="Drafts and published" icon={BarChart3} />
-        <MetricCard label="Submissions" value={overview.submissions} trend="Judge queue ready" icon={Code2} />
-        <MetricCard label="Average score" value={`${overview.averageScore}%`} trend="Evaluated attempts" icon={Trophy} />
+        {role === 'student' ? (
+          <>
+            <MetricCard label="Quizzes Completed" value={stats.quizzesAttempted ?? 0} trend="Your quiz attempts" icon={Clock3} />
+            <MetricCard label="Problems Solved" value={stats.problemsSolved ?? 0} trend="Accepted coding solutions" icon={Code2} />
+            <MetricCard label="Average Quiz Score" value={`${stats.averageQuizScore ?? 0}%`} trend="Across all attempts" icon={Trophy} />
+          </>
+        ) : (
+          <>
+            <MetricCard label="Quizzes Created" value={stats.quizzesCreated ?? 0} trend="Designed by you" icon={Clock3} />
+            <MetricCard label="Problems Created" value={stats.problemsCreated ?? 0} trend="Challenges authored by you" icon={Code2} />
+            <MetricCard label="Candidates Assessed" value={stats.totalCandidatesAssessed ?? 0} trend="Attempts on your quizzes" icon={Users} />
+          </>
+        )}
       </section>
 
       {/* Action Modules Section */}

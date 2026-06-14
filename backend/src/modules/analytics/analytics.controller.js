@@ -6,6 +6,11 @@ const overview = asyncHandler(async (_req, res) => {
   res.json({ success: true, data });
 });
 
+const myStats = asyncHandler(async (req, res) => {
+  const data = await service.getUserStats(req.user);
+  res.json({ success: true, data });
+});
+
 const exportCsv = asyncHandler(async (req, res) => {
   const csv = await service.exportAttemptsCsv(req.query);
   res.setHeader('Content-Type', 'text/csv');
@@ -19,4 +24,4 @@ const exportPdf = asyncHandler(async (req, res) => {
   await service.exportAttemptsPdf(req.query, res);
 });
 
-module.exports = { overview, exportCsv, exportPdf };
+module.exports = { overview, myStats, exportCsv, exportPdf };

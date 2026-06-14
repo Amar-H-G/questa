@@ -1,8 +1,12 @@
+const PDFDocument = require('pdfkit');
 const repository = require('./analytics.repository');
 
 const round = (value) => Math.round(value * 10) / 10;
 
 const QuizAttempt = require('../../models/quiz-attempt.model');
+const Quiz = require('../../models/quiz.model');
+const CodingProblem = require('../../models/coding-problem.model');
+const CodingSubmission = require('../../models/coding-submission.model');
 
 const getOverview = async () => {
   const [overview, trend] = await Promise.all([repository.countOverview(), repository.getAttemptTrend()]);
@@ -112,4 +116,44 @@ const exportAttemptsPdf = async (filters, res) => {
   doc.end();
 };
 
-module.exports = { getOverview, exportAttemptsCsv, exportAttemptsPdf };
+const getUserStats = async (user) => {
+  const userId = user.id;
+  const role = user.role;
+
+  if (role === 'student') {
+    const [attemptsCount, problemsSolvedCount, attempts] = await Promise.all([
+      QuizAttempt.countDocuments({ user: userId }),
+      CodingSubmission.countDocuments({ user: userId, status: 'accepted' }),
+      QuizAttempt.find({ user: userId }).select('percentage').lean(),
+    ]);
+
+    const averageQuizScore = attempts.length
+      ? Math.round(attempts.reduce((sum, att) => sum + (att.percentage || 0), 0) / attempts.length)
+      : 0;
+
+    return {
+      role,
+      quizzesAttempted: attemptsCount,
+      problemsSolved: problemsSolvedCount,
+      averageQuizScore,
+    };
+  } else {
+    const myQuizzes = await Quiz.find({ owner: userId }).select('_id').lean();
+    const quizIds = myQuizzes.map(q => q._id);
+
+    const [quizzesCreated, problemsCreated, totalCandidatesAssessed] = await Promise.all([
+      Quiz.countDocuments({ owner: userId }),
+      CodingProblem.countDocuments({ author: userId }),
+      QuizAttempt.countDocuments({ quiz: { $in: quizIds } }),
+    ]);
+
+    return {
+      role,
+      quizzesCreated,
+      problemsCreated,
+      totalCandidatesAssessed,
+    };
+  }
+};
+
+module.exports = { getOverview, getUserStats, exportAttemptsCsv, exportAttemptsPdf };

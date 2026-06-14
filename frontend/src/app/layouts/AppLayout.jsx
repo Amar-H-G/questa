@@ -20,9 +20,16 @@ export const AppLayout = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
+  const filteredNavigation = baseNavigation.filter((item) => {
+    if (item.to === '/analytics') {
+      return ['admin', 'teacher', 'recruiter'].includes(user?.role);
+    }
+    return true;
+  });
+
   const navigation = user?.role === 'admin'
-    ? [...baseNavigation, { to: '/admin/users', label: 'Users', icon: UserRound }]
-    : baseNavigation;
+    ? [...filteredNavigation, { to: '/admin/users', label: 'Users', icon: UserRound }]
+    : filteredNavigation;
 
   const { data: notifications } = useQuery({
     queryKey: ['notifications'],

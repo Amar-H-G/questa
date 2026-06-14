@@ -21,9 +21,8 @@ export const RegisterPage = () => {
       navigate('/dashboard');
     } catch (err) {
       const msg = getErrorMessage(err);
-      msg.split('\n').forEach((errorMsg) => {
-        toast.error(errorMsg);
-      });
+      const firstMsg = msg.split('\n')[0];
+      toast.error(firstMsg || 'Registration failed');
     } finally {
       setSubmitting(false);
     }

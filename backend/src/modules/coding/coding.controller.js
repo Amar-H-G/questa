@@ -7,7 +7,7 @@ const createProblem = asyncHandler(async (req, res) => {
 });
 
 const listProblems = asyncHandler(async (req, res) => {
-  const result = await service.listProblems(req.validated.query);
+  const result = await service.listProblems(req.validated.query, req.user);
   res.json({ success: true, data: result });
 });
 

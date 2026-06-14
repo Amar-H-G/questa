@@ -3,6 +3,7 @@ const ApiError = require('../../utils/api-error');
 const getPagination = require('../../utils/pagination');
 const executionService = require('./execution.service');
 const repository = require('./coding.repository');
+const CodingSubmission = require('../../models/coding-submission.model');
 
 const createProblem = (payload, user) =>
   repository.createProblem({
@@ -11,14 +12,46 @@ const createProblem = (payload, user) =>
     slug: `${slugify(payload.title, { lower: true, strict: true })}-${Date.now().toString(36)}`,
   });
 
-const listProblems = async (query) => {
+const listProblems = async (query, user) => {
   const { page, limit, skip } = getPagination(query);
   const filter = query.difficulty ? { difficulty: query.difficulty, status: 'published' } : { status: 'published' };
   const [items, total] = await Promise.all([
     repository.listProblems({ filter, skip, limit }),
     repository.countProblems(filter),
   ]);
-  return { items, meta: { page, limit, total } };
+
+  let itemsWithStatus = items;
+  if (user) {
+    const problemIds = items.map(item => item._id);
+    const [successfulSubmissions, attemptedSubmissions] = await Promise.all([
+      CodingSubmission.find({
+        user: user.id,
+        problem: { $in: problemIds },
+        status: 'accepted'
+      }).select('problem').lean(),
+      CodingSubmission.find({
+        user: user.id,
+        problem: { $in: problemIds }
+      }).select('problem').lean()
+    ]);
+
+    const solvedProblemIds = new Set(successfulSubmissions.map(s => s.problem.toString()));
+    const attemptedProblemIds = new Set(attemptedSubmissions.map(s => s.problem.toString()));
+
+    itemsWithStatus = items.map(item => {
+      const itemObj = item.toJSON();
+      if (solvedProblemIds.has(item.id)) {
+        itemObj.userStatus = 'solved';
+      } else if (attemptedProblemIds.has(item.id)) {
+        itemObj.userStatus = 'attempted';
+      } else {
+        itemObj.userStatus = 'unattempted';
+      }
+      return itemObj;
+    });
+  }
+
+  return { items: itemsWithStatus, meta: { page, limit, total } };
 };
 
 const submit = async (problemId, payload, user) => {

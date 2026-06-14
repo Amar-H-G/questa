@@ -30,9 +30,8 @@ export const ForgotPassPage = () => {
       setSuccess(true);
     } catch (err) {
       const msg = getErrorMessage(err);
-      msg.split('\n').forEach((errorMsg) => {
-        toast.error(errorMsg);
-      });
+      const firstMsg = msg.split('\n')[0];
+      toast.error(firstMsg || 'Request failed');
     } finally {
       setLoading(false);
     }

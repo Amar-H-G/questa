@@ -22,9 +22,8 @@ export const LoginPage = () => {
       navigate('/dashboard');
     } catch (err) {
       const msg = getErrorMessage(err);
-      msg.split('\n').forEach((errorMsg) => {
-        toast.error(errorMsg);
-      });
+      const firstMsg = msg.split('\n')[0];
+      toast.error(firstMsg || 'Login failed');
     } finally {
       setSubmitting(false);
     }

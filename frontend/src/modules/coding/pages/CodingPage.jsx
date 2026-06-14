@@ -1,4 +1,4 @@
-import { Code2, Cpu, SquareTerminal } from 'lucide-react';
+import { Code2, Cpu, SquareTerminal, CheckCircle2, Clock3, Trophy, Info } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { EmptyState } from '../../../components/ui/EmptyState';
@@ -14,6 +14,12 @@ export const CodingPage = () => {
     queryFn: async () => (await apiClient.get('/coding/problems')).data.data,
   });
   const problems = data?.items || [];
+
+  const { data: statsData } = useQuery({
+    queryKey: ['my-stats'],
+    queryFn: async () => (await apiClient.get('/analytics/my-stats')).data.data,
+  });
+  const stats = statsData || {};
 
   return (
     <div className="page-shell space-y-6 text-[#0f172a]">
@@ -40,6 +46,37 @@ export const CodingPage = () => {
         })}
       </div>
 
+      {/* Personal Practice Stats Grid */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="border border-slate-200 bg-white rounded-xl p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Solved</p>
+            <p className="mt-1.5 text-2xl font-bold text-slate-800">{stats.problemsSolved ?? 0}</p>
+          </div>
+          <div className="grid h-10 w-10 place-items-center rounded-lg bg-emerald-50 text-emerald-600">
+            <CheckCircle2 className="h-5 w-5" />
+          </div>
+        </div>
+        <div className="border border-slate-200 bg-white rounded-xl p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Quizzes Completed</p>
+            <p className="mt-1.5 text-2xl font-bold text-slate-800">{stats.quizzesAttempted ?? 0}</p>
+          </div>
+          <div className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-blue-600">
+            <Clock3 className="h-5 w-5" />
+          </div>
+        </div>
+        <div className="border border-slate-200 bg-white rounded-xl p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Average Quiz Score</p>
+            <p className="mt-1.5 text-2xl font-bold text-slate-800">{stats.averageQuizScore ?? 0}%</p>
+          </div>
+          <div className="grid h-10 w-10 place-items-center rounded-lg bg-amber-50 text-amber-500">
+            <Trophy className="h-5 w-5" />
+          </div>
+        </div>
+      </div>
+
       {error ? <InlineAlert>Problem library could not be loaded.</InlineAlert> : null}
       {isLoading ? (
         <div className="grid gap-4">
@@ -51,8 +88,20 @@ export const CodingPage = () => {
             <article key={problem.id} className="border border-slate-200 bg-white rounded-xl p-5 shadow-sm">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-lg font-bold text-slate-750">{problem.title}</h2>
-                  <p className={`mt-1 text-xs font-bold uppercase tracking-wider ${
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h2 className="text-lg font-bold text-slate-750 leading-snug">{problem.title}</h2>
+                    {problem.userStatus === 'solved' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
+                        <CheckCircle2 className="h-3.5 w-3.5" /> Solved
+                      </span>
+                    )}
+                    {problem.userStatus === 'attempted' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 border border-amber-200">
+                        <Info className="h-3.5 w-3.5" /> Attempted
+                      </span>
+                    )}
+                  </div>
+                  <p className={`mt-1.5 text-xs font-bold uppercase tracking-wider ${
                     problem.difficulty === 'easy' ? 'text-emerald-600' :
                     problem.difficulty === 'medium' ? 'text-amber-600' :
                     'text-rose-600'

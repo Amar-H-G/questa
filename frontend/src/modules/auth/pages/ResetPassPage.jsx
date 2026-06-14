@@ -77,10 +77,12 @@ export const ResetPassPage = () => {
 
         <div className="w-full max-w-md space-y-8">
           <div className="reveal-item flex items-center justify-between lg:justify-start gap-3">
-            <Logo size={40} />
-            <div className="lg:hidden">
-              <span className="text-lg font-bold tracking-tight text-slate-800">SurCodex</span>
-            </div>
+            <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition">
+              <Logo size={40} />
+              <div className="lg:hidden">
+                <span className="text-lg font-bold tracking-tight text-slate-800">SurCodex</span>
+              </div>
+            </Link>
           </div>
 
           {success ? (

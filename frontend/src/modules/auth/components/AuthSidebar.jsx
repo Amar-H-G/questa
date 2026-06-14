@@ -1,6 +1,7 @@
 import React from 'react';
 import { Logo } from '../../../components/ui/Logo';
 import { Code2, Award, Zap, CheckCircle2, ChevronRight, Terminal } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const AuthSidebar = ({ subtitle }) => {
   return (
@@ -13,13 +14,13 @@ export const AuthSidebar = ({ subtitle }) => {
       <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-[130px] pointer-events-none" />
 
       {/* Top logo */}
-      <div className="relative z-10 flex items-center gap-3">
+      <Link to="/" className="relative z-10 flex items-center gap-3 hover:opacity-90 transition">
         <Logo size={36} className="text-white" showText={false} />
         <div>
           <span className="text-lg font-extrabold tracking-wider bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">SurCodex</span>
           <span className="block text-[10px] text-slate-400 uppercase tracking-widest font-semibold mt-0.5">Education Platform</span>
         </div>
-      </div>
+      </Link>
 
       {/* Hero Visual Middle */}
       <div className="relative z-10 my-auto py-10 space-y-10">

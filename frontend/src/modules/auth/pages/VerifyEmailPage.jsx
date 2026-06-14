@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { CheckCircle2, XCircle, Loader2, ArrowRight } from 'lucide-react';
 import { apiClient } from '../../../services/api/client';
+import { AuthSidebar } from '../components/AuthSidebar';
+import { Logo } from '../../../components/ui/Logo';
 import gsap from 'gsap';
 
 export const VerifyEmailPage = () => {
@@ -9,13 +11,14 @@ export const VerifyEmailPage = () => {
   const token = searchParams.get('token');
   const [status, setStatus] = useState('verifying'); // verifying, success, error
   const [message, setMessage] = useState('');
-  const cardRef = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    gsap.from(cardRef.current, {
-      y: 30,
+    gsap.from('.reveal-item', {
+      y: 20,
       opacity: 0,
-      duration: 0.8,
+      duration: 0.6,
+      stagger: 0.08,
       ease: 'power3.out',
     });
 
@@ -39,63 +42,86 @@ export const VerifyEmailPage = () => {
   }, [token]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f8fafc] px-4 text-[#0f172a]">
-      <div
-        ref={cardRef}
-        className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xl shadow-slate-100/80"
-      >
-        <div className="flex justify-center mb-6">
-          <div className="grid h-12 w-12 place-items-center rounded-xl bg-blue-50 text-sm font-bold text-blue-600">
-            S
+    <main ref={containerRef} className="grid min-h-screen grid-cols-1 lg:grid-cols-2 bg-[#f8fafc] text-[#0f172a] overflow-hidden">
+      {/* Left educational sidebar */}
+      <AuthSidebar subtitle="Completing safety verification. We trace confirmation hashes to guarantee authentic candidate profiles across compiler pools." />
+
+      {/* Right form center */}
+      <section className="flex flex-col justify-center items-center px-6 py-12 lg:px-16 xl:px-24 bg-white relative">
+        <div className="absolute top-[-10%] right-[-10%] w-[350px] h-[350px] rounded-full bg-slate-50/70 blur-3xl pointer-events-none" />
+
+        <div className="w-full max-w-md space-y-8">
+          <div className="reveal-item flex items-center justify-between lg:justify-start gap-3">
+            <Logo size={40} />
+            <div className="lg:hidden">
+              <span className="text-lg font-bold tracking-tight text-slate-800">SurCodex</span>
+            </div>
           </div>
+
+          {status === 'verifying' && (
+            <div className="space-y-6 text-center reveal-item">
+              <div className="flex justify-center">
+                <div className="h-16 w-16 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 animate-spin">
+                  <Loader2 className="h-8 w-8" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Verifying Email...</h2>
+                <p className="text-sm text-slate-500 font-medium">
+                  We are validating your signature against database registers. One moment...
+                </p>
+              </div>
+            </div>
+          )}
+
+          {status === 'success' && (
+            <div className="space-y-6 text-center reveal-item">
+              <div className="flex justify-center">
+                <div className="h-16 w-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-500 animate-pulse">
+                  <CheckCircle2 className="h-8 w-8" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Email Verified!</h2>
+                <p className="text-sm text-slate-500 font-medium leading-relaxed">
+                  {message || 'Your credential record has been verified. You can now login.'}
+                </p>
+              </div>
+              <div className="pt-2">
+                <Link
+                  to="/login"
+                  className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-indigo-600/10 flex items-center justify-center gap-2"
+                >
+                  Sign In to SurCodex
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {status === 'error' && (
+            <div className="space-y-6 text-center reveal-item">
+              <div className="flex justify-center">
+                <div className="h-16 w-16 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500 animate-bounce">
+                  <XCircle className="h-8 w-8" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Verification Failed</h2>
+                <p className="text-sm text-rose-600 font-semibold leading-relaxed">{message}</p>
+              </div>
+              <div className="pt-2">
+                <Link
+                  to="/register"
+                  className="w-full h-11 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 font-bold text-sm text-slate-600 flex items-center justify-center gap-2 transition"
+                >
+                  Back to Registration
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
-
-        {status === 'verifying' && (
-          <div className="space-y-4">
-            <div className="flex justify-center">
-              <Loader2 className="h-12 w-12 text-blue-600 animate-spin" />
-            </div>
-            <h2 className="text-2xl font-bold tracking-tight">Verifying your email</h2>
-            <p className="text-sm text-slate-500 font-medium">Please wait while we confirm your verification token...</p>
-          </div>
-        )}
-
-        {status === 'success' && (
-          <div className="space-y-4">
-            <div className="flex justify-center">
-              <CheckCircle2 className="h-14 w-14 text-emerald-500" />
-            </div>
-            <h2 className="text-2xl font-bold tracking-tight">Account Verified!</h2>
-            <p className="text-sm text-slate-500 font-medium">{message}</p>
-            <div className="pt-4">
-              <Link
-                to="/login"
-                className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-600/10 transition text-sm"
-              >
-                Sign In to SurCodex
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {status === 'error' && (
-          <div className="space-y-4">
-            <div className="flex justify-center">
-              <XCircle className="h-14 w-14 text-rose-500" />
-            </div>
-            <h2 className="text-2xl font-bold tracking-tight">Verification Failed</h2>
-            <p className="text-sm text-rose-600 font-medium">{message}</p>
-            <div className="pt-4 space-y-2">
-              <Link
-                to="/register"
-                className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-sm font-bold text-slate-600 hover:bg-slate-50 transition"
-              >
-                Back to Registration
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };

@@ -92,12 +92,14 @@ const refresh = async (refreshToken, req) => {
 const logout = (refreshToken) => repository.revokeRefreshToken(hashToken(refreshToken));
 
 const requestPasswordReset = async (email) => {
+  console.log(`[Forgot Password] Request received for email: ${email}`);
   const user = await repository.findUserByEmailWithPassword(email);
   if (!user) {
-    // Return success to prevent email enumeration attacks
+    console.log(`[Forgot Password] Email "${email}" not found in database! (Returning success to prevent enumeration)`);
     return { success: true, message: 'If that email exists, we sent a password reset link.' };
   }
 
+  console.log(`[Forgot Password] User found: ${user.name}. Generating reset token...`);
   const crypto = require('crypto');
   const { sendPasswordResetEmail } = require('../../utils/email');
 
@@ -105,8 +107,16 @@ const requestPasswordReset = async (email) => {
   user.resetPasswordToken = token;
   user.resetPasswordTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
   await user.save();
+  console.log(`[Forgot Password] Reset token saved to database.`);
 
-  await sendPasswordResetEmail(user.email, user.name, token);
+  try {
+    console.log(`[Forgot Password] Sending reset email to ${user.email}...`);
+    await sendPasswordResetEmail(user.email, user.name, token);
+    console.log(`[Forgot Password] Reset email sent successfully.`);
+  } catch (error) {
+    console.error(`[Forgot Password] Failed to send email:`, error);
+    throw error;
+  }
 
   return { success: true, message: 'Password reset email sent.' };
 };

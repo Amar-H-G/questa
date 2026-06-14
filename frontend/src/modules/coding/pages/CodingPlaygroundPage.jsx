@@ -7,23 +7,23 @@ import { Button } from '../../../components/ui/Button';
 
 const LANGUAGE_BOILERPLATES = {
   javascript: `// Write your Node.js code here
-console.log("Hello, Coder!");`,
+console.log("Hello, SurCoder!");`,
 
   python: `# Write your Python 3 code here
-print("Hello, Coder!")`,
+print("Hello, SurCoder!")`,
 
   cpp: `// Write your C++ code here
 #include <iostream>
 
 int main() {
-    std::cout << "Hello, Coder!" << std::endl;
+    std::cout << "Hello, SurCoder!" << std::endl;
     return 0;
 }`,
 
   java: `// Write your Java code here
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, Coder!");
+        System.out.println("Hello, SurCoder!");
     }
 }`
 };

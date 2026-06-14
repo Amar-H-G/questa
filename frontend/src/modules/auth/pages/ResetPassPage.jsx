@@ -18,16 +18,20 @@ export const ResetPassPage = () => {
   const cardRef = useRef(null);
 
   useEffect(() => {
-    gsap.from(cardRef.current, {
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
+    const ctx = gsap.context(() => {
+      gsap.from(cardRef.current, {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+      });
     });
 
     if (!token) {
       toast.error('Password reset token is missing. Please request a new reset link.');
     }
+
+    return () => ctx.revert();
   }, [token]);
 
   const handleSubmit = async (e) => {

@@ -13,12 +13,15 @@ export const ForgotPassPage = () => {
   const cardRef = useRef(null);
 
   useEffect(() => {
-    gsap.from(cardRef.current, {
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
+    const ctx = gsap.context(() => {
+      gsap.from(cardRef.current, {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+      });
     });
+    return () => ctx.revert();
   }, []);
 
   const handleSubmit = async (e) => {

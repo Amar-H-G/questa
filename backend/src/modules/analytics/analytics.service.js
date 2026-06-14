@@ -117,7 +117,7 @@ const exportAttemptsPdf = async (filters, res) => {
 };
 
 const getUserStats = async (user) => {
-  const userId = user.id;
+  const userId = user._id;
   const role = user.role;
 
   if (role === 'student') {

@@ -191,9 +191,9 @@ export const DashboardPage = () => {
           </>
         ) : (
           <>
-            <MetricCard label="Quizzes Created" value={stats.quizzesCreated ?? 0} trend="Benchmarks published" icon={Clock3} />
-            <MetricCard label="Problems Created" value={stats.problemsCreated ?? 0} trend="Compiler challenges" icon={Code2} />
-            <MetricCard label="Candidates Vetted" value={stats.totalCandidatesAssessed ?? 0} trend="Total cohort assessments" icon={Users} />
+            <MetricCard label="Total Platform Users" value={overview.users ?? 0} trend="Registered accounts" icon={Users} />
+            <MetricCard label="Total Assessments" value={overview.quizzes ?? 0} trend="Active benchmarks" icon={Clock3} />
+            <MetricCard label="Average Platform Score" value={`${overview.averageScore ?? 0}%`} trend="Overall performance index" icon={Trophy} />
           </>
         )}
       </section>
@@ -204,8 +204,7 @@ export const DashboardPage = () => {
           <Link
             key={item.title}
             to={item.href}
-            className="glass-panel rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-50/20 group relative overflow-hidden"
-            data-reveal
+            className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-50/20 group relative overflow-hidden"
           >
             <div className="absolute top-[-20%] right-[-10%] w-20 h-20 bg-indigo-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-indigo-500/10 transition-colors" />
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100/50 group-hover:scale-105 transition-transform">
@@ -222,7 +221,7 @@ export const DashboardPage = () => {
 
       {/* Interactive learning streak panel for students, cohort details for recruiters/teachers */}
       {role === 'student' && (
-        <section className="glass-panel rounded-2xl p-6 border border-slate-200 shadow-sm relative overflow-hidden" data-reveal>
+        <section className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm relative overflow-hidden">
           <div className="absolute top-[-10%] right-[-10%] w-32 h-32 bg-indigo-500/5 rounded-full blur-xl pointer-events-none" />
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">

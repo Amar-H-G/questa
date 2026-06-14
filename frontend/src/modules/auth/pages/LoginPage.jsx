@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck } from 'lucide-react';
+import { Logo } from '../../../components/ui/Logo';
 import { toast } from 'react-hot-toast';
 import { Button } from '../../../components/ui/Button';
 import { TextField } from '../../../components/forms/TextField';
@@ -33,9 +33,7 @@ export const LoginPage = () => {
     <main className="grid min-h-screen place-items-center bg-[#f8fafc] px-4 text-[#0f172a]">
       <section className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-100/80">
         <div className="mb-8 flex items-center gap-3">
-          <div className="grid h-11 w-11 place-items-center rounded-lg bg-blue-50 text-blue-600">
-            <ShieldCheck className="h-5 w-5" />
-          </div>
+          <Logo size={44} />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
             <p className="text-sm text-slate-500 font-medium">Sign in to the assessment command center.</p>

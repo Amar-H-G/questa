@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Logo } from '../../../components/ui/Logo';
 import { toast } from 'react-hot-toast';
 import { Button } from '../../../components/ui/Button';
 import { TextField } from '../../../components/forms/TextField';
@@ -31,7 +32,13 @@ export const RegisterPage = () => {
   return (
     <main className="grid min-h-screen place-items-center bg-[#f8fafc] px-4 text-[#0f172a]">
       <section className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-100/80">
-        <h1 className="text-2xl font-bold tracking-tight">Create your SurCodex account</h1>
+        <div className="mb-6 flex items-center gap-3">
+          <Logo size={44} />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Create your account</h1>
+            <p className="text-sm text-slate-500 font-medium">Join the SurCodex technical assessment platform.</p>
+          </div>
+        </div>
         <form onSubmit={submit} className="mt-6 space-y-4">
           <TextField label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <TextField label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />

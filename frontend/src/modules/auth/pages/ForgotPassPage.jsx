@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Logo } from '../../../components/ui/Logo';
 import { Mail, CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { apiClient, getErrorMessage } from '../../../services/api/client';
@@ -44,9 +45,7 @@ export const ForgotPassPage = () => {
         className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-100/80"
       >
         <div className="flex justify-center mb-6">
-          <div className="grid h-12 w-12 place-items-center rounded-xl bg-blue-50 text-sm font-bold text-blue-600">
-            S
-          </div>
+          <Logo size={48} />
         </div>
 
         {success ? (

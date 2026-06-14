@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Code2, Shield, BarChart3, Users, Terminal, Sparkles, CheckCircle2, Star, HelpCircle } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { useAuthStore } from '../../../store/authStore';
+import { Logo } from '../../../components/ui/Logo';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
@@ -27,10 +28,7 @@ export const LandingPage = () => {
 
       {/* Navigation Header */}
       <nav className="relative z-10 max-w-7xl mx-auto px-6 h-20 flex items-center justify-between border-b border-slate-100 bg-white/80 backdrop-blur-md sticky top-0">
-        <div className="flex items-center gap-2">
-          <Terminal className="h-5 w-5 text-blue-600" />
-          <span className="text-lg font-bold tracking-tight text-[#0f172a]">SurCodex</span>
-        </div>
+        <Logo size={32} showText={true} />
         <div className="hidden md:flex items-center gap-8 text-sm text-slate-600 font-medium">
           <a href="#features" className="hover:text-blue-600 transition">Features</a>
           <a href="#showcase" className="hover:text-blue-600 transition">Showcase</a>

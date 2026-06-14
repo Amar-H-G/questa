@@ -4,6 +4,7 @@ import { BarChart3, Bell, Code2, Gauge, LogOut, Medal, Plus, UserRound, Check, M
 import { NavLink, Outlet } from 'react-router-dom';
 import { apiClient } from '../../services/api/client';
 import { useAuthStore } from '../../store/authStore';
+import { Logo } from '../../components/ui/Logo';
 
 const baseNavigation = [
   { to: '/dashboard', label: 'Command', icon: Gauge },
@@ -63,9 +64,7 @@ export const AppLayout = () => {
       <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-slate-200 bg-white px-4 py-5 lg:block">
         <div className="flex items-center justify-between px-2">
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-sm font-bold text-blue-600">
-              S
-            </div>
+            <Logo size={36} />
             <div>
               <p className="text-sm font-bold tracking-wide text-slate-800">SurCodex</p>
               <p className="text-xs text-slate-400 font-semibold">Assessment operations</p>
@@ -172,7 +171,7 @@ export const AppLayout = () => {
       {/* Header and Nav for Mobile */}
       <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/80 px-4 py-3 backdrop-blur-md lg:hidden">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-bold text-slate-800">SurCodex</span>
+          <Logo size={28} showText={true} textClass="text-slate-800 text-sm" />
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowDropdown(!showDropdown)}

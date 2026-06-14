@@ -41,4 +41,12 @@ const idParamSchema = z.object({
   params: z.object({ id: objectIdSchema }),
 });
 
-module.exports = { createProblemSchema, listProblemsSchema, submitSchema, idParamSchema };
+const playgroundRunSchema = z.object({
+  body: z.object({
+    language: z.enum(['javascript', 'python', 'cpp', 'java']),
+    sourceCode: z.string().min(1).max(50000),
+    stdin: z.string().max(10000).optional().default(''),
+  }),
+});
+
+module.exports = { createProblemSchema, listProblemsSchema, submitSchema, idParamSchema, playgroundRunSchema };

@@ -26,4 +26,9 @@ const getSubmission = asyncHandler(async (req, res) => {
   res.json({ success: true, data: submission });
 });
 
-module.exports = { createProblem, listProblems, submit, getProblem, getSubmission };
+const runPlayground = asyncHandler(async (req, res) => {
+  const result = await service.runPlayground(req.validated.body);
+  res.json({ success: true, data: result });
+});
+
+module.exports = { createProblem, listProblems, submit, getProblem, getSubmission, runPlayground };

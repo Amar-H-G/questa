@@ -13,5 +13,6 @@ router.get('/problems/:id', validate(schemas.idParamSchema), controller.getProbl
 router.post('/problems', authorize(ROLES.ADMIN, ROLES.TEACHER), validate(schemas.createProblemSchema), controller.createProblem);
 router.post('/problems/:id/submissions', validate(schemas.submitSchema), controller.submit);
 router.get('/submissions/:id', validate(schemas.idParamSchema), controller.getSubmission);
+router.post('/playground/run', validate(schemas.playgroundRunSchema), controller.runPlayground);
 
 module.exports = router;

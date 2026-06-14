@@ -1,4 +1,5 @@
 const CodingSubmission = require('../../models/coding-submission.model');
+const ApiError = require('../../utils/api-error');
 
 const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
   for (let i = 0; i < retries; i++) {
@@ -212,4 +213,63 @@ const runSimulation = async (submission, testCases) => {
   });
 };
 
-module.exports = { queueSubmission };
+const runPlayground = async ({ language, sourceCode, stdin }) => {
+  const judge0Url = process.env.JUDGE0_URL || 'https://judge0-ce.p.rapidapi.com';
+  const judge0Key = process.env.JUDGE0_KEY;
+
+  const languageId = LANGUAGE_ID_MAP[language];
+  if (!languageId) {
+    throw new ApiError(400, 'Unsupported language');
+  }
+
+  // If offline/local fallback, run local simulator
+  if (!judge0Key && judge0Url.includes('rapidapi.com')) {
+    await new Promise((r) => setTimeout(r, 1000));
+    return {
+      status: 'accepted',
+      stdout: `[Simulator Output for ${language.toUpperCase()}]\nHello, World!\nInput received: ${stdin || 'none'}`,
+      stderr: '',
+      runtimeMs: 15,
+      memoryKb: 450,
+    };
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (judge0Key) {
+    headers['x-rapidapi-key'] = judge0Key;
+    headers['x-rapidapi-host'] = new URL(judge0Url).hostname;
+  }
+
+  const payload = {
+    language_id: languageId,
+    source_code: Buffer.from(sourceCode).toString('base64'),
+    stdin: Buffer.from(stdin || '').toString('base64'),
+  };
+
+  const response = await fetch(`${judge0Url}/submissions?base64_encoded=true&wait=true`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Judge0 returned status ${response.status}`);
+  }
+
+  const result = await response.json();
+  const stdout = result.stdout ? Buffer.from(result.stdout, 'base64').toString('utf8') : '';
+  const stderr = result.stderr ? Buffer.from(result.stderr, 'base64').toString('utf8') : '';
+  const compileOutput = result.compile_output ? Buffer.from(result.compile_output, 'base64').toString('utf8') : '';
+
+  return {
+    status: mapJudgeStatus(result.status_id),
+    stdout: stdout.trim(),
+    stderr: (stderr || compileOutput).trim(),
+    runtimeMs: result.time ? Math.round(Number(result.time) * 1000) : 0,
+    memoryKb: result.memory || 0,
+  };
+};
+
+module.exports = { queueSubmission, runPlayground };

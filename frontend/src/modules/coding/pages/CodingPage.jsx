@@ -23,27 +23,20 @@ export const CodingPage = () => {
 
   return (
     <div className="page-shell space-y-6 text-[#0f172a]">
-      <div className="border border-slate-200 bg-white rounded-xl p-8 shadow-sm">
-        <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Coding evaluations</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-800">Judge-ready problem workspace</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 font-medium">
-          Submissions are modeled independently from execution providers, so Judge0 can be attached without leaking provider logic into controllers.
-        </p>
-      </div>
-      <div className="grid gap-4 lg:grid-cols-3">
-        {['Queued execution', 'Hidden test cases', 'Language matrix'].map((title, index) => {
-          const icons = [SquareTerminal, Cpu, Code2];
-          const Icon = icons[index];
-          return (
-            <div key={title} className="border border-slate-200 bg-white rounded-xl p-6 shadow-sm">
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-blue-600">
-                <Icon className="h-5 w-5" />
-              </div>
-              <h2 className="mt-5 text-lg font-bold text-slate-700">{title}</h2>
-              <p className="mt-2 text-sm text-slate-500 font-semibold">{languages[index] || languages.join(', ')}</p>
-            </div>
-          );
-        })}
+      <div className="border border-slate-200 bg-white rounded-xl p-8 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Coding evaluations</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-800">Judge-ready problem workspace</h1>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 font-medium">
+            Submissions are modeled independently from execution providers, so Judge0 can be attached without leaking provider logic into controllers.
+          </p>
+        </div>
+        <Link
+          to="/coding/playground"
+          className="inline-flex h-11 items-center justify-center rounded-xl bg-blue-600 px-6 text-sm font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/20 transition whitespace-nowrap"
+        >
+          <SquareTerminal className="mr-2 h-4 w-4" /> Open Playground
+        </Link>
       </div>
 
       {/* Personal Practice Stats Grid */}

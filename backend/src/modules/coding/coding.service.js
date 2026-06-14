@@ -106,4 +106,8 @@ const getSubmission = async (id, user) => {
   return submission;
 };
 
-module.exports = { createProblem, listProblems, submit, getProblem, getSubmission };
+const runPlayground = async (payload) => {
+  return executionService.runPlayground(payload);
+};
+
+module.exports = { createProblem, listProblems, submit, getProblem, getSubmission, runPlayground };

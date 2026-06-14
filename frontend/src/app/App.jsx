@@ -10,6 +10,7 @@ import { ResetPassPage } from '../modules/auth/pages/ResetPassPage';
 import { AnalyticsPage } from '../modules/analytics/pages/AnalyticsPage';
 import { CodingPage } from '../modules/coding/pages/CodingPage';
 import { CodingWorkspacePage } from '../modules/coding/pages/CodingWorkspacePage';
+import { CodingPlaygroundPage } from '../modules/coding/pages/CodingPlaygroundPage';
 import { DashboardPage } from '../modules/dashboard/pages/DashboardPage';
 import { LeaderboardPage } from '../modules/leaderboard/pages/LeaderboardPage';
 import { ProfilePage } from '../modules/profile/pages/ProfilePage';
@@ -51,6 +52,7 @@ export const App = () => (
         <Route path="quizzes/new" element={<CreateQuizPage />} />
         <Route path="quizzes/:id/attempt" element={<QuizAttemptPage />} />
         <Route path="coding" element={<CodingPage />} />
+        <Route path="coding/playground" element={<CodingPlaygroundPage />} />
         <Route path="coding/:id" element={<CodingWorkspacePage />} />
         <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="leaderboard" element={<LeaderboardPage />} />

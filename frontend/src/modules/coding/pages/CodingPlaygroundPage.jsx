@@ -77,7 +77,7 @@ export const CodingPlaygroundPage = () => {
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold tracking-tight text-slate-800">VSCode Playground</h1>
+              <h1 className="text-lg font-bold tracking-tight text-slate-800">SurCodex Playground</h1>
               <span className="flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-bold text-blue-600 border border-blue-100 uppercase tracking-wide">
                 <Sparkles className="h-2.5 w-2.5" /> Practice Mode
               </span>

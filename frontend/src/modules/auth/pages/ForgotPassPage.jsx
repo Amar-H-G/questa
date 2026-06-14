@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
-import { apiClient } from '../../../services/api/client';
+import { toast } from 'react-hot-toast';
+import { apiClient, getErrorMessage } from '../../../services/api/client';
 import gsap from 'gsap';
 
 export const ForgotPassPage = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
   const cardRef = useRef(null);
 
   useEffect(() => {
@@ -23,13 +23,16 @@ export const ForgotPassPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
 
     try {
       await apiClient.post('/auth/password-reset', { email });
+      toast.success('Password reset link sent successfully!');
       setSuccess(true);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send password reset email.');
+      const msg = getErrorMessage(err);
+      msg.split('\n').forEach((errorMsg) => {
+        toast.error(errorMsg);
+      });
     } finally {
       setLoading(false);
     }
@@ -73,12 +76,6 @@ export const ForgotPassPage = () => {
                 Enter your email address and we'll send you a password reset link.
               </p>
             </div>
-
-            {error && (
-              <div className="rounded-lg border border-rose-100 bg-rose-50 p-3 text-sm text-rose-600 font-medium">
-                {error}
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>

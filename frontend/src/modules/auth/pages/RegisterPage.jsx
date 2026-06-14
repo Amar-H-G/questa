@@ -1,25 +1,29 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { Button } from '../../../components/ui/Button';
 import { TextField } from '../../../components/forms/TextField';
 import { useAuthStore } from '../../../store/authStore';
+import { getErrorMessage } from '../../../services/api/client';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
   const register = useAuthStore((state) => state.register);
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student' });
-  const [error, setError] = useState('');
 
   const submit = async (event) => {
     event.preventDefault();
-    setError('');
     setSubmitting(true);
     try {
       await register(form);
+      toast.success('Account created successfully!');
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Unable to register');
+      const msg = getErrorMessage(err);
+      msg.split('\n').forEach((errorMsg) => {
+        toast.error(errorMsg);
+      });
     } finally {
       setSubmitting(false);
     }
@@ -48,7 +52,6 @@ export const RegisterPage = () => {
               <option value="recruiter">Recruiter</option>
             </select>
           </label>
-          {error ? <p className="text-sm text-rose-600 font-semibold">{error}</p> : null}
           <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-600/10" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Creating...' : 'Create account'}
           </Button>

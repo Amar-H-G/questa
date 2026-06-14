@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { KeyRound, CheckCircle2, Loader2, Lock } from 'lucide-react';
-import { apiClient } from '../../../services/api/client';
+import { toast } from 'react-hot-toast';
+import { apiClient, getErrorMessage } from '../../../services/api/client';
 import gsap from 'gsap';
 
 export const ResetPassPage = () => {
@@ -13,7 +14,6 @@ export const ResetPassPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
   const cardRef = useRef(null);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const ResetPassPage = () => {
     });
 
     if (!token) {
-      setError('Password reset token is missing. Please request a new reset link.');
+      toast.error('Password reset token is missing. Please request a new reset link.');
     }
   }, [token]);
 
@@ -34,22 +34,25 @@ export const ResetPassPage = () => {
     if (!token) return;
 
     if (password.length < 8) {
-      setError('Password must be at least 8 characters long.');
+      toast.error('Password must be at least 8 characters long.');
       return;
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      toast.error('Passwords do not match.');
       return;
     }
 
     setLoading(true);
-    setError('');
 
     try {
       await apiClient.post('/auth/reset-password', { token, password });
+      toast.success('Password has been reset successfully!');
       setSuccess(true);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to reset password. The link may have expired.');
+      const msg = getErrorMessage(err);
+      msg.split('\n').forEach((errorMsg) => {
+        toast.error(errorMsg);
+      });
     } finally {
       setLoading(false);
     }
@@ -93,12 +96,6 @@ export const ResetPassPage = () => {
                 Choose a strong password containing at least 8 characters, with 1 uppercase, 1 lowercase, 1 number, and 1 special character.
               </p>
             </div>
-
-            {error && (
-              <div className="rounded-lg border border-rose-100 bg-rose-50 p-3 text-sm text-rose-600 font-medium">
-                {error}
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>

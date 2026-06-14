@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { AppLayout } from './layouts/AppLayout';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { LoginPage } from '../modules/auth/pages/LoginPage';
@@ -19,7 +20,24 @@ import { UsersAdminPage } from '../modules/admin/pages/UsersAdminPage';
 import { LandingPage } from '../modules/dashboard/pages/LandingPage';
 
 export const App = () => (
-  <Routes>
+  <>
+    <Toaster
+      position="top-center"
+      toastOptions={{
+        duration: 5000,
+        style: {
+          background: '#ffffff',
+          color: '#0f172a',
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          borderRadius: '12px',
+          border: '1px solid #e2e8f0',
+          fontSize: '14px',
+          fontWeight: '500',
+          maxWidth: '450px',
+        },
+      }}
+    />
+    <Routes>
     <Route path="/" element={<LandingPage />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<RegisterPage />} />
@@ -42,4 +60,5 @@ export const App = () => (
     </Route>
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
+  </>
 );

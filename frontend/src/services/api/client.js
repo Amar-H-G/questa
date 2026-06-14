@@ -48,3 +48,19 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const getErrorMessage = (error) => {
+  const data = error.response?.data;
+  if (data?.details?.fieldErrors) {
+    const messages = [];
+    for (const [key, msgs] of Object.entries(data.details.fieldErrors)) {
+      if (Array.isArray(msgs)) {
+        messages.push(...msgs);
+      }
+    }
+    if (messages.length > 0) {
+      return messages.join('\n');
+    }
+  }
+  return data?.message || error.message || 'An unexpected error occurred';
+};

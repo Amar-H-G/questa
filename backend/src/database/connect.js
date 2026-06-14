@@ -19,6 +19,24 @@ const connectDatabase = async () => {
   });
 
   console.log(`MongoDB connected: ${connection.connection.host}`);
+
+  // Programmatically drop legacy index if it exists to avoid registration duplicate key errors
+  try {
+    const db = connection.connection.db;
+    const collections = await db.listCollections({ name: 'users' }).toArray();
+    if (collections.length > 0) {
+      const usersCollection = db.collection('users');
+      const indexes = await usersCollection.indexes();
+      const hasSupabaseIndex = indexes.some(idx => idx.name === 'supabaseUserId_1');
+      if (hasSupabaseIndex) {
+        await usersCollection.dropIndex('supabaseUserId_1');
+        console.log('Legacy unique index "supabaseUserId_1" dropped successfully.');
+      }
+    }
+  } catch (err) {
+    console.warn('Could not check or drop legacy indexes:', err.message);
+  }
+
   return connection;
 };
 

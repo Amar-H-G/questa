@@ -1,26 +1,30 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { Button } from '../../../components/ui/Button';
 import { TextField } from '../../../components/forms/TextField';
 import { useAuthStore } from '../../../store/authStore';
+import { getErrorMessage } from '../../../services/api/client';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
 
   const submit = async (event) => {
     event.preventDefault();
-    setError('');
     setSubmitting(true);
     try {
       await login(form);
+      toast.success('Logged in successfully!');
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Unable to sign in');
+      const msg = getErrorMessage(err);
+      msg.split('\n').forEach((errorMsg) => {
+        toast.error(errorMsg);
+      });
     } finally {
       setSubmitting(false);
     }
@@ -46,7 +50,6 @@ export const LoginPage = () => {
               Forgot password?
             </Link>
           </div>
-          {error ? <p className="text-sm text-rose-600 font-semibold">{error}</p> : null}
           <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-600/10" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Signing in...' : 'Sign in'}
           </Button>

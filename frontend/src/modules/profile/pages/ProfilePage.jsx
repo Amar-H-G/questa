@@ -83,6 +83,27 @@ export const ProfilePage = () => {
 
   const stats = myStatsData || { quizzesAttempted: 0, problemsSolved: 0, averageQuizScore: 0 };
 
+  const getGitHubLink = (val) => {
+    if (!val) return '#';
+    const cleanVal = val.trim();
+    if (/^https?:\/\//i.test(cleanVal)) return cleanVal;
+    return `https://github.com/${cleanVal.replace(/^\/+/, '')}`;
+  };
+
+  const getLinkedInLink = (val) => {
+    if (!val) return '#';
+    const cleanVal = val.trim();
+    if (/^https?:\/\//i.test(cleanVal)) return cleanVal;
+    return `https://linkedin.com/in/${cleanVal.replace(/^\/+/, '')}`;
+  };
+
+  const getPortfolioLink = (val) => {
+    if (!val) return '#';
+    const cleanVal = val.trim();
+    if (/^https?:\/\//i.test(cleanVal)) return cleanVal;
+    return `https://${cleanVal.replace(/^\/+/, '')}`;
+  };
+
   // Handle Input Changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -168,9 +189,47 @@ export const ProfilePage = () => {
     if (e) e.preventDefault();
     setSaving(true);
 
+    // Sanitize social links
+    const sanitizedData = { ...formData };
+    
+    // Clean GitHub Username
+    if (sanitizedData.github) {
+      let gh = sanitizedData.github.trim();
+      gh = gh.replace(/^(https?:\/\/)?(www\.)?github\.com\//i, '');
+      gh = gh.replace(/^\/+|\/+$/g, '');
+      sanitizedData.github = gh;
+    }
+    
+    // Clean LinkedIn Handle
+    if (sanitizedData.linkedin) {
+      let li = sanitizedData.linkedin.trim();
+      li = li.replace(/^(https?:\/\/)?(www\.)?linkedin\.com\/in\//i, '');
+      li = li.replace(/^\/+|\/+$/g, '');
+      sanitizedData.linkedin = li;
+    }
+    
+    // Clean Portfolio Link
+    if (sanitizedData.portfolio) {
+      let pf = sanitizedData.portfolio.trim();
+      pf = pf.replace(/^\/+|\/+$/g, '');
+      if (pf && !/^https?:\/\//i.test(pf)) {
+        pf = `https://${pf}`;
+      }
+      sanitizedData.portfolio = pf;
+    }
+
     try {
-      const { data } = await apiClient.put('/auth/profile', formData);
+      const { data } = await apiClient.put('/auth/profile', sanitizedData);
       useAuthStore.setState({ user: data.data.user });
+      
+      // Update form state with the sanitized values returned by backend
+      setFormData(prev => ({
+        ...prev,
+        github: data.data.user.profile?.github || '',
+        linkedin: data.data.user.profile?.linkedin || '',
+        portfolio: data.data.user.profile?.portfolio || '',
+      }));
+
       toast.success('Profile settings updated successfully!');
       setActiveTab('overview');
     } catch (err) {
@@ -366,7 +425,7 @@ export const ProfilePage = () => {
             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Social Presence</h3>
             <div className="space-y-2.5">
               <a 
-                href={formData.github ? `https://github.com/${formData.github}` : '#'} 
+                href={getGitHubLink(formData.github)} 
                 target="_blank" 
                 rel="noreferrer"
                 className="flex items-center justify-between p-3 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-slate-100/50 transition"
@@ -384,7 +443,7 @@ export const ProfilePage = () => {
               </a>
 
               <a 
-                href={formData.linkedin ? `https://linkedin.com/in/${formData.linkedin}` : '#'} 
+                href={getLinkedInLink(formData.linkedin)} 
                 target="_blank" 
                 rel="noreferrer"
                 className="flex items-center justify-between p-3 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-slate-100/50 transition"
@@ -402,7 +461,7 @@ export const ProfilePage = () => {
               </a>
 
               <a 
-                href={formData.portfolio || '#'} 
+                href={getPortfolioLink(formData.portfolio)} 
                 target="_blank" 
                 rel="noreferrer"
                 className="flex items-center justify-between p-3 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-slate-100/50 transition"
@@ -482,7 +541,9 @@ export const ProfilePage = () => {
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
                   <h2 className="text-lg font-extrabold text-slate-800">Edit Profile Information</h2>
-                  <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Keep your details up-to-date for assessments.</p>
+                  <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
+                    Keep your details up-to-date. Fields marked with <span className="text-rose-500 font-bold">*</span> are required.
+                  </p>
                 </div>
                 <button
                   type="submit"
@@ -586,7 +647,7 @@ export const ProfilePage = () => {
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider border-l-2 border-blue-650 pl-2">Personal Details</h3>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Full Name</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Full Name <span className="text-rose-500">*</span></label>
                     <input
                       type="text"
                       name="name"
@@ -599,7 +660,7 @@ export const ProfilePage = () => {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Email Address <span className="text-rose-500">*</span></label>
                     <input
                       type="email"
                       name="email"
@@ -708,7 +769,7 @@ export const ProfilePage = () => {
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Portfolio Link</label>
                       <input
-                        type="url"
+                        type="text"
                         name="portfolio"
                         value={formData.portfolio}
                         onChange={handleChange}

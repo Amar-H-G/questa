@@ -9,6 +9,9 @@ import { Button } from '../../../components/ui/Button';
 import { useAuthStore } from '../../../store/authStore';
 import { Logo } from '../../../components/ui/Logo';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const LandingPage = () => {
   const navigate = useNavigate();
@@ -17,6 +20,7 @@ export const LandingPage = () => {
   
   const heroRef = useRef(null);
   const showcaseRef = useRef(null);
+  const cursorRef = useRef(null);
 
   useEffect(() => {
     if (accessToken) {
@@ -42,13 +46,123 @@ export const LandingPage = () => {
         delay: 0.5,
         ease: 'elastic.out(1, 0.5)'
       });
+
+      // Mouse Follower setup
+      const cursor = cursorRef.current;
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+      if (!isTouchDevice && cursor) {
+        gsap.set(cursor, { opacity: 0, scale: 1 });
+        
+        const onMouseMove = (e) => {
+          gsap.to(cursor, {
+            x: e.clientX,
+            y: e.clientY,
+            duration: 0.2,
+            ease: 'power2.out',
+            opacity: 1
+          });
+        };
+        
+        const onMouseEnter = () => {
+          gsap.to(cursor, {
+            scale: 2.2,
+            backgroundColor: 'rgba(37, 99, 235, 0.15)',
+            borderColor: '#2563eb',
+            duration: 0.3
+          });
+        };
+        
+        const onMouseLeave = () => {
+          gsap.to(cursor, {
+            scale: 1,
+            backgroundColor: 'rgba(59, 130, 246, 0.05)',
+            borderColor: '#3b82f6',
+            duration: 0.3
+          });
+        };
+        
+        window.addEventListener('mousemove', onMouseMove);
+        
+        // Find interactive elements
+        const interactiveElements = document.querySelectorAll('button, a, [role="button"], .interactive-card');
+        interactiveElements.forEach((el) => {
+          el.addEventListener('mouseenter', onMouseEnter);
+          el.addEventListener('mouseleave', onMouseLeave);
+        });
+        
+        // Clean up events
+        return () => {
+          window.removeEventListener('mousemove', onMouseMove);
+          interactiveElements.forEach((el) => {
+            el.removeEventListener('mouseenter', onMouseEnter);
+            el.removeEventListener('mouseleave', onMouseLeave);
+          });
+        };
+      }
     }, heroRef);
 
-    return () => ctx.revert();
+    // ScrollTrigger reveals for sections
+    const stCtx = gsap.context(() => {
+      // Reveal sections dynamically
+      ['#features', '#showcase', '#testimonials', '#pricing', '#faq'].forEach((secId) => {
+        const el = document.querySelector(secId);
+        if (el) {
+          gsap.from(el, {
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
+            y: 40,
+            opacity: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+          });
+        }
+      });
+
+      // Reveal features cards inside features section with stagger
+      gsap.from('#features .glass-panel', {
+        scrollTrigger: {
+          trigger: '#features',
+          start: 'top 80%',
+        },
+        y: 60,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.15,
+        ease: 'power4.out',
+      });
+
+      // Reveal testimonials cards
+      gsap.from('#testimonials .glass-panel', {
+        scrollTrigger: {
+          trigger: '#testimonials',
+          start: 'top 80%',
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.15,
+        ease: 'power4.out',
+      });
+    });
+
+    return () => {
+      ctx.revert();
+      stCtx.revert();
+    };
   }, []);
 
   return (
     <div className="min-h-screen bg-[#fafbfe] text-[#0f172a] overflow-x-hidden font-sans selection:bg-blue-500/20 antialiased">
+      {/* Custom Mouse Follower */}
+      <div 
+        ref={cursorRef}
+        className="fixed top-0 left-0 w-6 h-6 rounded-full border border-blue-500/30 bg-blue-500/5 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 opacity-0 hidden md:block"
+      />
+
       {/* Background Decorative Ambient Lights */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[800px] pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-15%] left-[5%] w-[600px] h-[600px] rounded-full bg-blue-400/10 blur-[130px] animate-pulse-glow" />
@@ -81,7 +195,7 @@ export const LandingPage = () => {
           </button>
           <button 
             onClick={() => navigate('/register')} 
-            className="h-10 px-5 rounded-lg btn-premium-gradient font-bold text-xs flex items-center gap-1.5 shadow-md shadow-blue-600/15"
+            className="h-10 px-5 rounded-2xl btn-premium-gradient font-bold text-xs flex items-center gap-1.5 shadow-md shadow-blue-600/15 hover:scale-[1.03] transition-all duration-300"
           >
             Get Started
             <ArrowRight className="h-3.5 w-3.5" />
@@ -108,14 +222,14 @@ export const LandingPage = () => {
         <div className="hero-reveal flex flex-col sm:flex-row gap-4 mt-10 w-full justify-center max-w-md">
           <button 
             onClick={() => navigate('/register')} 
-            className="h-12 px-8 rounded-lg btn-premium-gradient font-bold text-sm shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2"
+            className="h-12 px-8 rounded-2xl btn-premium-gradient font-bold text-sm shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2 hover:scale-[1.03] transition-all duration-300"
           >
             Create Free Account
             <ArrowRight className="h-4 w-4" />
           </button>
           <a 
             href="#showcase" 
-            className="flex items-center justify-center gap-2 px-6 h-12 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition text-sm font-bold text-slate-600 shadow-sm"
+            className="flex items-center justify-center gap-2 px-6 h-12 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 text-sm font-bold text-slate-600 shadow-sm hover:scale-[1.03]"
           >
             Explore Interactive Demo
           </a>
@@ -526,7 +640,7 @@ export const LandingPage = () => {
             </div>
             <button 
               onClick={() => navigate('/register')} 
-              className="w-full h-11 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition"
+              className="w-full h-11 rounded-2xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:scale-[1.02] hover:border-slate-300 transition-all duration-300"
             >
               Get Started Free
             </button>
@@ -549,7 +663,7 @@ export const LandingPage = () => {
             </div>
             <button 
               onClick={() => navigate('/register')} 
-              className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-xs transition shadow-md shadow-blue-600/15"
+              className="w-full h-11 rounded-2xl btn-premium-gradient font-bold text-xs hover:scale-[1.02] transition-all duration-300 shadow-md shadow-blue-600/15"
             >
               Upgrade to Pro
             </button>
@@ -570,7 +684,7 @@ export const LandingPage = () => {
             </div>
             <button 
               onClick={() => navigate('/register')} 
-              className="w-full h-11 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition"
+              className="w-full h-11 rounded-2xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:scale-[1.02] hover:border-slate-300 transition-all duration-300"
             >
               Contact Sales
             </button>

@@ -173,6 +173,31 @@ const resendVerification = async (email) => {
   return { success: true, message: 'Verification email resent.' };
 };
 
+const updateProfile = async (user, body) => {
+  if (body.name !== undefined) user.name = body.name;
+  if (body.email !== undefined) user.email = body.email;
+
+  if (!user.profile) {
+    user.profile = {};
+  }
+
+  const profileFields = [
+    'headline', 'company', 'location', 'skills', 'avatar',
+    'coverBanner', 'bannerType', 'bio', 'phone', 'github',
+    'linkedin', 'portfolio', 'preferredLang',
+    'emailNotifications', 'weeklyReport', 'anonymousStanding'
+  ];
+
+  profileFields.forEach((field) => {
+    if (body[field] !== undefined) {
+      user.profile[field] = body[field];
+    }
+  });
+
+  await user.save();
+  return { user: user.toJSON() };
+};
+
 module.exports = {
   register,
   login,
@@ -182,4 +207,5 @@ module.exports = {
   resetPassword,
   verifyEmail,
   resendVerification,
+  updateProfile,
 };

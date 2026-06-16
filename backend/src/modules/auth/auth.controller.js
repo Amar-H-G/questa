@@ -45,6 +45,11 @@ const resendVerification = asyncHandler(async (req, res) => {
   res.json({ success: true, data: result });
 });
 
+const updateProfile = asyncHandler(async (req, res) => {
+  const result = await service.updateProfile(req.user, req.validated.body);
+  res.json({ success: true, data: result });
+});
+
 module.exports = {
   register,
   login,
@@ -55,4 +60,5 @@ module.exports = {
   verifyEmail,
   resetPassword,
   resendVerification,
+  updateProfile,
 };

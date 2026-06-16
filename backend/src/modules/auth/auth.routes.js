@@ -23,6 +23,7 @@ router.post('/login', authLimiter, validate(schemas.loginSchema), controller.log
 router.post('/refresh-token', validate(schemas.refreshSchema), controller.refresh);
 router.post('/logout', validate(schemas.logoutSchema), controller.logout);
 router.get('/me', authenticate, controller.me);
+router.put('/profile', authenticate, validate(schemas.updateProfileSchema), controller.updateProfile);
 router.post('/password-reset', authLimiter, validate(schemas.passwordResetRequestSchema), controller.requestPasswordReset);
 router.post('/verify-email', validate(schemas.verifyEmailSchema), controller.verifyEmail);
 router.post('/reset-password', authLimiter, validate(schemas.resetPasswordSchema), controller.resetPassword);

@@ -37,8 +37,8 @@ if (env.NODE_ENV === 'production') {
     })
   );
 }
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: false, limit: '1mb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 app.use(cookieParser());
 // Workaround for Express 5 + express-mongo-sanitize compatibility: make req.query writable
 app.use((req, res, next) => {

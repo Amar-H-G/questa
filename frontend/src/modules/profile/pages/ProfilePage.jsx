@@ -113,7 +113,7 @@ export const ProfilePage = () => {
     }));
   };
 
-  // Handle Photo Upload (Base64)
+  // Handle Photo Upload (Base64) with Auto-Save
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -124,9 +124,17 @@ export const ProfilePage = () => {
     }
 
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData((prev) => ({ ...prev, avatar: reader.result }));
-      toast.success('Avatar loaded! Save profile to persist.');
+    reader.onloadend = async () => {
+      const base64Str = reader.result;
+      const toastId = toast.loading('Uploading profile photo...');
+      try {
+        const { data } = await apiClient.put('/auth/profile', { avatar: base64Str });
+        useAuthStore.setState({ user: data.data.user });
+        toast.success('Profile photo updated successfully!', { id: toastId });
+      } catch (err) {
+        console.error(err);
+        toast.error(err.response?.data?.message || 'Failed to upload profile photo.', { id: toastId });
+      }
     };
     reader.readAsDataURL(file);
   };

@@ -37,10 +37,20 @@ const createQuiz = async (payload, user) => {
 
 const listQuizzes = async (query, user) => {
   const { page, limit, skip } = getPagination(query);
-  const owner = query.mine === 'true' ? user.id : undefined;
+  
+  let filter = {};
+  if (query.mine === 'true') {
+    filter = { owner: user.id || user._id };
+  } else {
+    filter = {
+      owner: { $ne: user.id || user._id },
+      status: 'published',
+    };
+  }
+
   const [items, total] = await Promise.all([
-    repository.listQuizzes({ owner, skip, limit }),
-    repository.countQuizzes(owner),
+    repository.listQuizzes({ filter, skip, limit }),
+    repository.countQuizzes(filter),
   ]);
 
   return { items, meta: { page, limit, total } };
@@ -89,6 +99,9 @@ const submitAttempt = async (quizId, payload, user) => {
   const { answers = [] } = payload;
   const quiz = await repository.findQuizById(quizId);
   if (!quiz || quiz.status !== 'published') throw new ApiError(404, 'Published quiz not found');
+  if (quiz.owner && quiz.owner.toString() === user.id) {
+    throw new ApiError(400, 'You cannot attempt your own quiz');
+  }
 
   const questions = await repository.findQuestionsWithAnswers(quizId);
   const answerMap = new Map(answers.map((answer) => [answer.question, answer.selectedOptions.map(String)]));

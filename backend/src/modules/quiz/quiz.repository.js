@@ -5,9 +5,9 @@ const QuizAttempt = require('../../models/quiz-attempt.model');
 const createQuiz = (payload) => Quiz.create(payload);
 const updateQuiz = (id, payload) => Quiz.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
 const findQuizById = (id) => Quiz.findById(id);
-const listQuizzes = ({ owner, skip, limit }) =>
-  Quiz.find(owner ? { owner } : {}).sort('-createdAt').skip(skip).limit(limit);
-const countQuizzes = (owner) => Quiz.countDocuments(owner ? { owner } : {});
+const listQuizzes = ({ filter, skip, limit }) =>
+  Quiz.find(filter || {}).sort('-createdAt').skip(skip).limit(limit);
+const countQuizzes = (filter) => Quiz.countDocuments(filter || {});
 const deleteQuiz = (id) => Quiz.findByIdAndDelete(id);
 const insertQuestions = (questions) => Question.insertMany(questions);
 const replaceQuestions = async (quizId, questions) => {

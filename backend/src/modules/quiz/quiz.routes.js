@@ -10,10 +10,10 @@ const router = express.Router();
 router.use(authenticate);
 router.get('/', controller.listQuizzes);
 router.get('/:id', validate(schemas.idParamSchema), controller.getQuiz);
-router.post('/', authorize(ROLES.ADMIN, ROLES.TEACHER), validate(schemas.createQuizSchema), controller.createQuiz);
-router.patch('/:id', authorize(ROLES.ADMIN, ROLES.TEACHER), validate(schemas.updateQuizSchema), controller.updateQuiz);
-router.post('/:id/publish', authorize(ROLES.ADMIN, ROLES.TEACHER), validate(schemas.idParamSchema), controller.publishQuiz);
-router.delete('/:id', authorize(ROLES.ADMIN, ROLES.TEACHER), validate(schemas.idParamSchema), controller.removeQuiz);
+router.post('/', authorize(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), validate(schemas.createQuizSchema), controller.createQuiz);
+router.patch('/:id', authorize(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), validate(schemas.updateQuizSchema), controller.updateQuiz);
+router.post('/:id/publish', authorize(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), validate(schemas.idParamSchema), controller.publishQuiz);
+router.delete('/:id', authorize(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), validate(schemas.idParamSchema), controller.removeQuiz);
 router.post('/:id/attempts', validate(schemas.submitAttemptSchema), controller.submitAttempt);
 
 module.exports = router;

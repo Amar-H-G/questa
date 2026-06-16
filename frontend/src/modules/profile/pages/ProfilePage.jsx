@@ -227,8 +227,8 @@ export const ProfilePage = () => {
         </div>
 
         {/* User basic details row */}
-        <div className="px-6 pb-6 pt-0 flex flex-col md:flex-row md:items-end gap-6 relative z-10 -mt-16">
-          <div className="relative group/avatar cursor-pointer self-start" onClick={triggerFileInput}>
+        <div className="px-6 pb-6 pt-3 flex flex-col md:flex-row md:items-end gap-6 relative z-10">
+          <div className="relative group/avatar cursor-pointer self-start -mt-20 z-20" onClick={triggerFileInput}>
             <div className="h-32 w-32 rounded-3xl border-4 border-white bg-slate-100 overflow-hidden shadow-lg relative transition-all duration-300 group-hover/avatar:shadow-xl">
               {formData.avatar && formData.avatar.length > 10 ? (
                 <img src={formData.avatar} alt="Profile Avatar" className="h-full w-full object-cover" />

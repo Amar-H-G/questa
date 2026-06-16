@@ -174,6 +174,41 @@ const resendVerification = async (email) => {
 };
 
 const updateProfile = async (user, body) => {
+  const fs = require('fs');
+  const path = require('path');
+
+  const saveBase64Image = (base64Str, prefix) => {
+    if (!base64Str || typeof base64Str !== 'string') return base64Str;
+
+    // Match base64 data URL
+    const matches = base64Str.match(/^data:image\/([A-Za-z0-9-+]+);base64,(.+)$/);
+    if (!matches) {
+      return base64Str;
+    }
+
+    const ext = matches[1] === 'jpeg' ? 'jpg' : matches[1];
+    const data = matches[2];
+    const buffer = Buffer.from(data, 'base64');
+
+    const uploadDir = path.join(__dirname, '../../../uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    const filename = `${prefix}-${user.id || 'user'}-${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`;
+    const filepath = path.join(uploadDir, filename);
+
+    fs.writeFileSync(filepath, buffer);
+    return `/uploads/${filename}`;
+  };
+
+  if (body.avatar !== undefined) {
+    body.avatar = saveBase64Image(body.avatar, 'avatar');
+  }
+  if (body.coverBanner !== undefined) {
+    body.coverBanner = saveBase64Image(body.coverBanner, 'banner');
+  }
+
   if (body.name !== undefined) user.name = body.name;
   if (body.email !== undefined) user.email = body.email;
 

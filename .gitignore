@@ -15,3 +15,6 @@ build/
 
 # Scratch/test files
 backend/test-db.js
+
+# Uploaded files
+backend/uploads/

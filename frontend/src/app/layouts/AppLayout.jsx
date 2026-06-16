@@ -6,7 +6,7 @@ import {
   BookOpen, Sparkles, Award
 } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { apiClient } from '../../services/api/client';
+import { apiClient, getAvatarUrl } from '../../services/api/client';
 import { useAuthStore } from '../../store/authStore';
 import { Logo } from '../../components/ui/Logo';
 
@@ -174,7 +174,7 @@ export const AppLayout = () => {
         <div className="rounded-2xl border border-slate-200/80 bg-slate-50/50 p-4 space-y-4">
           <div className="flex items-center gap-3">
             {user?.profile?.avatar && user.profile.avatar.length > 10 ? (
-              <img src={user.profile.avatar} alt="Profile" className="h-9 w-9 rounded-xl object-cover border border-slate-200 shadow-md shadow-blue-600/10" />
+              <img src={getAvatarUrl(user.profile.avatar)} alt="Profile" className="h-9 w-9 rounded-xl object-cover border border-slate-200 shadow-md shadow-blue-600/10" />
             ) : (
               <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-extrabold text-xs shadow-md shadow-blue-600/10">
                 {user?.name ? user.name[0].toUpperCase() : 'O'}

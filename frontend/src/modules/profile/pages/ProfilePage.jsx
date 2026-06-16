@@ -8,7 +8,7 @@ import {
   Briefcase, Save, Settings, Heart, Image as ImageIcon, Paintbrush
 } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
-import { apiClient } from '../../../services/api/client';
+import { apiClient, getAvatarUrl } from '../../../services/api/client';
 
 const PRESET_GRADIENTS = [
   { name: 'Indigo Dream', value: 'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)' },
@@ -200,7 +200,7 @@ export const ProfilePage = () => {
   const getBannerStyle = () => {
     if (formData.bannerType === 'image' && formData.coverBanner) {
       return {
-        backgroundImage: `url(${formData.coverBanner})`,
+        backgroundImage: `url(${getAvatarUrl(formData.coverBanner)})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       };
@@ -231,7 +231,7 @@ export const ProfilePage = () => {
           <div className="relative group/avatar cursor-pointer self-start -mt-20 z-20" onClick={triggerFileInput}>
             <div className="h-32 w-32 rounded-3xl border-4 border-white bg-slate-100 overflow-hidden shadow-lg relative transition-all duration-300 group-hover/avatar:shadow-xl">
               {formData.avatar && formData.avatar.length > 10 ? (
-                <img src={formData.avatar} alt="Profile Avatar" className="h-full w-full object-cover" />
+                <img src={getAvatarUrl(formData.avatar)} alt="Profile Avatar" className="h-full w-full object-cover" />
               ) : (
                 <div className="h-full w-full bg-gradient-to-tr from-slate-200 to-slate-100 flex items-center justify-center text-slate-400 font-extrabold text-4xl uppercase">
                   {formData.name ? formData.name[0] : 'O'}

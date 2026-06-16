@@ -64,3 +64,17 @@ export const getErrorMessage = (error) => {
   }
   return data?.message || error.message || 'An unexpected error occurred';
 };
+
+export const getAvatarUrl = (path) => {
+  if (!path) return '';
+  if (typeof path === 'string' && path.startsWith('/uploads/')) {
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+    try {
+      const origin = new URL(apiBase).origin;
+      return `${origin}${path}`;
+    } catch (e) {
+      return path;
+    }
+  }
+  return path;
+};

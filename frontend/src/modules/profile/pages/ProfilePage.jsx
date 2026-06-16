@@ -231,7 +231,14 @@ export const ProfilePage = () => {
           <div className="relative group/avatar cursor-pointer self-start -mt-20 z-20" onClick={triggerFileInput}>
             <div className="h-32 w-32 rounded-3xl border-4 border-white bg-slate-100 overflow-hidden shadow-lg relative transition-all duration-300 group-hover/avatar:shadow-xl">
               {formData.avatar && formData.avatar.length > 10 ? (
-                <img src={getAvatarUrl(formData.avatar)} alt="Profile Avatar" className="h-full w-full object-cover" />
+                <div 
+                  className="h-full w-full"
+                  style={{
+                    backgroundImage: `url(${getAvatarUrl(formData.avatar)})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                />
               ) : (
                 <div className="h-full w-full bg-gradient-to-tr from-slate-200 to-slate-100 flex items-center justify-center text-slate-400 font-extrabold text-4xl uppercase">
                   {formData.name ? formData.name[0] : 'O'}

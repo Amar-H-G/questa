@@ -185,4 +185,22 @@ const getQuiz = async (quizId, user) => {
   return { quiz, questions };
 };
 
-module.exports = { createQuiz, listQuizzes, updateQuiz, publishQuiz, removeQuiz, submitAttempt, getQuiz };
+const getQuizAttempts = async (quizId, user) => {
+  const quiz = await repository.findQuizById(quizId);
+  if (!quiz) throw new ApiError(404, 'Quiz not found');
+
+  const userIdStr = user.id || user._id?.toString();
+  const isOwnerOrAdmin = (quiz.owner && quiz.owner.toString() === userIdStr) || user.role === 'admin';
+  if (!isOwnerOrAdmin) {
+    throw new ApiError(403, 'You do not have permission to view attempts for this quiz');
+  }
+
+  const QuizAttempt = require('../../models/quiz-attempt.model');
+  const attempts = await QuizAttempt.find({ quiz: quizId })
+    .populate('user', 'name email')
+    .sort('-createdAt');
+
+  return attempts;
+};
+
+module.exports = { createQuiz, listQuizzes, updateQuiz, publishQuiz, removeQuiz, submitAttempt, getQuiz, getQuizAttempts };

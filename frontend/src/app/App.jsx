@@ -17,6 +17,7 @@ import { ProfilePage } from '../modules/profile/pages/ProfilePage';
 import { CreateQuizPage } from '../modules/quiz/pages/CreateQuizPage';
 import { QuizListPage } from '../modules/quiz/pages/QuizListPage';
 import { QuizAttemptPage } from '../modules/quiz/pages/QuizAttemptPage';
+import { QuizAttemptsPage } from '../modules/quiz/pages/QuizAttemptsPage';
 import { UsersAdminPage } from '../modules/admin/pages/UsersAdminPage';
 import { LandingPage } from '../modules/dashboard/pages/LandingPage';
 
@@ -51,6 +52,7 @@ export const App = () => (
         <Route path="quizzes" element={<QuizListPage />} />
         <Route path="quizzes/new" element={<CreateQuizPage />} />
         <Route path="quizzes/:id/attempt" element={<QuizAttemptPage />} />
+        <Route path="quizzes/:id/attempts" element={<QuizAttemptsPage />} />
         <Route path="coding" element={<CodingPage />} />
         <Route path="coding/playground" element={<CodingPlaygroundPage />} />
         <Route path="coding/:id" element={<CodingWorkspacePage />} />

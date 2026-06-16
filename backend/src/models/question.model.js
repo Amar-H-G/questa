@@ -8,6 +8,11 @@ const optionSchema = new mongoose.Schema(
   { _id: true }
 );
 
+optionSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+});
+
 const questionSchema = new mongoose.Schema(
   {
     quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz', required: true, index: true },
@@ -20,6 +25,11 @@ const questionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+questionSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+});
 
 questionSchema.index({ quiz: 1, order: 1 }, { unique: true });
 

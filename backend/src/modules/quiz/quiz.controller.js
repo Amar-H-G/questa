@@ -36,4 +36,9 @@ const getQuiz = asyncHandler(async (req, res) => {
   res.json({ success: true, data });
 });
 
-module.exports = { createQuiz, listQuizzes, updateQuiz, publishQuiz, removeQuiz, submitAttempt, getQuiz };
+const getQuizAttempts = asyncHandler(async (req, res) => {
+  const attempts = await service.getQuizAttempts(req.params.id, req.user);
+  res.json({ success: true, data: attempts });
+});
+
+module.exports = { createQuiz, listQuizzes, updateQuiz, publishQuiz, removeQuiz, submitAttempt, getQuiz, getQuizAttempts };

@@ -15,5 +15,6 @@ router.patch('/:id', authorize(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), valid
 router.post('/:id/publish', authorize(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), validate(schemas.idParamSchema), controller.publishQuiz);
 router.delete('/:id', authorize(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), validate(schemas.idParamSchema), controller.removeQuiz);
 router.post('/:id/attempts', validate(schemas.submitAttemptSchema), controller.submitAttempt);
+router.get('/:id/attempts', validate(schemas.idParamSchema), controller.getQuizAttempts);
 
 module.exports = router;

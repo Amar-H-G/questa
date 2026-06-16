@@ -165,7 +165,9 @@ export const QuizAttemptPage = () => {
         const optionIndex = Number(e.key) - 1;
         const currentQuestion = questions[currentQuestionIndex];
         if (currentQuestion && currentQuestion.options[optionIndex]) {
-          toggleOption(currentQuestion.id, currentQuestion.options[optionIndex].id, currentQuestion.type);
+          const qId = currentQuestion.id || currentQuestion._id;
+          const optId = currentQuestion.options[optionIndex].id || currentQuestion.options[optionIndex]._id;
+          toggleOption(qId, optId, currentQuestion.type);
         }
       }
     };
@@ -378,10 +380,12 @@ export const QuizAttemptPage = () => {
 
               <div className="grid gap-3 pt-2">
                 {currentQuestion.options.map((option, idx) => {
-                  const isChecked = (answers[currentQuestion.id] || []).includes(option.id);
+                  const qId = currentQuestion.id || currentQuestion._id;
+                  const optId = option.id || option._id;
+                  const isChecked = (answers[qId] || []).includes(optId);
                   return (
                     <label
-                      key={option.id}
+                      key={optId}
                       className={`flex items-start gap-4 p-4 rounded-xl border transition cursor-pointer select-none ${
                         isChecked
                           ? 'border-blue-600 bg-blue-50/30 text-[#0f172a] shadow-sm'
@@ -391,9 +395,9 @@ export const QuizAttemptPage = () => {
                       <div className="flex items-center h-5">
                         <input
                           type={currentQuestion.type === 'multi_select' ? 'checkbox' : 'radio'}
-                          name={`q-${currentQuestion.id}`}
+                          name={`q-${qId}`}
                           checked={isChecked}
-                          onChange={() => toggleOption(currentQuestion.id, option.id, currentQuestion.type)}
+                          onChange={() => toggleOption(qId, optId, currentQuestion.type)}
                           className="h-4.5 w-4.5 accent-blue-600"
                         />
                       </div>
@@ -422,8 +426,8 @@ export const QuizAttemptPage = () => {
             </button>
 
             <button
-              onClick={() => clearAnswers(currentQuestion.id)}
-              disabled={!(answers[currentQuestion?.id] || []).length}
+              onClick={() => clearAnswers(currentQuestion.id || currentQuestion._id)}
+              disabled={!(answers[currentQuestion?.id || currentQuestion?._id] || []).length}
               className="text-xs border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 font-bold h-10 px-4 rounded-xl transition shadow-sm"
             >
               Clear Choice
@@ -468,11 +472,12 @@ export const QuizAttemptPage = () => {
               <h3 className="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider">Questions list</h3>
               <div className="grid grid-cols-5 gap-2">
                 {questions.map((q, idx) => {
-                  const hasAnswer = (answers[q.id] || []).length > 0;
+                  const qId = q.id || q._id;
+                  const hasAnswer = (answers[qId] || []).length > 0;
                   const isActive = idx === currentQuestionIndex;
                   return (
                     <button
-                      key={q.id}
+                      key={qId}
                       onClick={() => setCurrentQuestionIndex(idx)}
                       className={`h-9 rounded-xl text-xs font-mono font-bold transition border ${
                         isActive

@@ -105,6 +105,15 @@ export const QuizListPage = () => {
                       {publishMutation.isPending ? 'Publishing...' : 'Publish'}
                     </button>
                   ) : null}
+
+                  {activeTab === 'mine' && quiz.status === 'published' ? (
+                    <Link
+                      className="inline-flex h-8 items-center justify-center rounded-lg bg-blue-50 border border-blue-100 px-3 text-xs font-bold text-blue-600 hover:bg-blue-100 transition duration-200"
+                      to={`/quizzes/${quiz.id}/attempts`}
+                    >
+                      View Results
+                    </Link>
+                  ) : null}
                   
                   {/* Solve Actions under Available Quizzes tab */}
                   {activeTab === 'available' && quiz.status === 'published' ? (

@@ -158,7 +158,7 @@ export const RegisterPage = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-indigo-600/10 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-blue-600/10 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isSubmitting ? 'Creating account...' : 'Create Account'}
                 {!isSubmitting && <ArrowRight className="h-4 w-4" />}
@@ -169,7 +169,7 @@ export const RegisterPage = () => {
           <div className="reveal-item text-center pt-2 border-t border-slate-100">
             <p className="text-sm text-slate-500 font-medium">
               Already registered?{' '}
-              <Link className="text-indigo-600 hover:text-indigo-700 hover:underline font-bold" to="/login">
+              <Link className="text-blue-600 hover:text-blue-700 hover:underline font-bold" to="/login">
                 Sign in
               </Link>
             </p>

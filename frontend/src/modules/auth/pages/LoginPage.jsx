@@ -100,7 +100,7 @@ export const LoginPage = () => {
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-500" htmlFor="password">
                   Password
                 </label>
-                <Link className="text-xs text-indigo-600 hover:text-indigo-700 font-bold hover:underline" to="/forgot-password">
+                <Link className="text-xs text-blue-600 hover:text-blue-700 font-bold hover:underline" to="/forgot-password">
                   Forgot?
                 </Link>
               </div>
@@ -129,7 +129,7 @@ export const LoginPage = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-indigo-600/10 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-blue-600/10 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isSubmitting ? 'Signing in...' : 'Sign In'}
                 {!isSubmitting && <ArrowRight className="h-4 w-4" />}
@@ -140,7 +140,7 @@ export const LoginPage = () => {
           <div className="reveal-item text-center pt-2 border-t border-slate-100">
             <p className="text-sm text-slate-500 font-medium">
               New to SurCodex?{' '}
-              <Link className="text-indigo-600 hover:text-indigo-700 hover:underline font-bold" to="/register">
+              <Link className="text-blue-600 hover:text-blue-700 hover:underline font-bold" to="/register">
                 Create free account
               </Link>
             </p>

@@ -86,8 +86,8 @@ export const AppLayout = () => {
                 <Bell className="h-4 w-4" />
                 {unread > 0 ? (
                   <span className="absolute right-1.5 top-1.5 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-600"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-600"></span>
                   </span>
                 ) : null}
               </button>
@@ -97,7 +97,7 @@ export const AppLayout = () => {
                 <div className="absolute right-0 mt-3 w-80 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl z-50 animate-float-2">
                   <div className="flex justify-between items-center border-b border-slate-100 pb-2 mb-3">
                     <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Recent Notifications</h4>
-                    {unread > 0 && <span className="text-[9px] font-bold bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">{unread} unread</span>}
+                    {unread > 0 && <span className="text-[9px] font-bold bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">{unread} unread</span>}
                   </div>
 
                   <div className="space-y-2 max-h-[260px] overflow-y-auto">
@@ -107,11 +107,11 @@ export const AppLayout = () => {
                           key={item.id}
                           className={`group relative flex gap-3 p-3 rounded-xl border transition ${
                             !item.readAt
-                              ? 'bg-indigo-50/20 border-indigo-100'
+                              ? 'bg-blue-50/20 border-blue-100'
                               : 'bg-transparent border-transparent opacity-60'
                           }`}
                         >
-                          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100">
+                          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100">
                             <MessageSquare className="h-3.5 w-3.5" />
                           </div>
                           <div className="flex-1 min-w-0 pr-6">
@@ -151,17 +151,17 @@ export const AppLayout = () => {
                 className={({ isActive }) =>
                   `flex h-11 items-center gap-3.5 rounded-xl px-4 text-xs tracking-wide transition relative group ${
                     isActive
-                      ? 'bg-indigo-50/80 text-indigo-600 font-bold border border-indigo-100/50'
+                      ? 'bg-blue-50/80 text-blue-600 font-bold border border-blue-100/50'
                       : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800 font-bold'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <item.icon className={`h-4.5 w-4.5 transition-colors ${isActive ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                    <item.icon className={`h-4.5 w-4.5 transition-colors ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
                     <span>{item.label}</span>
                     {isActive && (
-                      <span className="absolute right-3 w-1.5 h-1.5 rounded-full bg-indigo-600" />
+                      <span className="absolute right-3 w-1.5 h-1.5 rounded-full bg-blue-600" />
                     )}
                   </>
                 )}
@@ -173,12 +173,12 @@ export const AppLayout = () => {
         {/* User profile footer info */}
         <div className="rounded-2xl border border-slate-200/80 bg-slate-50/50 p-4 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-extrabold text-xs shadow-md shadow-indigo-600/10">
+            <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-extrabold text-xs shadow-md shadow-blue-600/10">
               {user?.name ? user.name[0].toUpperCase() : 'O'}
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold text-slate-800 truncate leading-none">{user?.name || 'Operator'}</p>
-              <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2 py-0.5 text-[9px] font-bold text-indigo-600 border border-indigo-100 mt-1 capitalize leading-none">
+              <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-bold text-blue-600 border border-blue-100 mt-1 capitalize leading-none">
                 <Sparkles className="h-2 w-2" />
                 {user?.role || 'student'}
               </span>
@@ -204,7 +204,7 @@ export const AppLayout = () => {
               className="relative grid h-9 w-9 place-items-center rounded-xl bg-slate-50 text-slate-500 hover:bg-slate-100 border border-slate-200"
             >
               <Bell className="h-4 w-4" />
-              {unread ? <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-indigo-600" /> : null}
+              {unread ? <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-blue-600" /> : null}
             </button>
             <button onClick={logout} className="rounded-xl bg-slate-50 text-slate-500 hover:bg-slate-100 border border-slate-200 p-2">
               <LogOut className="h-4 w-4" />
@@ -224,7 +224,7 @@ export const AppLayout = () => {
                   <div
                     key={item.id}
                     className={`p-2.5 rounded-xl border text-[11px] ${
-                      !item.readAt ? 'bg-indigo-50/20 border-indigo-100' : 'bg-transparent border-transparent opacity-60'
+                      !item.readAt ? 'bg-blue-50/20 border-blue-100' : 'bg-transparent border-transparent opacity-60'
                     }`}
                   >
                     <p className="font-bold text-slate-800 truncate">{item.title}</p>
@@ -234,7 +234,7 @@ export const AppLayout = () => {
                       {!item.readAt && (
                         <button
                           onClick={() => markReadMutation.mutate(item.id)}
-                          className="text-[9px] text-indigo-600 hover:underline font-bold"
+                          className="text-[9px] text-blue-600 hover:underline font-bold"
                         >
                           Mark read
                         </button>
@@ -258,7 +258,7 @@ export const AppLayout = () => {
               className={({ isActive }) =>
                 `inline-flex h-9 shrink-0 items-center gap-2 rounded-xl px-3.5 text-xs font-bold transition border ${
                   isActive 
-                    ? 'bg-indigo-50 text-indigo-600 border-indigo-100' 
+                    ? 'bg-blue-50 text-blue-600 border-blue-100' 
                     : 'bg-slate-50 text-slate-500 hover:bg-slate-100 border-slate-200'
                 }`
               }

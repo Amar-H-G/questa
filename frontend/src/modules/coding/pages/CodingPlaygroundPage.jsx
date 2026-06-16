@@ -80,8 +80,8 @@ export const CodingPlaygroundPage = () => {
             <div className="flex items-center gap-2.5">
               <Logo size={22} />
               <h1 className="text-base font-extrabold tracking-tight text-slate-800">Playground</h1>
-              <span className="flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-100 px-2 py-0.5 text-[9px] font-bold text-indigo-600 uppercase tracking-wide">
-                <Sparkles className="h-2.5 w-2.5 text-indigo-500" /> Practice Arena
+              <span className="flex items-center gap-1 rounded-full bg-blue-50 border border-blue-100 px-2 py-0.5 text-[9px] font-bold text-blue-600 uppercase tracking-wide">
+                <Sparkles className="h-2.5 w-2.5 text-blue-500" /> Practice Arena
               </span>
             </div>
             <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Compile code snippets instantly with any language</p>
@@ -110,7 +110,7 @@ export const CodingPlaygroundPage = () => {
             <select
               value={language}
               onChange={(e) => handleLanguageChange(e.target.value)}
-              className="h-9.5 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-bold text-slate-700 outline-none focus:border-indigo-600"
+              className="h-9.5 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-bold text-slate-700 outline-none focus:border-blue-600"
             >
               <option value="javascript">JavaScript (Node.js)</option>
               <option value="python">Python (3.11)</option>
@@ -132,7 +132,7 @@ export const CodingPlaygroundPage = () => {
               value={stdin}
               onChange={(e) => setStdin(e.target.value)}
               placeholder="Provide execution inputs here if your code reads from stdin..."
-              className="flex-1 w-full p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-xs font-mono outline-none resize-none focus:border-indigo-600 transition font-semibold"
+              className="flex-1 w-full p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-xs font-mono outline-none resize-none focus:border-blue-600 transition font-semibold"
             />
           </div>
 
@@ -154,7 +154,7 @@ export const CodingPlaygroundPage = () => {
             <div className="flex-1 rounded-xl bg-slate-950 p-4 font-mono text-xs text-slate-200 overflow-auto whitespace-pre-wrap select-text relative border border-slate-900 font-semibold">
               {running ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 gap-3 text-slate-400">
-                  <Loader2 className="h-8 w-8 text-indigo-500 animate-spin" />
+                  <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Executing in sandbox...</span>
                 </div>
               ) : result ? (
@@ -226,13 +226,13 @@ export const CodingPlaygroundPage = () => {
 
           <footer className="flex items-center justify-between bg-slate-50/80 px-5 py-4 border-t border-slate-200">
             <span className="text-[10px] text-slate-400 font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <Zap className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
+              <Zap className="h-3.5 w-3.5 text-blue-500 animate-pulse" />
               Practice Sandbox compiler
             </span>
             <button
               onClick={handleRun}
               disabled={running}
-              className="h-10 px-6 rounded-xl btn-premium-gradient text-xs font-bold flex items-center gap-2 disabled:opacity-50 shadow-md shadow-indigo-600/10"
+              className="h-10 px-6 rounded-xl btn-premium-gradient text-xs font-bold flex items-center gap-2 disabled:opacity-50 shadow-md shadow-blue-600/10"
             >
               {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
               Run Code

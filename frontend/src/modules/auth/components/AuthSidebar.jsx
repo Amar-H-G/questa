@@ -11,13 +11,13 @@ export const AuthSidebar = ({ subtitle }) => {
       
       {/* Radial Gradient Ambient Lights */}
       <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-500/10 blur-[130px] pointer-events-none" />
 
       {/* Top logo */}
       <Link to="/" className="relative z-10 flex items-center gap-3 hover:opacity-90 transition">
         <Logo size={36} className="text-white" showText={false} />
         <div>
-          <span className="text-lg font-extrabold tracking-wider bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">SurCodex</span>
+          <span className="text-lg font-extrabold tracking-wider bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent">SurCodex</span>
           <span className="block text-[10px] text-slate-400 uppercase tracking-widest font-semibold mt-0.5">Education Platform</span>
         </div>
       </Link>
@@ -25,13 +25,13 @@ export const AuthSidebar = ({ subtitle }) => {
       {/* Hero Visual Middle */}
       <div className="relative z-10 my-auto py-10 space-y-10">
         <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-xs font-semibold">
             <Zap className="h-3 w-3" />
             Empowering Technical Excellence
           </div>
           <h2 className="text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight">
             Verify skills with <br />
-            <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 via-blue-300 to-cyan-300 bg-clip-text text-transparent">
               intelligent learning paths
             </span>
           </h2>
@@ -49,13 +49,13 @@ export const AuthSidebar = ({ subtitle }) => {
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
               <span className="text-[10px] text-slate-500 font-mono ml-3">learning_matrix.js</span>
             </div>
-            <span className="text-[9px] text-indigo-400 font-bold uppercase tracking-wider bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">JS Engine</span>
+            <span className="text-[9px] text-blue-400 font-bold uppercase tracking-wider bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">JS Engine</span>
           </div>
 
           <div className="font-mono text-xs text-slate-300 space-y-1">
-            <p className="text-slate-500"><span className="text-indigo-400">const</span> evaluateSkill = (developer) =&gt; &#123;</p>
-            <p className="pl-4"><span className="text-indigo-400">const</span> streak = developer.learningStreak;</p>
-            <p className="pl-4 text-emerald-400"><span className="text-indigo-400">if</span> (streak &gt; 10) return "Mastery Level";</p>
+            <p className="text-slate-500"><span className="text-blue-400">const</span> evaluateSkill = (developer) =&gt; &#123;</p>
+            <p className="pl-4"><span className="text-blue-400">const</span> streak = developer.learningStreak;</p>
+            <p className="pl-4 text-emerald-400"><span className="text-blue-400">if</span> (streak &gt; 10) return "Mastery Level";</p>
             <p className="pl-4 text-slate-500">return "Unlocking potential...";</p>
             <p className="text-slate-500">&#125;;</p>
           </div>

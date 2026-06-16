@@ -36,8 +36,8 @@ button {
 }
 
 ::selection {
-  background: rgba(99, 102, 241, 0.2);
-  color: #4f46e5;
+  background: rgba(59, 130, 246, 0.2);
+  color: #2563eb;
 }
 
 /* Premium Scrollbar */
@@ -128,20 +128,20 @@ button {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .premium-input:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
   background-color: #ffffff;
 }
 
 /* Custom interactive states */
 .btn-premium-gradient {
-  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
   color: white;
   transition: all 0.3s ease;
 }
 .btn-premium-gradient:hover {
-  background: linear-gradient(135deg, #4338ca 0%, #2563eb 100%);
-  box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3);
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+  box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
   transform: translateY(-1px);
 }
 .btn-premium-gradient:active {

@@ -48,11 +48,11 @@ export const LandingPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#fafbfe] text-[#0f172a] overflow-x-hidden font-sans selection:bg-indigo-500/20 antialiased">
+    <div className="min-h-screen bg-[#fafbfe] text-[#0f172a] overflow-x-hidden font-sans selection:bg-blue-500/20 antialiased">
       {/* Background Decorative Ambient Lights */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[800px] pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-15%] left-[5%] w-[600px] h-[600px] rounded-full bg-blue-400/10 blur-[130px] animate-pulse-glow" />
-        <div className="absolute top-[-5%] right-[5%] w-[700px] h-[700px] rounded-full bg-indigo-400/10 blur-[140px] animate-pulse-glow" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-[-5%] right-[5%] w-[700px] h-[700px] rounded-full bg-blue-400/10 blur-[140px] animate-pulse-glow" style={{ animationDelay: '2s' }} />
         <div className="absolute top-[50%] left-[30%] w-[350px] h-[350px] rounded-full bg-cyan-400/5 blur-[100px]" />
       </div>
 
@@ -61,27 +61,27 @@ export const LandingPage = () => {
         <div className="flex items-center gap-3">
           <Logo size={34} />
           <div>
-            <span className="text-base font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">SurCodex</span>
+            <span className="text-base font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent">SurCodex</span>
             <span className="block text-[9px] text-slate-400 uppercase tracking-widest font-bold leading-none">Learning & Assessment</span>
           </div>
         </div>
         <div className="hidden md:flex items-center gap-8 text-sm text-slate-600 font-semibold">
-          <a href="#features" className="hover:text-indigo-600 transition">Features</a>
-          <a href="#showcase" className="hover:text-indigo-600 transition">Showcase</a>
-          <a href="#testimonials" className="hover:text-indigo-600 transition">Testimonials</a>
-          <a href="#pricing" className="hover:text-indigo-600 transition">Pricing</a>
-          <a href="#faq" className="hover:text-indigo-600 transition">FAQ</a>
+          <a href="#features" className="hover:text-blue-600 transition">Features</a>
+          <a href="#showcase" className="hover:text-blue-600 transition">Showcase</a>
+          <a href="#testimonials" className="hover:text-blue-600 transition">Testimonials</a>
+          <a href="#pricing" className="hover:text-blue-600 transition">Pricing</a>
+          <a href="#faq" className="hover:text-blue-600 transition">FAQ</a>
         </div>
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate('/login')} 
-            className="text-sm font-bold text-slate-600 hover:text-indigo-600 transition px-4 py-2"
+            className="text-sm font-bold text-slate-600 hover:text-blue-600 transition px-4 py-2"
           >
             Log In
           </button>
           <button 
             onClick={() => navigate('/register')} 
-            className="h-10 px-5 rounded-lg btn-premium-gradient font-bold text-xs flex items-center gap-1.5 shadow-md shadow-indigo-600/15"
+            className="h-10 px-5 rounded-lg btn-premium-gradient font-bold text-xs flex items-center gap-1.5 shadow-md shadow-blue-600/15"
           >
             Get Started
             <ArrowRight className="h-3.5 w-3.5" />
@@ -91,14 +91,14 @@ export const LandingPage = () => {
 
       {/* Hero Section */}
       <section ref={heroRef} className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-20 flex flex-col items-center text-center">
-        <div className="hero-reveal inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-indigo-100 bg-indigo-50/60 text-indigo-700 text-xs font-bold mb-8">
-          <Sparkles className="h-3.5 w-3.5 text-indigo-500 animate-spin" style={{ animationDuration: '6s' }} />
+        <div className="hero-reveal inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-100 bg-blue-50/60 text-blue-700 text-xs font-bold mb-8">
+          <Sparkles className="h-3.5 w-3.5 text-blue-500 animate-spin" style={{ animationDuration: '6s' }} />
           <span>Next-Generation Technical Skill Verification</span>
         </div>
         
         <h1 className="hero-reveal text-4xl md:text-7xl font-extrabold tracking-tight max-w-4xl leading-[1.12] text-slate-900">
           Transform Assessment <br className="hidden md:inline" />
-          into an <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent">Educational Journey</span>
+          into an <span className="bg-gradient-to-r from-blue-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent">Educational Journey</span>
         </h1>
         
         <p className="hero-reveal text-slate-500 text-base md:text-lg max-w-2xl mt-6 leading-relaxed font-medium">
@@ -108,7 +108,7 @@ export const LandingPage = () => {
         <div className="hero-reveal flex flex-col sm:flex-row gap-4 mt-10 w-full justify-center max-w-md">
           <button 
             onClick={() => navigate('/register')} 
-            className="h-12 px-8 rounded-lg btn-premium-gradient font-bold text-sm shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
+            className="h-12 px-8 rounded-lg btn-premium-gradient font-bold text-sm shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2"
           >
             Create Free Account
             <ArrowRight className="h-4 w-4" />
@@ -139,13 +139,13 @@ export const LandingPage = () => {
             </div>
             <div className="grid md:grid-cols-2 gap-6 font-mono">
               <div className="space-y-1 text-slate-400">
-                <p><span className="text-indigo-400">def</span> <span className="text-blue-400">fibonacci</span>(n):</p>
+                <p><span className="text-blue-400">def</span> <span className="text-blue-400">fibonacci</span>(n):</p>
                 <p className="pl-4">if n &lt;= 0: return []</p>
                 <p className="pl-4">elif n == 1: return [0]</p>
                 <p className="pl-4">sequence = [0, 1]</p>
                 <p className="pl-4">while len(sequence) &lt; n:</p>
                 <p className="pl-8">sequence.append(sequence[-1] + sequence[-2])</p>
-                <p className="pl-4"><span className="text-indigo-400">return</span> sequence</p>
+                <p className="pl-4"><span className="text-blue-400">return</span> sequence</p>
               </div>
               <div className="bg-slate-900/50 rounded-lg p-4 border border-slate-800 space-y-3">
                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Compiler Standings</p>
@@ -165,7 +165,7 @@ export const LandingPage = () => {
 
           {/* Floating Achievement Badge 1 */}
           <div className="hero-badge-reveal absolute -left-8 top-12 bg-white rounded-xl border border-slate-200 p-3 shadow-xl flex items-center gap-3 animate-float-1 max-w-[200px] text-left">
-            <div className="h-9 w-9 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0">
+            <div className="h-9 w-9 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
               <Trophy className="h-4.5 w-4.5" />
             </div>
             <div>
@@ -193,7 +193,7 @@ export const LandingPage = () => {
             <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1.5">Sandbox Uptime</p>
           </div>
           <div>
-            <p className="text-3xl font-extrabold text-indigo-600">25k+</p>
+            <p className="text-3xl font-extrabold text-blue-600">25k+</p>
             <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1.5">Tasks Completed</p>
           </div>
           <div>
@@ -212,11 +212,11 @@ export const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-slate-400 text-xs tracking-wider uppercase font-bold">
           <span>Inspiring modern teams at:</span>
           <div className="flex flex-wrap gap-8 md:gap-12 opacity-85 text-slate-500 font-semibold text-sm">
-            <span className="hover:text-indigo-600 transition">STRIPE</span>
-            <span className="hover:text-indigo-600 transition">VERCEL</span>
-            <span className="hover:text-indigo-600 transition">LINEAR</span>
-            <span className="hover:text-indigo-600 transition">FRAMER</span>
-            <span className="hover:text-indigo-600 transition">RAYCAST</span>
+            <span className="hover:text-blue-600 transition">STRIPE</span>
+            <span className="hover:text-blue-600 transition">VERCEL</span>
+            <span className="hover:text-blue-600 transition">LINEAR</span>
+            <span className="hover:text-blue-600 transition">FRAMER</span>
+            <span className="hover:text-blue-600 transition">RAYCAST</span>
           </div>
         </div>
       </section>
@@ -224,7 +224,7 @@ export const LandingPage = () => {
       {/* Capabilities / Features Grid */}
       <section id="features" className="max-w-7xl mx-auto px-6 py-28 space-y-20">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
             Features
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Comprehensive Skill Architectures</h2>
@@ -246,8 +246,8 @@ export const LandingPage = () => {
 
           {/* Card 2 */}
           <div className="glass-panel p-8 rounded-2xl space-y-5 border border-slate-200 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-100/40 transition duration-350 group relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl pointer-events-none" />
-            <div className="h-11 w-11 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:scale-105 transition">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full blur-xl pointer-events-none" />
+            <div className="h-11 w-11 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-105 transition">
               <Shield className="h-5 w-5" />
             </div>
             <h3 className="text-lg font-bold text-slate-800">Anti-Cheat Analytics</h3>
@@ -273,7 +273,7 @@ export const LandingPage = () => {
       {/* Interactive Showcases */}
       <section id="showcase" ref={showcaseRef} className="max-w-7xl mx-auto px-6 py-12 space-y-12">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
             Interactive Showcase
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Explore the Workspace</h2>
@@ -288,7 +288,7 @@ export const LandingPage = () => {
               onClick={() => setActiveShowcase(tab)}
               className={`flex-1 py-4 text-xs font-bold uppercase border-b-2 transition ${
                 activeShowcase === tab 
-                  ? 'border-indigo-600 text-indigo-600 font-extrabold' 
+                  ? 'border-blue-600 text-blue-600 font-extrabold' 
                   : 'border-transparent text-slate-400 hover:text-slate-600'
               }`}
             >
@@ -316,14 +316,14 @@ export const LandingPage = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-slate-50 rounded-xl p-5 font-mono text-xs text-slate-700 min-h-[220px] border border-slate-100">
                   <p className="text-slate-400">// Compile and reverse string arrays</p>
-                  <p className="text-indigo-600"><span className="font-bold">function</span> reverseArray(list) &#123;</p>
+                  <p className="text-blue-600"><span className="font-bold">function</span> reverseArray(list) &#123;</p>
                   <p className="text-slate-700 pl-4">let left = 0, right = list.length - 1;</p>
                   <p className="text-slate-700 pl-4">while (left &lt; right) &#123;</p>
                   <p className="text-slate-700 pl-8">[list[left], list[right]] = [list[right], list[left]];</p>
                   <p className="text-slate-700 pl-8">left++; right--;</p>
                   <p className="text-slate-700 pl-4">&#125;</p>
-                  <p className="text-indigo-600 pl-4">return list;</p>
-                  <p className="text-indigo-600">&#125;</p>
+                  <p className="text-blue-600 pl-4">return list;</p>
+                  <p className="text-blue-600">&#125;</p>
                 </div>
                 <div className="space-y-4">
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Test Suite Overview</p>
@@ -345,15 +345,15 @@ export const LandingPage = () => {
           {activeShowcase === 'quiz' && (
             <div className="space-y-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <span className="text-xs text-indigo-600 font-bold uppercase tracking-wider">Concept: Complexity</span>
+                <span className="text-xs text-blue-600 font-bold uppercase tracking-wider">Concept: Complexity</span>
                 <span className="text-xs text-rose-500 font-mono font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100">Timer: 18:45</span>
               </div>
               <div className="space-y-5 max-w-2xl mx-auto py-4">
                 <p className="text-base font-bold text-slate-800">What is the worst-case space complexity of a balance binary search tree insertion?</p>
                 <div className="space-y-2">
-                  <div className="p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/30 text-indigo-700 text-xs flex justify-between items-center cursor-pointer">
+                  <div className="p-3.5 rounded-xl border border-blue-200 bg-blue-50/30 text-blue-700 text-xs flex justify-between items-center cursor-pointer">
                     <span className="font-semibold">A. O(log N) space complexity</span>
-                    <CheckCircle2 className="h-4 w-4 text-indigo-600" />
+                    <CheckCircle2 className="h-4 w-4 text-blue-600" />
                   </div>
                   <div className="p-3.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs cursor-pointer hover:border-slate-300 hover:bg-slate-50 transition font-semibold">
                     <span>B. O(N) space complexity</span>
@@ -370,7 +370,7 @@ export const LandingPage = () => {
             <div className="space-y-5">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <span className="text-xs text-slate-400 font-bold">Candidate Evaluation Log</span>
-                <span className="text-[10px] text-indigo-600 font-bold uppercase bg-indigo-50 px-2.5 py-0.5 rounded border border-indigo-100">Cohort: Senior Javascript Engineers</span>
+                <span className="text-[10px] text-blue-600 font-bold uppercase bg-blue-50 px-2.5 py-0.5 rounded border border-blue-100">Cohort: Senior Javascript Engineers</span>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="border border-slate-200/80 rounded-xl p-4 space-y-3.5 bg-slate-50/50">
@@ -379,10 +379,10 @@ export const LandingPage = () => {
                       <p className="font-bold text-slate-800 text-xs">Elena Rostova</p>
                       <p className="text-[10px] text-slate-400 font-semibold">elena.rostova@dev.net</p>
                     </div>
-                    <span className="text-xs font-bold text-indigo-600">98% Correct</span>
+                    <span className="text-xs font-bold text-blue-600">98% Correct</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-slate-200 overflow-hidden">
-                    <div className="h-full bg-indigo-600" style={{ width: '98%' }} />
+                    <div className="h-full bg-blue-600" style={{ width: '98%' }} />
                   </div>
                   <div className="flex justify-between text-[9px] text-slate-400 font-semibold">
                     <span>Timings: 14 mins</span>
@@ -395,10 +395,10 @@ export const LandingPage = () => {
                       <p className="font-bold text-slate-800 text-xs">Marcus Chen</p>
                       <p className="text-[10px] text-slate-400 font-semibold">marcus.chen@tech.io</p>
                     </div>
-                    <span className="text-xs font-bold text-indigo-600">85% Correct</span>
+                    <span className="text-xs font-bold text-blue-600">85% Correct</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-slate-200 overflow-hidden">
-                    <div className="h-full bg-indigo-600" style={{ width: '85%' }} />
+                    <div className="h-full bg-blue-600" style={{ width: '85%' }} />
                   </div>
                   <div className="flex justify-between text-[9px] text-slate-400 font-semibold">
                     <span>Timings: 22 mins</span>
@@ -414,7 +414,7 @@ export const LandingPage = () => {
       {/* Testimonials */}
       <section id="testimonials" className="max-w-7xl mx-auto px-6 py-24 space-y-16">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
             Testimonials
           </div>
           <h2 className="text-3xl font-extrabold text-center tracking-tight">Vetted by Engineering Leaders</h2>
@@ -472,7 +472,7 @@ export const LandingPage = () => {
       {/* FAQ */}
       <section id="faq" className="max-w-4xl mx-auto px-6 py-20 space-y-12">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
             FAQ
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight">Frequently Asked Questions</h2>
@@ -480,7 +480,7 @@ export const LandingPage = () => {
         </div>
         <div className="space-y-4">
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-2 shadow-sm">
-            <p className="text-sm font-bold flex items-center gap-2.5 text-indigo-600">
+            <p className="text-sm font-bold flex items-center gap-2.5 text-blue-600">
               <HelpCircle className="h-4.5 w-4.5 shrink-0" />
               How does the code compilation process work?
             </p>
@@ -489,7 +489,7 @@ export const LandingPage = () => {
             </p>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-2 shadow-sm">
-            <p className="text-sm font-bold flex items-center gap-2.5 text-indigo-600">
+            <p className="text-sm font-bold flex items-center gap-2.5 text-blue-600">
               <HelpCircle className="h-4.5 w-4.5 shrink-0" />
               Can I customize coding challenges or quizzes?
             </p>
@@ -503,7 +503,7 @@ export const LandingPage = () => {
       {/* Pricing */}
       <section id="pricing" className="max-w-7xl mx-auto px-6 py-24 space-y-16">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
             Pricing
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Simple, Transparent Pricing</h2>
@@ -533,15 +533,15 @@ export const LandingPage = () => {
           </div>
 
           {/* Plan 2 - Growth Pro */}
-          <div className="bg-white p-8 rounded-2xl border-2 border-indigo-600 relative space-y-6 flex flex-col justify-between shadow-2xl shadow-indigo-100">
-            <div className="absolute top-[-12px] right-6 bg-indigo-600 text-white text-[9px] font-bold tracking-widest px-3 py-1 rounded-full uppercase">Popular</div>
+          <div className="bg-white p-8 rounded-2xl border-2 border-blue-600 relative space-y-6 flex flex-col justify-between shadow-2xl shadow-blue-100">
+            <div className="absolute top-[-12px] right-6 bg-blue-600 text-white text-[9px] font-bold tracking-widest px-3 py-1 rounded-full uppercase">Popular</div>
             <div className="space-y-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-indigo-600">Growth Pro</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Growth Pro</p>
               <p className="text-4xl font-extrabold text-slate-800">$49 <span className="text-xs text-slate-400 font-normal">/ month</span></p>
               <p className="text-xs text-slate-500 font-medium">Perfect for scaling up pipelines and running multiple test queues.</p>
-              <hr className="border-indigo-100" />
+              <hr className="border-blue-100" />
               <ul className="text-xs text-slate-600 space-y-3 font-semibold">
-                <li className="flex items-center gap-2 text-indigo-600">✓ Unlimited Quiz Tasks</li>
+                <li className="flex items-center gap-2 text-blue-600">✓ Unlimited Quiz Tasks</li>
                 <li className="flex items-center gap-2">✓ 500 Code compiler submissions</li>
                 <li className="flex items-center gap-2">✓ Multi-language Judge0 sandboxes</li>
                 <li className="flex items-center gap-2">✓ Interactive Leaderboards & stands</li>
@@ -549,7 +549,7 @@ export const LandingPage = () => {
             </div>
             <button 
               onClick={() => navigate('/register')} 
-              className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-xs transition shadow-md shadow-indigo-600/15"
+              className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-xs transition shadow-md shadow-blue-600/15"
             >
               Upgrade to Pro
             </button>

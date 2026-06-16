@@ -112,14 +112,14 @@ export const DashboardPage = () => {
     <div ref={scope} className="page-shell space-y-8 text-[#0f172a]">
       {/* Upper Grid: Role-based Greeting & Telemetry */}
       <section className="grid gap-6 lg:grid-cols-[1.4fr_0.6fr]">
-        <div className="relative rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-950 via-[#1e1b4b] to-slate-900 p-6 lg:p-8 text-white overflow-hidden shadow-lg" data-reveal>
+        <div className="relative rounded-2xl border border-slate-200 bg-white p-6 lg:p-8 text-slate-800 overflow-hidden shadow-sm" data-reveal>
           {/* Subtle decoration inside the greeting panel */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
-          <div className="absolute -top-12 -right-12 w-48 h-48 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#f8fafc_1px,transparent_1px),linear-gradient(to_bottom,#f8fafc_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+          <div className="absolute -top-12 -right-12 w-48 h-48 bg-blue-50 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 space-y-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/15 text-indigo-300 text-[10px] font-bold uppercase tracking-wider">
-              <Sparkles className="h-3 w-3 animate-pulse" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-blue-100 bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider">
+              <Sparkles className="h-3 w-3 text-blue-500 animate-pulse" />
               {hero.subtitle}
             </div>
 
@@ -127,17 +127,17 @@ export const DashboardPage = () => {
               <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl lg:text-5xl leading-tight">
                 {hero.title}
               </h1>
-              <p className="max-w-2xl text-xs leading-relaxed text-slate-400 font-semibold">
+              <p className="max-w-2xl text-xs leading-relaxed text-slate-500 font-semibold">
                 {hero.description}
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3 pt-2">
-              <Link className="h-10 px-5 rounded-xl btn-premium-gradient text-xs font-bold flex items-center justify-center gap-1.5 shadow-lg shadow-indigo-600/15" to={hero.cta1Href}>
+              <Link className="h-10 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-blue-600/15 transition" to={hero.cta1Href}>
                 {hero.cta1}
                 <ChevronRight className="h-3.5 w-3.5" />
               </Link>
-              <Link className="h-10 px-5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-xs font-bold text-slate-200 transition flex items-center justify-center" to={hero.cta2Href}>
+              <Link className="h-10 px-5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-600 transition flex items-center justify-center" to={hero.cta2Href}>
                 {hero.cta2}
               </Link>
             </div>
@@ -146,7 +146,7 @@ export const DashboardPage = () => {
 
         {/* Telemetry Center Panel */}
         <div className="glass-panel rounded-2xl p-6 flex flex-col justify-between shadow-sm relative overflow-hidden" data-reveal>
-          <div className="absolute top-[-20%] right-[-10%] w-24 h-24 bg-indigo-500/5 rounded-full blur-xl pointer-events-none" />
+          <div className="absolute top-[-20%] right-[-10%] w-24 h-24 bg-blue-500/5 rounded-full blur-xl pointer-events-none" />
           <div>
             <div className="flex items-center justify-between">
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Sandbox Telemetry</p>
@@ -173,7 +173,7 @@ export const DashboardPage = () => {
                   <span className="text-slate-700">{item.value}</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden border border-slate-200/50">
-                  <div className="h-full rounded-full bg-indigo-600" style={{ width: `${item.percentage}%` }} />
+                  <div className="h-full rounded-full bg-blue-600" style={{ width: `${item.percentage}%` }} />
                 </div>
               </div>
             ))}
@@ -204,15 +204,15 @@ export const DashboardPage = () => {
           <Link
             key={item.title}
             to={item.href}
-            className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-50/20 group relative overflow-hidden"
+            className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-50/20 group relative overflow-hidden"
           >
-            <div className="absolute top-[-20%] right-[-10%] w-20 h-20 bg-indigo-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-indigo-500/10 transition-colors" />
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100/50 group-hover:scale-105 transition-transform">
+            <div className="absolute top-[-20%] right-[-10%] w-20 h-20 bg-blue-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-blue-500/10 transition-colors" />
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100/50 group-hover:scale-105 transition-transform">
               <item.icon className="h-5 w-5" />
             </div>
             <h2 className="mt-5 text-base font-extrabold text-slate-800 flex items-center gap-1.5">
               {item.title}
-              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-slate-500 font-semibold">{item.copy}</p>
           </Link>
@@ -222,10 +222,10 @@ export const DashboardPage = () => {
       {/* Interactive learning streak panel for students, cohort details for recruiters/teachers */}
       {role === 'student' && (
         <section className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="absolute top-[-10%] right-[-10%] w-32 h-32 bg-indigo-500/5 rounded-full blur-xl pointer-events-none" />
+          <div className="absolute top-[-10%] right-[-10%] w-32 h-32 bg-blue-500/5 rounded-full blur-xl pointer-events-none" />
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-1 text-[10px] font-bold bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-0.5 rounded-full uppercase">
+              <div className="inline-flex items-center gap-1 text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded-full uppercase">
                 Active Streak
               </div>
               <h3 className="text-lg font-extrabold text-slate-800">Complete your daily compiler challenge</h3>
@@ -235,7 +235,7 @@ export const DashboardPage = () => {
               {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, idx) => (
                 <div key={day} className="flex flex-col items-center gap-1.5">
                   <div className={`h-8 w-8 rounded-lg flex items-center justify-center border text-xs font-bold ${idx < 4
-                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/10'
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/10'
                       : 'bg-slate-50 text-slate-400 border-slate-200'
                     }`}>
                     {idx < 4 ? <Check className="h-3.5 w-3.5" /> : day[0]}

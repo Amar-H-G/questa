@@ -224,7 +224,7 @@ export const CodingWorkspacePage = () => {
             <select
               value={language}
               onChange={(e) => handleLanguageChange(e.target.value)}
-              className="h-9.5 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-bold text-slate-700 outline-none focus:border-indigo-600"
+              className="h-9.5 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-bold text-slate-700 outline-none focus:border-blue-600"
             >
               {problem.supportedLanguages?.map((lang) => (
                 <option key={lang} value={lang}>
@@ -252,7 +252,7 @@ export const CodingWorkspacePage = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl transition ${
                   activeTab === tab.id
-                    ? 'bg-white text-indigo-600 border border-slate-200 shadow-sm'
+                    ? 'bg-white text-blue-600 border border-slate-200 shadow-sm'
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -284,7 +284,7 @@ export const CodingWorkspacePage = () => {
                   <div className="grid gap-3.5 mt-3">
                     {problem.testCases?.map((tc, idx) => (
                       <div key={tc._id || idx} className="rounded-xl bg-slate-50 border border-slate-200/80 p-4 text-xs font-mono">
-                        <span className="block text-[9px] text-indigo-600 uppercase font-bold mb-2">Case {idx + 1}</span>
+                        <span className="block text-[9px] text-blue-600 uppercase font-bold mb-2">Case {idx + 1}</span>
                         <div className="grid gap-3 sm:grid-cols-2 font-semibold">
                           <div>
                             <span className="text-slate-400 block text-[10px]">Input:</span>
@@ -306,7 +306,7 @@ export const CodingWorkspacePage = () => {
               <div className="space-y-4">
                 {running ? (
                   <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                    <Loader2 className="h-10 w-10 text-indigo-600 animate-spin" />
+                    <Loader2 className="h-10 w-10 text-blue-600 animate-spin" />
                     <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Executing sandbox compilers...</span>
                   </div>
                 ) : runResult ? (
@@ -323,7 +323,7 @@ export const CodingWorkspacePage = () => {
                           {runResult.status?.replace('_', ' ').toUpperCase()}
                         </div>
                       )}
-                      <span className="text-xs text-slate-500 font-bold">Overall Score: <span className="text-indigo-600 font-extrabold">{runResult.score}%</span></span>
+                      <span className="text-xs text-slate-500 font-bold">Overall Score: <span className="text-blue-600 font-extrabold">{runResult.score}%</span></span>
                     </div>
 
                     <div className="space-y-3.5 pt-4 border-t border-slate-100">
@@ -333,7 +333,7 @@ export const CodingWorkspacePage = () => {
                           {runResult.executionResults.map((res, idx) => (
                             <div key={res._id || idx} className="rounded-xl bg-slate-50 border border-slate-200 p-4 text-xs font-mono space-y-3">
                               <div className="flex justify-between items-center">
-                                <span className="text-[10px] text-indigo-600 uppercase font-bold">Case {idx + 1}</span>
+                                <span className="text-[10px] text-blue-600 uppercase font-bold">Case {idx + 1}</span>
                                 <span className={`text-[10px] uppercase font-bold ${res.status === 'accepted' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                   {res.status?.toUpperCase()}
                                 </span>
@@ -380,15 +380,15 @@ export const CodingWorkspacePage = () => {
                     <button
                       key={sub._id || idx}
                       onClick={() => setSelectedHistory(sub)}
-                      className="w-full text-left focus:outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl block group"
+                      className="w-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500/20 rounded-xl block group"
                     >
-                      <div className="rounded-xl p-4 flex justify-between items-center text-xs hover:border-indigo-300 transition-all border border-slate-200 bg-white shadow-sm">
+                      <div className="rounded-xl p-4 flex justify-between items-center text-xs hover:border-blue-300 transition-all border border-slate-200 bg-white shadow-sm">
                         <div className="space-y-1">
                           <span className="block font-bold text-slate-700">Submission #{history.length - idx}</span>
                           <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">{sub.language} • {new Date(sub.createdAt || Date.now()).toLocaleTimeString()}</span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="font-extrabold text-indigo-600 font-mono">{sub.score}%</span>
+                          <span className="font-extrabold text-blue-600 font-mono">{sub.score}%</span>
                           <span className={`px-2 py-0.5 rounded-md text-[9px] uppercase font-bold border ${
                             sub.status === 'accepted' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100'
                           }`}>
@@ -437,7 +437,7 @@ export const CodingWorkspacePage = () => {
 
           <footer className="flex items-center justify-between bg-slate-50/80 px-5 py-4 border-t border-slate-200">
             <span className="text-[10px] text-slate-400 font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <Zap className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
+              <Zap className="h-3.5 w-3.5 text-blue-500 animate-pulse" />
               Active Compiler Sandbox
             </span>
             <div className="flex gap-2.5">
@@ -452,7 +452,7 @@ export const CodingWorkspacePage = () => {
               <button
                 onClick={() => handleExecute(true)}
                 disabled={running}
-                className="h-10 px-5 rounded-xl btn-premium-gradient text-xs font-bold flex items-center gap-2 disabled:opacity-50 shadow-md shadow-indigo-600/10"
+                className="h-10 px-5 rounded-xl btn-premium-gradient text-xs font-bold flex items-center gap-2 disabled:opacity-50 shadow-md shadow-blue-600/10"
               >
                 {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 Submit Solution
@@ -502,7 +502,7 @@ export const CodingWorkspacePage = () => {
                   }
                   setSelectedHistory(null);
                 }}
-                className="flex-1 h-10.5 rounded-xl btn-premium-gradient text-xs font-bold shadow-md shadow-indigo-600/10"
+                className="flex-1 h-10.5 rounded-xl btn-premium-gradient text-xs font-bold shadow-md shadow-blue-600/10"
               >
                 Restore to Editor
               </button>

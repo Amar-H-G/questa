@@ -275,7 +275,7 @@ export const QuizAttemptPage = () => {
   const getTimerColorClass = () => {
     if (timeLeft < 60) return 'text-rose-600 border-rose-200 bg-rose-50/50 animate-pulse';
     if (timeLeft < 300) return 'text-amber-600 border-amber-200 bg-amber-50/20';
-    return 'text-indigo-600 border-indigo-100 bg-indigo-50/30';
+    return 'text-blue-600 border-blue-100 bg-blue-50/30';
   };
 
   if (isSubmitted && submittedData) {
@@ -298,11 +298,11 @@ export const QuizAttemptPage = () => {
           <div className="grid gap-4 sm:grid-cols-2 max-w-md mx-auto bg-slate-50/60 p-5 rounded-2xl border border-slate-200">
             <div>
               <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Score</span>
-              <strong className="text-2xl font-extrabold text-indigo-600 mt-1 block">{submittedData.score} pts</strong>
+              <strong className="text-2xl font-extrabold text-blue-600 mt-1 block">{submittedData.score} pts</strong>
             </div>
             <div>
               <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Percentage</span>
-              <strong className="text-2xl font-extrabold text-indigo-600 mt-1 block">{submittedData.percentage}%</strong>
+              <strong className="text-2xl font-extrabold text-blue-600 mt-1 block">{submittedData.percentage}%</strong>
             </div>
           </div>
 
@@ -315,7 +315,7 @@ export const QuizAttemptPage = () => {
             </button>
             <button 
               onClick={() => navigate('/leaderboard')} 
-              className="flex-1 h-11 rounded-xl btn-premium-gradient text-xs font-bold shadow-md shadow-indigo-600/10 flex items-center justify-center gap-1.5"
+              className="flex-1 h-11 rounded-xl btn-premium-gradient text-xs font-bold shadow-md shadow-blue-600/10 flex items-center justify-center gap-1.5"
             >
               View Leaderboard
               <ChevronRight className="h-3.5 w-3.5" />
@@ -331,7 +331,7 @@ export const QuizAttemptPage = () => {
       {/* Timer, Warnings, progress and fullscreen instructions */}
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border border-slate-200/80 bg-white rounded-2xl px-5 py-4 shadow-sm">
         <div>
-          <span className="text-[10px] text-indigo-600 font-bold tracking-wider uppercase flex items-center gap-1.5">
+          <span className="text-[10px] text-blue-600 font-bold tracking-wider uppercase flex items-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5" />
             Active Security Benchmarking
           </span>
@@ -371,7 +371,7 @@ export const QuizAttemptPage = () => {
             <div className="space-y-6">
               <div className="flex justify-between items-center border-b border-slate-100 pb-4">
                 <span className="text-[10px] text-slate-400 font-bold uppercase">Question {currentQuestionIndex + 1} of {questions.length}</span>
-                <span className="text-[10px] font-bold bg-indigo-50 text-indigo-600 border border-indigo-100/50 px-2.5 py-1 rounded-full uppercase tracking-wider">{currentQuestion.points} {currentQuestion.points === 1 ? 'Point' : 'Points'}</span>
+                <span className="text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100/50 px-2.5 py-1 rounded-full uppercase tracking-wider">{currentQuestion.points} {currentQuestion.points === 1 ? 'Point' : 'Points'}</span>
               </div>
 
               <h2 className="text-lg font-bold leading-relaxed text-slate-800">{currentQuestion.prompt}</h2>
@@ -384,7 +384,7 @@ export const QuizAttemptPage = () => {
                       key={option.id}
                       className={`flex items-start gap-4 p-4 rounded-xl border transition cursor-pointer select-none ${
                         isChecked
-                          ? 'border-indigo-600 bg-indigo-50/30 text-[#0f172a] shadow-sm'
+                          ? 'border-blue-600 bg-blue-50/30 text-[#0f172a] shadow-sm'
                           : 'border-slate-200 bg-white hover:bg-slate-50/50 text-slate-700'
                       }`}
                     >
@@ -394,11 +394,11 @@ export const QuizAttemptPage = () => {
                           name={`q-${currentQuestion.id}`}
                           checked={isChecked}
                           onChange={() => toggleOption(currentQuestion.id, option.id, currentQuestion.type)}
-                          className="h-4.5 w-4.5 accent-indigo-600"
+                          className="h-4.5 w-4.5 accent-blue-600"
                         />
                       </div>
                       <div className="text-xs font-bold leading-relaxed">
-                        <span className="font-mono text-indigo-600 font-bold mr-2">{String.fromCharCode(65 + idx)}.</span>
+                        <span className="font-mono text-blue-600 font-bold mr-2">{String.fromCharCode(65 + idx)}.</span>
                         {option.label}
                       </div>
                     </label>
@@ -439,7 +439,7 @@ export const QuizAttemptPage = () => {
             ) : (
               <button
                 onClick={() => setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1))}
-                className="h-10 px-5 rounded-xl btn-premium-gradient text-xs font-bold flex items-center gap-2 shadow-md shadow-indigo-600/10"
+                className="h-10 px-5 rounded-xl btn-premium-gradient text-xs font-bold flex items-center gap-2 shadow-md shadow-blue-600/10"
               >
                 Next
                 <ChevronRight className="h-4 w-4" />
@@ -459,7 +459,7 @@ export const QuizAttemptPage = () => {
                   <span>{progressPercent}%</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden border border-slate-200/50">
-                  <div className="h-full bg-indigo-600 transition-all duration-300" style={{ width: `${progressPercent}%` }} />
+                  <div className="h-full bg-blue-600 transition-all duration-300" style={{ width: `${progressPercent}%` }} />
                 </div>
               </div>
             </div>
@@ -476,9 +476,9 @@ export const QuizAttemptPage = () => {
                       onClick={() => setCurrentQuestionIndex(idx)}
                       className={`h-9 rounded-xl text-xs font-mono font-bold transition border ${
                         isActive
-                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/15'
+                          ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/15'
                           : hasAnswer
-                          ? 'bg-indigo-50 text-indigo-600 border-indigo-100/50'
+                          ? 'bg-blue-50 text-blue-600 border-blue-100/50'
                           : 'bg-slate-50 text-slate-400 hover:bg-slate-100 border-slate-200'
                       }`}
                     >
@@ -492,7 +492,7 @@ export const QuizAttemptPage = () => {
 
           <div className="pt-6 border-t border-slate-100 mt-6 space-y-4">
             <div className="text-[10px] text-slate-500 leading-relaxed space-y-1.5 bg-slate-50/80 p-4 rounded-xl border border-slate-200 font-semibold">
-              <span className="block font-bold text-indigo-600 uppercase tracking-wider flex items-center gap-1">
+              <span className="block font-bold text-blue-600 uppercase tracking-wider flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
                 Anti-Cheat Telemetry
               </span>
@@ -502,7 +502,7 @@ export const QuizAttemptPage = () => {
             </div>
             <button 
               onClick={() => setShowSubmitModal(true)} 
-              className="w-full h-11 rounded-xl btn-premium-gradient font-bold text-xs shadow-md shadow-indigo-600/15"
+              className="w-full h-11 rounded-xl btn-premium-gradient font-bold text-xs shadow-md shadow-blue-600/15"
             >
               Submit Assessment
             </button>
@@ -536,7 +536,7 @@ export const QuizAttemptPage = () => {
                   handleFinalSubmit();
                 }}
                 disabled={submitMutation.isPending}
-                className="flex-1 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/10 disabled:opacity-50 transition"
+                className="flex-1 h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-600/10 disabled:opacity-50 transition"
               >
                 {submitMutation.isPending ? 'Submitting...' : 'Yes, Submit'}
               </button>

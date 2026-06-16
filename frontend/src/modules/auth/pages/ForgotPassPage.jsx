@@ -78,7 +78,7 @@ export const ForgotPassPage = () => {
               <div className="pt-2">
                 <Link
                   to="/login"
-                  className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-indigo-600/10 flex items-center justify-center gap-2"
+                  className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-blue-600/10 flex items-center justify-center gap-2"
                 >
                   Back to Sign In
                   <ArrowRight className="h-4 w-4" />
@@ -117,7 +117,7 @@ export const ForgotPassPage = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-indigo-600/10 flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-blue-600/10 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {loading ? (
                       <>
@@ -137,7 +137,7 @@ export const ForgotPassPage = () => {
               <div className="reveal-item text-center pt-4 border-t border-slate-100">
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-indigo-600 transition"
+                  className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-blue-600 transition"
                 >
                   <ArrowLeft className="h-3 w-3" />
                   Back to Sign In

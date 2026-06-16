@@ -92,7 +92,7 @@ export const VerifyEmailPage = () => {
               <div className="pt-2">
                 <Link
                   to="/login"
-                  className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-indigo-600/10 flex items-center justify-center gap-2"
+                  className="w-full h-11 rounded-lg btn-premium-gradient font-bold text-sm shadow-md shadow-blue-600/10 flex items-center justify-center gap-2"
                 >
                   Sign In to SurCodex
                   <ArrowRight className="h-4 w-4" />

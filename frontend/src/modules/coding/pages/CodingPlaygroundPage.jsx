@@ -220,6 +220,11 @@ export const CodingPlaygroundPage = () => {
                 lineHeight: 22,
                 fontFamily: "'Fira Code', Consolas, Monaco, monospace",
                 padding: { top: 16 },
+                scrollbar: {
+                  vertical: 'hidden',
+                  horizontal: 'hidden',
+                  handleMouseWheel: true,
+                }
               }}
             />
           </div>

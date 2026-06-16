@@ -428,8 +428,9 @@ export const CodingWorkspacePage = () => {
                 fontFamily: "'Fira Code', Consolas, Monaco, monospace",
                 padding: { top: 16 },
                 scrollbar: {
-                  verticalScrollbarSize: 8,
-                  horizontalScrollbarSize: 8,
+                  vertical: 'hidden',
+                  horizontal: 'hidden',
+                  handleMouseWheel: true,
                 }
               }}
             />

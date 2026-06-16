@@ -50,7 +50,24 @@ export const CreateQuizPage = () => {
   };
 
   const updateQuestion = (index, patch) => {
-    setQuestions((current) => current.map((question, itemIndex) => (itemIndex === index ? { ...question, ...patch } : question)));
+    setQuestions((current) =>
+      current.map((question, itemIndex) => {
+        if (itemIndex !== index) return question;
+        const updated = { ...question, ...patch };
+        if (patch.type === 'true_false') {
+          updated.options = [
+            { label: 'True', isCorrect: true },
+            { label: 'False', isCorrect: false },
+          ];
+        } else if (patch.type && question.type === 'true_false') {
+          updated.options = [
+            { label: '', isCorrect: true },
+            { label: '', isCorrect: false },
+          ];
+        }
+        return updated;
+      })
+    );
   };
 
   const updateOption = (questionIndex, optionIndex, patch) => {
@@ -58,9 +75,9 @@ export const CreateQuizPage = () => {
       current.map((question, itemIndex) =>
         itemIndex === questionIndex
           ? {
-              ...question,
-              options: question.options.map((option, index) => (index === optionIndex ? { ...option, ...patch } : option)),
-            }
+            ...question,
+            options: question.options.map((option, index) => (index === optionIndex ? { ...option, ...patch } : option)),
+          }
           : question
       )
     );
@@ -71,9 +88,9 @@ export const CreateQuizPage = () => {
       current.map((question, qIdx) =>
         qIdx === questionIndex
           ? {
-              ...question,
-              options: [...question.options, { label: '', isCorrect: false }],
-            }
+            ...question,
+            options: [...question.options, { label: '', isCorrect: false }],
+          }
           : question
       )
     );
@@ -142,7 +159,7 @@ export const CreateQuizPage = () => {
             </div>
             {questions.map((question, questionIndex) => (
               <div key={questionIndex} className="rounded-xl border border-slate-200 bg-slate-50/50 p-6 space-y-4">
-                <div className="grid gap-4 sm:grid-cols-[1fr_140px_90px_auto]">
+                <div className={`grid gap-4 ${question.type === 'true_false' ? 'sm:grid-cols-[1fr_140px_140px_90px_auto]' : 'sm:grid-cols-[1fr_140px_90px_auto]'}`}>
                   <TextField
                     label={`Question ${questionIndex + 1}`}
                     value={question.prompt}
@@ -160,6 +177,27 @@ export const CreateQuizPage = () => {
                       <option value="true_false">True/false</option>
                     </select>
                   </label>
+                  {question.type === 'true_false' && (
+                    <label className="block">
+                      <span className="mb-2 block text-sm font-semibold text-slate-700">Correct Answer</span>
+                      <select
+                        className="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-750 outline-none transition focus:border-blue-600"
+                        value={question.options.find(o => o.isCorrect)?.label || 'True'}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          updateQuestion(questionIndex, {
+                            options: [
+                              { label: 'True', isCorrect: val === 'True' },
+                              { label: 'False', isCorrect: val === 'False' }
+                            ]
+                          });
+                        }}
+                      >
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                      </select>
+                    </label>
+                  )}
                   <TextField
                     label="Points"
                     type="number"
@@ -176,64 +214,66 @@ export const CreateQuizPage = () => {
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Options</span>
-                    <button
-                      type="button"
-                      onClick={() => addOption(questionIndex)}
-                      className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100/70 border border-blue-100/80 px-3 py-1.5 rounded-xl transition-all duration-300 hover:scale-[1.03]"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                      Add Option
-                    </button>
+                {question.type !== 'true_false' && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Options</span>
+                      <button
+                        type="button"
+                        onClick={() => addOption(questionIndex)}
+                        className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100/70 border border-blue-100/80 px-3 py-1.5 rounded-xl transition-all duration-300 hover:scale-[1.03]"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        Add Option
+                      </button>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {question.options.map((option, optionIndex) => (
+                        <div key={optionIndex} className="flex items-center gap-2">
+                          <label className="flex-1 flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3 hover:bg-slate-50/50 transition">
+                            <input
+                              type={question.type === 'multi_select' ? 'checkbox' : 'radio'}
+                              name={`correct-${questionIndex}`}
+                              checked={option.isCorrect}
+                              className="accent-blue-600 h-4 w-4"
+                              onChange={(e) => {
+                                if (question.type === 'multi_select') {
+                                  updateOption(questionIndex, optionIndex, { isCorrect: e.target.checked });
+                                } else {
+                                  updateQuestion(questionIndex, {
+                                    options: question.options.map((item, index) => ({ ...item, isCorrect: index === optionIndex })),
+                                  });
+                                }
+                              }}
+                            />
+                            <input
+                              className="h-10 min-w-0 flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400 font-semibold"
+                              placeholder={`Option ${optionIndex + 1}`}
+                              value={option.label}
+                              onChange={(e) => updateOption(questionIndex, optionIndex, { label: e.target.value })}
+                            />
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => removeOption(questionIndex, optionIndex)}
+                            disabled={question.options.length <= 2}
+                            className="h-11 w-11 shrink-0 grid place-items-center rounded-xl border border-slate-200 bg-white hover:bg-rose-50 hover:border-rose-100 text-slate-450 hover:text-rose-600 disabled:opacity-40 disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-400 transition-all duration-300 hover:scale-[1.03] disabled:hover:scale-100 shadow-sm"
+                            title="Delete option"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {question.options.map((option, optionIndex) => (
-                      <div key={optionIndex} className="flex items-center gap-2">
-                        <label className="flex-1 flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3 hover:bg-slate-50/50 transition">
-                          <input
-                            type={question.type === 'multi_select' ? 'checkbox' : 'radio'}
-                            name={`correct-${questionIndex}`}
-                            checked={option.isCorrect}
-                            className="accent-blue-600 h-4 w-4"
-                            onChange={(e) => {
-                              if (question.type === 'multi_select') {
-                                updateOption(questionIndex, optionIndex, { isCorrect: e.target.checked });
-                              } else {
-                                updateQuestion(questionIndex, {
-                                  options: question.options.map((item, index) => ({ ...item, isCorrect: index === optionIndex })),
-                                });
-                              }
-                            }}
-                          />
-                          <input
-                            className="h-10 min-w-0 flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400 font-semibold"
-                            placeholder={`Option ${optionIndex + 1}`}
-                            value={option.label}
-                            onChange={(e) => updateOption(questionIndex, optionIndex, { label: e.target.value })}
-                          />
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => removeOption(questionIndex, optionIndex)}
-                          disabled={question.options.length <= 2}
-                          className="h-11 w-11 shrink-0 grid place-items-center rounded-xl border border-slate-200 bg-white hover:bg-rose-50 hover:border-rose-100 text-slate-400 hover:text-rose-600 disabled:opacity-40 disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-400 transition-all duration-300 hover:scale-[1.03] disabled:hover:scale-100 shadow-sm"
-                          title="Delete option"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                )}
               </div>
             ))}
           </div>
           {mutation.error ? <p className="text-sm text-rose-600 font-bold">{mutation.error.response?.data?.message || 'Unable to create quiz'}</p> : null}
-          <button 
-            type="submit" 
-            className="w-full h-12 rounded-2xl btn-premium-gradient font-bold text-sm shadow-xl shadow-blue-600/20 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 mt-6" 
+          <button
+            type="submit"
+            className="w-full h-12 rounded-2xl btn-premium-gradient font-bold text-sm shadow-xl shadow-blue-600/20 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 mt-6"
             disabled={mutation.isPending}
           >
             {mutation.isPending ? 'Creating...' : 'Create Quiz'}

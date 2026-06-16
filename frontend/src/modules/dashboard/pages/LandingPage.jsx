@@ -104,7 +104,7 @@ export const LandingPage = () => {
 
     // ScrollTrigger reveals for sections
     const stCtx = gsap.context(() => {
-      // Reveal sections dynamically
+      // Reveal all sections dynamically
       ['#features', '#showcase', '#testimonials', '#pricing', '#faq'].forEach((secId) => {
         const el = document.querySelector(secId);
         if (el) {
@@ -121,37 +121,16 @@ export const LandingPage = () => {
           });
         }
       });
-
-      // Reveal features cards inside features section with stagger
-      gsap.from('#features .glass-panel', {
-        scrollTrigger: {
-          trigger: '#features',
-          start: 'top 80%',
-        },
-        y: 60,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.15,
-        ease: 'power4.out',
-      });
-
-      // Reveal testimonials cards
-      gsap.from('#testimonials .glass-panel', {
-        scrollTrigger: {
-          trigger: '#testimonials',
-          start: 'top 80%',
-        },
-        y: 50,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.15,
-        ease: 'power4.out',
-      });
     });
+
+    const refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 250);
 
     return () => {
       ctx.revert();
       stCtx.revert();
+      clearTimeout(refreshTimer);
     };
   }, []);
 

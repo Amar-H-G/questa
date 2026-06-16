@@ -24,7 +24,7 @@ export const QuizListPage = () => {
           <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Quiz operations</p>
           <h1 className="text-3xl font-bold tracking-tight text-slate-800">Assessment library</h1>
         </div>
-        <Link className="inline-flex h-10 items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 text-sm font-bold shadow-md shadow-blue-600/10 transition" to="/quizzes/new">
+        <Link className="inline-flex h-10 items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-4 text-sm font-bold shadow-md shadow-blue-600/15 hover:scale-[1.03] transition-all duration-300" to="/quizzes/new">
           <Plus className="h-4 w-4" />
           New quiz
         </Link>
@@ -52,17 +52,17 @@ export const QuizListPage = () => {
                 <div className="flex shrink-0 items-center gap-2">
                   <span className="rounded-full bg-slate-100 px-3 py-1 text-xs capitalize text-slate-600 font-semibold border border-slate-200/50">{quiz.status}</span>
                   {quiz.status === 'draft' ? (
-                    <Button
-                      className="h-8 px-3 text-xs bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-bold"
+                    <button
+                      className="h-8 px-3 text-xs bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-bold rounded-lg transition-all duration-200"
                       onClick={() => publishMutation.mutate(quiz.id)}
                       disabled={publishMutation.isPending}
                     >
                       Publish
-                    </Button>
+                    </button>
                   ) : null}
                   {quiz.status === 'published' ? (
                     <Link
-                      className="inline-flex h-8 items-center justify-center rounded-lg bg-blue-600 px-3 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/10 transition"
+                      className="inline-flex h-8 items-center justify-center rounded-lg bg-blue-600 px-3 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/15 transition-all duration-200 hover:scale-[1.03]"
                       to={`/quizzes/${quiz.id}/attempt`}
                     >
                       Attempt

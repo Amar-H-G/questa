@@ -94,7 +94,7 @@ export const AppLayout = () => {
 
               {/* Notification drop panel */}
               {showDropdown && (
-                <div className="absolute right-0 mt-3 w-80 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl z-50 animate-float-2">
+                <div className="absolute left-0 mt-3 w-80 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl z-50 animate-float-2">
                   <div className="flex justify-between items-center border-b border-slate-100 pb-2 mb-3">
                     <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Recent Notifications</h4>
                     {unread > 0 && <span className="text-[9px] font-bold bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">{unread} unread</span>}

@@ -160,7 +160,7 @@ export const LandingPage = () => {
       {/* Custom Mouse Follower */}
       <div 
         ref={cursorRef}
-        className="fixed top-0 left-0 w-6 h-6 rounded-full border border-blue-500/30 bg-blue-500/5 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 opacity-0 hidden md:block"
+        className="fixed top-0 left-0 w-3.5 h-3.5 rounded-full border border-blue-500/30 bg-blue-500/5 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 opacity-0 hidden md:block"
       />
 
       {/* Background Decorative Ambient Lights */}

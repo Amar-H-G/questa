@@ -94,9 +94,11 @@ export const AnalyticsPage = () => {
           <h2 className="text-lg font-bold text-slate-700">Completion trend</h2>
           <div className="mt-6 flex h-56 items-end gap-3">
             {(overview.trend?.length ? overview.trend : [{ label: 'No data', averageScore: 0 }]).map((point) => (
-              <div key={point.label} className="flex flex-1 flex-col items-center gap-2">
-                <div className="w-full rounded-t-lg bg-blue-600/80" style={{ height: `${Math.max(point.averageScore, 4)}%` }} />
-                <span className="text-xs text-slate-500 font-semibold">{point.label}</span>
+              <div key={point.label} className="flex flex-1 flex-col items-center gap-2 h-full justify-end">
+                <div className="w-full flex-1 flex items-end relative min-h-0">
+                  <div className="w-full rounded-t-lg bg-blue-600/80" style={{ height: `${Math.max(point.averageScore, 4)}%` }} />
+                </div>
+                <span className="text-xs text-slate-500 font-semibold shrink-0">{point.label}</span>
               </div>
             ))}
           </div>

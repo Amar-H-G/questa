@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, Clock, ChevronLeft, ChevronRight, CheckCircle2, ShieldAlert, Maximize2, Sparkles, AlertCircle } from 'lucide-react';
 import { apiClient } from '../../../services/api/client';
 import { Button } from '../../../components/ui/Button';
@@ -11,6 +11,7 @@ import gsap from 'gsap';
 export const QuizAttemptPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({}); // { questionId: [selectedOptionId] }
   const [timeLeft, setTimeLeft] = useState(null);
@@ -39,6 +40,7 @@ export const QuizAttemptPage = () => {
       setIsSubmitted(true);
       setSubmittedData(data);
       localStorage.removeItem(`surcodex-quiz-attempt-${id}`);
+      queryClient.invalidateQueries({ queryKey: ['quizzes'] });
     },
   });
 

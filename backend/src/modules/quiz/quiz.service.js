@@ -53,7 +53,32 @@ const listQuizzes = async (query, user) => {
     repository.countQuizzes(filter),
   ]);
 
-  return { items, meta: { page, limit, total } };
+  const QuizAttempt = require('../../models/quiz-attempt.model');
+  const attempts = await QuizAttempt.find({
+    user: user.id || user._id,
+    quiz: { $in: items.map(item => item._id || item.id) }
+  });
+
+  console.log("--- backend listQuizzes user ---", {
+    id: user.id,
+    _id: user._id,
+    role: user.role,
+    email: user.email
+  });
+  console.log("--- backend listQuizzes attempts count ---", attempts.length);
+  console.log("--- backend listQuizzes attempts details ---", JSON.stringify(attempts.map(a => ({ quiz: a.quiz, user: a.user }))));
+
+  const attemptedQuizIds = new Set(attempts.map(a => a.quiz.toString()));
+
+  const serializedItems = items.map(item => {
+    const obj = item.toJSON ? item.toJSON() : item;
+    return {
+      ...obj,
+      hasAttempted: attemptedQuizIds.has((obj.id || obj._id).toString())
+    };
+  });
+
+  return { items: serializedItems, meta: { page, limit, total } };
 };
 
 const updateQuiz = async (id, payload, user) => {

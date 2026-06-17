@@ -117,12 +117,18 @@ export const QuizListPage = () => {
                   
                   {/* Solve Actions under Available Quizzes tab */}
                   {activeTab === 'available' && quiz.status === 'published' ? (
-                    <Link
-                      className="inline-flex h-8 items-center justify-center rounded-lg bg-blue-600 px-3 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/15 transition-all duration-200 hover:scale-[1.03]"
-                      to={`/quizzes/${quiz.id}/attempt`}
-                    >
-                      Attempt
-                    </Link>
+                    quiz.hasAttempted ? (
+                      <span className="inline-flex h-8 items-center justify-center rounded-lg bg-emerald-50 border border-emerald-100 px-3 text-xs font-bold text-emerald-600">
+                        Attempted
+                      </span>
+                    ) : (
+                      <Link
+                        className="inline-flex h-8 items-center justify-center rounded-lg bg-blue-600 px-3 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/15 transition-all duration-200 hover:scale-[1.03]"
+                        to={`/quizzes/${quiz.id}/attempt`}
+                      >
+                        Attempt
+                      </Link>
+                    )
                   ) : null}
                 </div>
               </div>

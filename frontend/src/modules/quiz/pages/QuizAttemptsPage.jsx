@@ -162,7 +162,7 @@ export const QuizAttemptsPage = () => {
                             <div className="flex items-start gap-2.5">
                               <span className="text-xs font-bold text-slate-400 mt-0.5">Q{index + 1}.</span>
                               <div className="min-w-0 flex-1">
-                                <h4 className="font-extrabold text-slate-700 text-sm leading-relaxed">{question.text}</h4>
+                                 <h4 className="font-extrabold text-slate-700 text-sm leading-relaxed">{question.prompt || question.text}</h4>
                               </div>
                               <span className="shrink-0 mt-0.5">
                                 {answer.isCorrect ? (
@@ -172,7 +172,7 @@ export const QuizAttemptsPage = () => {
                                 )}
                               </span>
                             </div>
-
+ 
                             {/* Render Options */}
                             <div className="grid gap-2 pl-6 pt-1">
                               {question.options.map((opt) => {
@@ -181,7 +181,7 @@ export const QuizAttemptsPage = () => {
                                 
                                 let optionStyle = "border-slate-200 bg-white text-slate-600";
                                 let optionBadge = null;
-
+ 
                                 if (isSelected && isCorrectOpt) {
                                   optionStyle = "border-emerald-200 bg-emerald-50 text-emerald-800 font-semibold";
                                   optionBadge = <span className="text-[10px] text-emerald-600 font-bold ml-auto shrink-0">Selected (Correct)</span>;
@@ -192,14 +192,14 @@ export const QuizAttemptsPage = () => {
                                   optionStyle = "border-emerald-100 bg-emerald-50/30 text-emerald-700 font-medium";
                                   optionBadge = <span className="text-[10px] text-emerald-500 font-bold ml-auto shrink-0">Correct Choice</span>;
                                 }
-
+ 
                                 return (
                                   <div
                                     key={opt.id || opt._id}
                                     className={`flex items-center gap-2 border rounded-lg p-2.5 text-xs transition duration-150 ${optionStyle}`}
                                   >
                                     <span className="h-1.5 w-1.5 rounded-full bg-slate-400 shrink-0" />
-                                    <span className="min-w-0 flex-1 break-words leading-normal">{opt.text}</span>
+                                    <span className="min-w-0 flex-1 break-words leading-normal">{opt.label || opt.text}</span>
                                     {optionBadge}
                                   </div>
                                 );

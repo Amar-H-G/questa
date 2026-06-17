@@ -6,6 +6,7 @@ const testCaseSchema = new mongoose.Schema(
     expectedOutput: { type: String, required: true },
     isHidden: { type: Boolean, default: false },
     weight: { type: Number, default: 1 },
+    explanation: { type: String, default: '' },
   },
   { _id: true }
 );
@@ -15,17 +16,22 @@ const codingProblemSchema = new mongoose.Schema(
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     title: { type: String, required: true, trim: true, maxlength: 160 },
     slug: { type: String, required: true, unique: true, lowercase: true },
-    difficulty: { type: String, enum: ['easy', 'medium', 'hard'], default: 'medium', index: true },
-    prompt: { type: String, required: true },
+    description: { type: String, default: '' },
+    prompt: { type: String, required: true }, // acts as Problem Statement
     constraints: [String],
-    supportedLanguages: [{ type: String, enum: ['javascript', 'python', 'cpp', 'java'] }],
+    inputFormat: { type: String, default: '' },
+    outputFormat: { type: String, default: '' },
+    tags: [String],
+    timeLimit: { type: Number, default: 2000 }, // in milliseconds
+    memoryLimit: { type: Number, default: 51200 }, // in KB
+    supportedLanguages: [{ type: String, enum: ['javascript', 'python', 'cpp', 'java', 'c'] }],
     testCases: [testCaseSchema],
     status: { type: String, enum: ['draft', 'published', 'archived'], default: 'draft', index: true },
   },
   { timestamps: true }
 );
 
-codingProblemSchema.index({ title: 'text', prompt: 'text' });
+codingProblemSchema.index({ title: 'text', prompt: 'text', tags: 'text' });
 
 codingProblemSchema.virtual('id').get(function getId() {
   return this._id.toString();

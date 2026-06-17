@@ -1,12 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Editor from '@monaco-editor/react';
 import { 
   Code2, Play, Send, ChevronLeft, Loader2, 
   CheckCircle2, XCircle, Info, RefreshCw, Terminal, 
-  BookOpen, History, Award, Zap, AlertCircle
+  BookOpen, History, Award, Zap, AlertCircle, Lock
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { apiClient } from '../../../services/api/client';
 import { Button } from '../../../components/ui/Button';
 import { InlineAlert } from '../../../components/ui/InlineAlert';
@@ -63,16 +64,35 @@ public class Main {
         }
     }
 }`,
+
+  c: `// Write your C solution here
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char buffer[4096];
+    while (fgets(buffer, sizeof(buffer), stdin)) {
+        printf("%s", buffer);
+    }
+    return 0;
+}`
 };
 
 export const CodingWorkspacePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   // Load problem details
-  const { data: problem, isLoading, error, refetch } = useQuery({
+  const { data: problem, isLoading: isLoadingProblem, error: problemError } = useQuery({
     queryKey: ['coding-problem', id],
     queryFn: async () => (await apiClient.get(`/coding/problems/${id}`)).data.data,
+  });
+
+  // Load student's attempt to check if locked
+  const { data: attempt, isLoading: isLoadingAttempt } = useQuery({
+    queryKey: ['coding-attempt', id],
+    queryFn: async () => (await apiClient.get(`/coding/problems/${id}/attempt`)).data.data,
   });
 
   const [language, setLanguage] = useState('javascript');
@@ -85,14 +105,21 @@ export const CodingWorkspacePage = () => {
   const [theme, setTheme] = useState('vs-dark'); // vs-dark or light
 
   const containerRef = useRef(null);
+  const isLocked = !!attempt;
 
+  // Initialize editor on problem load, or restore locked solution
   useEffect(() => {
-    if (problem) {
+    if (attempt && attempt.submission) {
+      setCode(attempt.submission.sourceCode || '');
+      setLanguage(attempt.submission.language || 'javascript');
+      setRunResult(attempt.submission);
+      setActiveTab('output');
+    } else if (problem) {
       const defaultLang = problem.supportedLanguages?.[0] || 'javascript';
       setLanguage(defaultLang);
       setCode(LANGUAGE_BOILERPLATES[defaultLang] || '');
     }
-  }, [problem]);
+  }, [problem, attempt]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -102,58 +129,133 @@ export const CodingWorkspacePage = () => {
         { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power2.out' }
       );
     }
-  }, [isLoading]);
+  }, [isLoadingProblem]);
 
   const handleLanguageChange = (newLang) => {
+    if (isLocked) return;
     setLanguage(newLang);
     setCode(LANGUAGE_BOILERPLATES[newLang] || '');
   };
 
-  const handleExecute = async (isSubmission = false) => {
+  // Run Code (Playground execution - only visible sample test cases)
+  const handleRunCode = async () => {
+    if (isLocked || running) return;
+
     setRunning(true);
     setRunResult(null);
     setActiveTab('output');
 
     try {
-      // Create submission
-      const { data } = await apiClient.post(`/coding/problems/${id}/submissions`, {
-        language,
-        sourceCode: code,
-      });
-
-      const submissionId = data.data.submission.id;
-
-      // Poll submission result until evaluated
-      let completed = false;
-      let resultData = null;
-      let attempts = 0;
-
-      while (!completed && attempts < 15) {
-        attempts++;
-        await new Promise((r) => setTimeout(r, 2000));
-
-        const res = await apiClient.get(`/coding/submissions/${submissionId}`);
-        resultData = res.data.data;
-
-        if (resultData.status !== 'queued' && resultData.status !== 'running') {
-          completed = true;
-        }
+      // Backend returns only visible sample test cases in problem.testCases for students
+      const sampleCases = problem.testCases || [];
+      if (sampleCases.length === 0) {
+        throw new Error('No sample test cases configured for this problem.');
       }
 
-      setRunResult(resultData);
-      setHistory((prev) => [resultData, ...prev]);
+      const results = [];
+      let overallPassed = true;
+
+      for (let i = 0; i < sampleCases.length; i++) {
+        const tc = sampleCases[i];
+        
+        const { data } = await apiClient.post('/coding/playground/run', {
+          language,
+          sourceCode: code,
+          stdin: tc.input,
+        });
+
+        const res = data.data;
+        const stdoutClean = (res.stdout || '').trim();
+        const expectedClean = (tc.expectedOutput || '').trim();
+        const passed = res.status === 'accepted' && stdoutClean === expectedClean;
+
+        if (!passed) {
+          overallPassed = false;
+        }
+
+        results.push({
+          testCase: tc._id || i,
+          status: passed ? 'accepted' : (res.status === 'accepted' ? 'wrong_answer' : res.status),
+          stdout: res.stdout,
+          stderr: res.stderr,
+          runtimeMs: res.runtimeMs,
+          memoryKb: res.memoryKb,
+        });
+      }
+
+      const passedCount = results.filter(r => r.status === 'accepted').length;
+      setRunResult({
+        isPlaygroundRun: true,
+        status: overallPassed ? 'accepted' : 'wrong_answer',
+        score: Math.round((passedCount / sampleCases.length) * 100),
+        executionResults: results,
+      });
+
+      toast.success('Sandbox execution completed.');
     } catch (err) {
       console.error(err);
       setRunResult({
         status: 'runtime_error',
-        error: err.response?.data?.message || 'Execution request failed',
+        error: err.response?.data?.message || err.message || 'Execution request failed',
       });
     } finally {
       setRunning(false);
     }
   };
 
-  if (isLoading) {
+  // Submit Solution (Creates database submission & lock attempt)
+  const handleSubmitSolution = async () => {
+    if (isLocked || running) return;
+
+    if (window.confirm('Are you sure you want to submit? You can only submit once per challenge.')) {
+      setRunning(true);
+      setRunResult(null);
+      setActiveTab('output');
+
+      try {
+        const { data } = await apiClient.post(`/coding/problems/${id}/submissions`, {
+          language,
+          sourceCode: code,
+        });
+
+        const submissionId = data.data.submission.id;
+
+        // Poll submission result until evaluated
+        let completed = false;
+        let resultData = null;
+        let attemptsCount = 0;
+
+        while (!completed && attemptsCount < 15) {
+          attemptsCount++;
+          await new Promise((r) => setTimeout(r, 2000));
+
+          const res = await apiClient.get(`/coding/submissions/${submissionId}`);
+          resultData = res.data.data;
+
+          if (resultData.status !== 'queued' && resultData.status !== 'running') {
+            completed = true;
+          }
+        }
+
+        setRunResult(resultData);
+        setHistory((prev) => [resultData, ...prev]);
+        
+        // Refresh attempts query to lock user out from resubmitting
+        queryClient.invalidateQueries({ queryKey: ['coding-attempt', id] });
+        toast.success('Your solution has been submitted successfully.');
+      } catch (err) {
+        console.error(err);
+        setRunResult({
+          status: 'runtime_error',
+          error: err.response?.data?.message || 'Submission request failed',
+        });
+      } finally {
+        setRunning(false);
+      }
+    }
+  };
+
+  if (isLoadingProblem || isLoadingAttempt) {
     return (
       <div className="page-shell space-y-6 py-6 px-4 text-[#0f172a]">
         <div className="flex gap-4">
@@ -168,7 +270,7 @@ export const CodingWorkspacePage = () => {
     );
   }
 
-  if (error || !problem) {
+  if (problemError || !problem) {
     return (
       <div className="page-shell py-8 px-4 text-[#0f172a]">
         <InlineAlert>Problem library could not be loaded. Please ensure this challenge exists.</InlineAlert>
@@ -177,7 +279,20 @@ export const CodingWorkspacePage = () => {
   }
 
   return (
-    <div ref={containerRef} className="page-shell min-h-[calc(100vh-120px)] flex flex-col gap-4 py-2 px-1 text-[#0f172a] select-none">
+    <div ref={containerRef} className="page-shell min-h-[calc(100vh-120px)] flex flex-col gap-4 py-2 px-1 text-[#0f172a] select-text">
+      {/* Locked Challenge Alert Banner */}
+      {isLocked && (
+        <div className="flex items-center gap-3.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-2xl px-5 py-3.5 shadow-sm">
+          <Lock className="h-5 w-5 text-amber-600 flex-shrink-0 animate-pulse" />
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-amber-700">Challenge Locked</p>
+            <p className="text-xs font-semibold text-amber-600 mt-0.5">
+              You have already attempted and submitted this challenge. Resubmissions are restricted by the system.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Workspace Header */}
       <header className="flex items-center justify-between border border-slate-200/80 bg-white rounded-2xl px-5 py-3.5 shadow-sm">
         <div className="flex items-center gap-3.5">
@@ -224,7 +339,8 @@ export const CodingWorkspacePage = () => {
             <select
               value={language}
               onChange={(e) => handleLanguageChange(e.target.value)}
-              className="h-9.5 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-bold text-slate-700 outline-none focus:border-blue-600"
+              disabled={isLocked}
+              className="h-9.5 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-bold text-slate-700 outline-none focus:border-blue-600 disabled:opacity-60"
             >
               {problem.supportedLanguages?.map((lang) => (
                 <option key={lang} value={lang}>
@@ -240,7 +356,6 @@ export const CodingWorkspacePage = () => {
       <div className="grid gap-4 lg:grid-cols-2 flex-1">
         {/* Left Panel: Description, Output, History */}
         <section className="border border-slate-200 bg-white rounded-2xl flex flex-col justify-between overflow-hidden shadow-sm" data-reveal>
-          {/* Tabs header modeled like file tabs */}
           <div className="flex border-b border-slate-200 bg-slate-50/50 p-1 gap-1">
             {[
               { id: 'description', label: 'Problem Description', icon: BookOpen },
@@ -264,11 +379,32 @@ export const CodingWorkspacePage = () => {
 
           <div className="flex-1 p-6 overflow-y-auto max-h-[560px]">
             {activeTab === 'description' && (
-              <div className="space-y-6">
+              <div className="space-y-6 font-sans">
+                {problem.description && (
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Overview</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed mt-2 font-medium">{problem.description}</p>
+                  </div>
+                )}
+
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Task Prompt</h3>
                   <p className="text-sm text-slate-600 leading-relaxed mt-2 whitespace-pre-wrap font-semibold">{problem.prompt}</p>
                 </div>
+
+                {problem.inputFormat && (
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Input Specification</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed mt-2 font-semibold">{problem.inputFormat}</p>
+                  </div>
+                )}
+
+                {problem.outputFormat && (
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Output Specification</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed mt-2 font-semibold">{problem.outputFormat}</p>
+                  </div>
+                )}
 
                 {problem.constraints?.length > 0 && (
                   <div className="pt-4 border-t border-slate-100">
@@ -279,11 +415,11 @@ export const CodingWorkspacePage = () => {
                   </div>
                 )}
 
-                <div className="pt-4 border-t border-slate-100">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Benchmark Test Cases</h3>
+                <div className="pt-4 border-t border-slate-100 font-mono">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-sans">Sample Test Cases</h3>
                   <div className="grid gap-3.5 mt-3">
                     {problem.testCases?.map((tc, idx) => (
-                      <div key={tc._id || idx} className="rounded-xl bg-slate-50 border border-slate-200/80 p-4 text-xs font-mono">
+                      <div key={tc._id || idx} className="rounded-xl bg-slate-50 border border-slate-200/80 p-4 text-xs">
                         <span className="block text-[9px] text-blue-600 uppercase font-bold mb-2">Case {idx + 1}</span>
                         <div className="grid gap-3 sm:grid-cols-2 font-semibold">
                           <div>
@@ -295,6 +431,12 @@ export const CodingWorkspacePage = () => {
                             <pre className="text-slate-700 whitespace-pre-wrap mt-0.5">{tc.expectedOutput}</pre>
                           </div>
                         </div>
+                        {tc.explanation && (
+                          <div className="mt-2.5 pt-2 border-t border-slate-200/60 font-sans text-slate-500">
+                            <span className="text-slate-400 block text-[9px] font-bold uppercase">Explanation:</span>
+                            <span className="text-[11px] font-medium leading-relaxed">{tc.explanation}</span>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -315,7 +457,7 @@ export const CodingWorkspacePage = () => {
                       {runResult.status === 'accepted' ? (
                         <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 px-3.5 py-1.5 rounded-xl border border-emerald-100 text-xs font-bold">
                           <CheckCircle2 className="h-4 w-4" />
-                          Accepted
+                          {runResult.isPlaygroundRun ? 'Dry Run Passed' : 'Accepted'}
                         </div>
                       ) : (
                         <div className="flex items-center gap-2 text-rose-600 bg-rose-50 px-3.5 py-1.5 rounded-xl border border-rose-100 text-xs font-bold">
@@ -323,39 +465,66 @@ export const CodingWorkspacePage = () => {
                           {runResult.status?.replace('_', ' ').toUpperCase()}
                         </div>
                       )}
-                      <span className="text-xs text-slate-500 font-bold">Overall Score: <span className="text-blue-600 font-extrabold">{runResult.score}%</span></span>
+                      <span className="text-xs text-slate-500 font-bold">
+                        Overall Score: <span className="text-blue-600 font-extrabold">{runResult.score}%</span>
+                      </span>
                     </div>
 
                     <div className="space-y-3.5 pt-4 border-t border-slate-100">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Execution Standings</h3>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                        {runResult.isPlaygroundRun ? 'Dry Run Outcomes (Visible cases only)' : 'Evaluation Results'}
+                      </h3>
                       {runResult.executionResults?.length ? (
-                        <div className="space-y-3">
-                          {runResult.executionResults.map((res, idx) => (
-                            <div key={res._id || idx} className="rounded-xl bg-slate-50 border border-slate-200 p-4 text-xs font-mono space-y-3">
-                              <div className="flex justify-between items-center">
-                                <span className="text-[10px] text-blue-600 uppercase font-bold">Case {idx + 1}</span>
-                                <span className={`text-[10px] uppercase font-bold ${res.status === 'accepted' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                  {res.status?.toUpperCase()}
-                                </span>
-                              </div>
-                              {res.stdout && (
-                                <div className="bg-white p-2.5 rounded border border-slate-200/60">
-                                  <span className="text-slate-400 block text-[9px] font-bold">Stdout:</span>
-                                  <pre className="text-slate-700 whitespace-pre-wrap mt-0.5">{res.stdout}</pre>
+                        <div className="space-y-3 font-mono">
+                          {runResult.executionResults.map((res, idx) => {
+                            // Determine if this testcase is sample or hidden
+                            // If isPlaygroundRun is true, it only ran against samples.
+                            // If it is a submission run, match res.testCase against problem.testCases (which contains only samples for students).
+                            const matchedSample = problem.testCases?.find(tc => tc._id === res.testCase || tc.id === res.testCase);
+                            const isHidden = !runResult.isPlaygroundRun && !matchedSample;
+
+                            return (
+                              <div key={res._id || idx} className={`rounded-xl border p-4 text-xs space-y-3 ${
+                                isHidden ? 'border-indigo-100 bg-indigo-50/10' : 'border-slate-200 bg-slate-50'
+                              }`}>
+                                <div className="flex justify-between items-center">
+                                  <span className="text-[10px] text-blue-600 uppercase font-bold">
+                                    {isHidden ? `Hidden Case #${idx + 1}` : `Sample Case #${idx + 1}`}
+                                  </span>
+                                  <span className={`text-[10px] uppercase font-bold ${res.status === 'accepted' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                    {res.status?.toUpperCase()}
+                                  </span>
                                 </div>
-                              )}
-                              {res.stderr && (
-                                <div className="bg-rose-50/20 p-2.5 rounded border border-rose-100">
-                                  <span className="text-rose-500 block text-[9px] font-bold">Stderr Details:</span>
-                                  <pre className="text-rose-600 whitespace-pre-wrap mt-0.5">{res.stderr}</pre>
+
+                                {/* Render details only if it is not hidden */}
+                                {!isHidden ? (
+                                  <>
+                                    {res.stdout && (
+                                      <div className="bg-white p-2.5 rounded border border-slate-200/60 font-semibold">
+                                        <span className="text-slate-400 block text-[9px] font-bold">Stdout:</span>
+                                        <pre className="text-slate-700 whitespace-pre-wrap mt-0.5">{res.stdout}</pre>
+                                      </div>
+                                    )}
+                                    {res.stderr && (
+                                      <div className="bg-rose-50/20 p-2.5 rounded border border-rose-100 font-semibold">
+                                        <span className="text-rose-500 block text-[9px] font-bold">Stderr Details:</span>
+                                        <pre className="text-rose-600 whitespace-pre-wrap mt-0.5">{res.stderr}</pre>
+                                      </div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <div className="bg-indigo-50/20 p-2.5 rounded border border-indigo-100/50 text-[10px] font-medium text-slate-500">
+                                    Details for hidden evaluation criteria are protected for security compliance.
+                                  </div>
+                                )}
+
+                                <div className="flex justify-between text-[10px] text-slate-400 border-t border-slate-200/60 pt-2 font-bold uppercase tracking-wider">
+                                  <span>Runtime: {res.runtimeMs ?? 0}ms</span>
+                                  <span>Memory: {Math.round((res.memoryKb || 0) / 1024 * 10) / 10}MB</span>
                                 </div>
-                              )}
-                              <div className="flex justify-between text-[10px] text-slate-400 border-t border-slate-200/60 pt-2 font-bold uppercase tracking-wider">
-                                <span>Runtime: {res.runtimeMs}ms</span>
-                                <span>Memory: {Math.round(res.memoryKb / 1024 * 10) / 10}MB</span>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       ) : (
                         <p className="text-xs text-slate-400 font-semibold">No detailed logs cached.</p>
@@ -422,6 +591,7 @@ export const CodingWorkspacePage = () => {
               onChange={(v) => setCode(v || '')}
               options={{
                 fontSize: 14,
+                readOnly: isLocked,
                 minimap: { enabled: false },
                 cursorBlinking: 'smooth',
                 lineHeight: 22,
@@ -443,16 +613,16 @@ export const CodingWorkspacePage = () => {
             </span>
             <div className="flex gap-2.5">
               <button
-                onClick={() => handleExecute(false)}
-                disabled={running}
+                onClick={handleRunCode}
+                disabled={running || isLocked}
                 className="h-10 px-5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-2 disabled:opacity-50 transition shadow-sm"
               >
                 {running ? <Loader2 className="h-4 w-4 animate-spin text-slate-500" /> : <Play className="h-4 w-4 text-slate-500" />}
                 Run Code
               </button>
               <button
-                onClick={() => handleExecute(true)}
-                disabled={running}
+                onClick={handleSubmitSolution}
+                disabled={running || isLocked}
                 className="h-10 px-5 rounded-xl btn-premium-gradient text-xs font-bold flex items-center gap-2 disabled:opacity-50 shadow-md shadow-blue-600/10"
               >
                 {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
@@ -497,13 +667,18 @@ export const CodingWorkspacePage = () => {
               </button>
               <button
                 onClick={() => {
+                  if (isLocked) {
+                    toast.error('Editor is locked. You cannot restore code after submission.');
+                    return;
+                  }
                   setCode(selectedHistory.sourceCode || selectedHistory.code || '');
                   if (selectedHistory.language) {
                     setLanguage(selectedHistory.language);
                   }
                   setSelectedHistory(null);
                 }}
-                className="flex-1 h-10.5 rounded-xl btn-premium-gradient text-xs font-bold shadow-md shadow-blue-600/10"
+                disabled={isLocked}
+                className="flex-1 h-10.5 rounded-xl btn-premium-gradient text-xs font-bold shadow-md shadow-blue-600/10 disabled:opacity-40"
               >
                 Restore to Editor
               </button>

@@ -56,7 +56,7 @@ export const AnalyticsPage = () => {
     if (cheatedOnly) params.append('cheated', cheatedOnly);
     if (minScore) params.append('scoreMin', minScore);
 
-    const token = localStorage.getItem('token');
+    const token = useAuthStore.getState().accessToken;
     const endpoint = type === 'pdf' ? '/analytics/export-pdf' : '/analytics/export';
     const downloadUrl = `${apiClient.defaults.baseURL}${endpoint}?${params.toString()}&token=${token}`;
     

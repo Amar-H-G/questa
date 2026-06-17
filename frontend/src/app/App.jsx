@@ -11,6 +11,7 @@ import { AnalyticsPage } from '../modules/analytics/pages/AnalyticsPage';
 import { CodingPage } from '../modules/coding/pages/CodingPage';
 import { CodingWorkspacePage } from '../modules/coding/pages/CodingWorkspacePage';
 import { CodingPlaygroundPage } from '../modules/coding/pages/CodingPlaygroundPage';
+import { CreateCodingProblemPage } from '../modules/coding/pages/CreateCodingProblemPage';
 import { DashboardPage } from '../modules/dashboard/pages/DashboardPage';
 import { LeaderboardPage } from '../modules/leaderboard/pages/LeaderboardPage';
 import { ProfilePage } from '../modules/profile/pages/ProfilePage';
@@ -54,8 +55,10 @@ export const App = () => (
         <Route path="quizzes/:id/attempt" element={<QuizAttemptPage />} />
         <Route path="quizzes/:id/attempts" element={<QuizAttemptsPage />} />
         <Route path="coding" element={<CodingPage />} />
-        <Route path="coding/playground" element={<CodingPlaygroundPage />} />
+        <Route path="coding/new" element={<CreateCodingProblemPage />} />
         <Route path="coding/:id" element={<CodingWorkspacePage />} />
+        <Route path="coding/:id/edit" element={<CreateCodingProblemPage isEdit />} />
+        <Route path="coding/playground" element={<CodingPlaygroundPage />} />
         <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="leaderboard" element={<LeaderboardPage />} />
         <Route path="profile" element={<ProfilePage />} />

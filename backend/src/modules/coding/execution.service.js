@@ -26,6 +26,7 @@ const LANGUAGE_ID_MAP = {
   python: 92,     // Python 3.11.2
   cpp: 76,        // GCC 13.1.0
   java: 91,       // OpenJDK 19.0.1
+  c: 75,          // GCC 13.1.0 (C)
 };
 
 // Map Judge0 status IDs to our schema statuses
@@ -61,6 +62,11 @@ const queueSubmission = async (submission, problem) => {
     } catch (error) {
       console.error(`Execution failed for submission ${submission.id}:`, error);
       await CodingSubmission.findByIdAndUpdate(submission.id, { status: 'runtime_error' });
+      const CodingAttempt = require('../../models/coding-attempt.model');
+      await CodingAttempt.findOneAndUpdate(
+        { submission: submission.id },
+        { score: 0, status: 'runtime_error' }
+      );
     }
   });
 
@@ -164,6 +170,12 @@ const runJudge0Execution = async (submission, testCases, languageId, judge0Url, 
     executionResults,
   }, { new: true });
 
+  const CodingAttempt = require('../../models/coding-attempt.model');
+  await CodingAttempt.findOneAndUpdate(
+    { submission: submission.id },
+    { score, status: finalStatus }
+  );
+
   const appEmitter = require('../../utils/events');
   appEmitter.emit('submission.accepted', {
     submission: updated,
@@ -204,6 +216,12 @@ const runSimulation = async (submission, testCases) => {
     score,
     executionResults,
   }, { new: true });
+
+  const CodingAttempt = require('../../models/coding-attempt.model');
+  await CodingAttempt.findOneAndUpdate(
+    { submission: submission.id },
+    { score, status }
+  );
 
   const appEmitter = require('../../utils/events');
   appEmitter.emit('submission.accepted', {
@@ -319,6 +337,20 @@ const runLocalSimulator = async (language, sourceCode, stdin) => {
       stdout = prints.join('\n');
     } else {
       stdout = '[Local Simulator for Java]\nCode executed successfully.';
+    }
+  } else if (language === 'c') {
+    const lines = sourceCode.split('\n');
+    let prints = [];
+    for (const line of lines) {
+      const match = line.match(/printf\s*\(\s*["'](.*?)["']/);
+      if (match) {
+        prints.push(match[1]);
+      }
+    }
+    if (prints.length > 0) {
+      stdout = prints.join('\n');
+    } else {
+      stdout = '[Local Simulator for C]\nCode executed successfully.';
     }
   }
 

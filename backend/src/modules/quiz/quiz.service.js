@@ -37,9 +37,12 @@ const createQuiz = async (payload, user) => {
 
 const listQuizzes = async (query, user) => {
   const { page, limit, skip } = getPagination(query);
-  
+
+  const isMine = query.mine === 'true';
+  const creatorRole = query.creatorRole; // 'student' | 'teacher' | undefined
+
   let filter = {};
-  if (query.mine === 'true') {
+  if (isMine) {
     filter = { owner: user.id || user._id };
   } else {
     filter = {
@@ -48,10 +51,19 @@ const listQuizzes = async (query, user) => {
     };
   }
 
-  const [items, total] = await Promise.all([
-    repository.listQuizzes({ filter, skip, limit }),
+  // Fetch with owner populated so we can filter by role
+  const [rawItems, total] = await Promise.all([
+    repository.listQuizzesWithOwner({ filter, skip: creatorRole ? 0 : skip, limit: creatorRole ? 9999 : limit }),
     repository.countQuizzes(filter),
   ]);
+
+  // Apply in-memory role filter when requested
+  let items = rawItems;
+  if (!isMine && creatorRole) {
+    items = rawItems.filter(
+      (q) => q.owner && q.owner.role === creatorRole
+    );
+  }
 
   const QuizAttempt = require('../../models/quiz-attempt.model');
   const attempts = await QuizAttempt.find({

@@ -7,6 +7,12 @@ const updateQuiz = (id, payload) => Quiz.findByIdAndUpdate(id, payload, { new: t
 const findQuizById = (id) => Quiz.findById(id);
 const listQuizzes = ({ filter, skip, limit }) =>
   Quiz.find(filter || {}).sort('-createdAt').skip(skip).limit(limit);
+const listQuizzesWithOwner = ({ filter, skip, limit }) =>
+  Quiz.find(filter || {})
+    .populate('owner', 'name email role')
+    .sort('-createdAt')
+    .skip(skip)
+    .limit(limit);
 const countQuizzes = (filter) => Quiz.countDocuments(filter || {});
 const deleteQuiz = (id) => Quiz.findByIdAndDelete(id);
 const insertQuestions = (questions) => Question.insertMany(questions);
@@ -23,6 +29,7 @@ module.exports = {
   updateQuiz,
   findQuizById,
   listQuizzes,
+  listQuizzesWithOwner,
   countQuizzes,
   deleteQuiz,
   insertQuestions,

@@ -240,6 +240,11 @@ const runLocalSimulator = async (language, sourceCode, stdin) => {
   let status = 'accepted';
 
   if (language === 'javascript') {
+    // Pre-process stdin so student code can read it via require('fs')
+    const stdinContent = stdin || '';
+    const stdinLines = stdinContent.split('\n');
+    let lineIndex = 0;
+
     const sandbox = {
       console: {
         log: (...args) => {
@@ -254,14 +259,50 @@ const runLocalSimulator = async (language, sourceCode, stdin) => {
       },
       process: {
         stdout: {
-          write: (str) => {
-            stdout += str;
-          }
-        }
+          write: (str) => { stdout += str; }
+        },
+        stderr: {
+          write: (str) => { stderr += str; }
+        },
+        argv: ['node', 'solution.js'],
+        env: {},
+        exit: () => {},
       },
+      // Mock require so student code using require('fs').readFileSync('/dev/stdin') works
+      require: (mod) => {
+        if (mod === 'fs') {
+          return {
+            readFileSync: (_path, _enc) => stdinContent,
+          };
+        }
+        if (mod === 'readline') {
+          return {
+            createInterface: () => ({
+              on: () => {},
+              close: () => {},
+            }),
+          };
+        }
+        throw new Error(`Module '${mod}' is not available in the local sandbox. Use require('fs') to read stdin.`);
+      },
+      // Helper: read one line at a time (alternative input method)
+      readLine: () => stdinLines[lineIndex++] ?? '',
       Buffer,
       setTimeout,
-      clearTimeout
+      clearTimeout,
+      Math,
+      parseInt,
+      parseFloat,
+      isNaN,
+      isFinite,
+      JSON,
+      Number,
+      String,
+      Boolean,
+      Array,
+      Object,
+      Set,
+      Map,
     };
 
     try {

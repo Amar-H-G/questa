@@ -313,43 +313,45 @@ const runLocalSimulator = async (language, sourceCode, stdin) => {
       stderr = err.message;
     }
   } else if (language === 'python') {
+    const fs = require('fs');
+    const path = require('path');
+    const tempDir = path.join(__dirname, '../../.temp_exec');
+    const tempFile = path.join(tempDir, `script_${Date.now()}_${Math.random().toString(36).slice(2)}.py`);
     try {
-      const fs = require('fs');
-      const path = require('path');
-      const tempDir = path.join(__dirname, '../../.temp_exec');
       if (!fs.existsSync(tempDir)) {
         fs.mkdirSync(tempDir, { recursive: true });
       }
-      const tempFile = path.join(tempDir, `script_${Date.now()}.py`);
-      fs.writeFileSync(tempFile, sourceCode);
+      fs.writeFileSync(tempFile, sourceCode, 'utf-8');
 
+      // Detect python command (python3 preferred, fall back to python)
       let pyCmd = 'python';
       try {
         execSync('python3 --version', { stdio: 'ignore' });
         pyCmd = 'python3';
-      } catch (e) {}
-
-      stdout = execSync(`${pyCmd} "${tempFile}"`, {
-        input: stdin || '',
-        timeout: 2000,
-        encoding: 'utf-8'
-      });
-      fs.unlinkSync(tempFile);
-    } catch (err) {
-      const lines = sourceCode.split('\n');
-      let prints = [];
-      for (const line of lines) {
-        const match = line.match(/print\s*\(\s*["'](.*?)["']\s*\)/);
-        if (match) {
-          prints.push(match[1]);
+      } catch (e) {
+        try {
+          execSync('python --version', { stdio: 'ignore' });
+          pyCmd = 'python';
+        } catch (e2) {
+          throw new Error('Python is not installed or not in PATH.');
         }
       }
-      if (prints.length > 0) {
-        stdout = prints.join('\n');
-      } else {
-        status = 'runtime_error';
-        stderr = err.message || 'Python execution failed';
-      }
+
+      // Normalize Windows CRLF → LF so comparison works cross-platform
+      stdout = execSync(`${pyCmd} "${tempFile}"`, {
+        input: stdin || '',
+        timeout: 5000,
+        encoding: 'utf-8',
+        maxBuffer: 1024 * 1024, // 1MB output buffer
+      }).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      status = 'accepted';
+    } catch (err) {
+      status = 'runtime_error';
+      // execSync throws with err.stderr for runtime errors
+      stderr = (err.stderr || err.stdout || err.message || 'Python execution failed').toString().trim();
+    } finally {
+      // Always clean up temp file
+      try { fs.unlinkSync(tempFile); } catch (_) {}
     }
   } else if (language === 'cpp') {
     const lines = sourceCode.split('\n');

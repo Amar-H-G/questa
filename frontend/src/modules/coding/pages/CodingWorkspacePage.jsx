@@ -27,15 +27,13 @@ function solve(input) {
 console.log(solve(input));`,
 
   python: `# Write your Python 3 solution here
-import sys
+# Read input using input() — one line at a time
+# Example: n = int(input())
 
-def solve(input_data):
-    # Write your logic here
-    return input_data.strip()
+n = int(input())
 
-if __name__ == "__main__":
-    input_data = sys.stdin.read()
-    print(solve(input_data))`,
+# Write your logic here
+print(n)`,
 
   cpp: `// Write your C++ solution here
 #include <iostream>
@@ -165,8 +163,10 @@ export const CodingWorkspacePage = () => {
         });
 
         const res = data.data;
-        const stdoutClean = (res.stdout || '').trim();
-        const expectedClean = (tc.expectedOutput || '').trim();
+        // Normalize line endings (\r\n → \n) before comparing — fixes Windows Python output
+        const normalizeOutput = (s) => (s || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+        const stdoutClean = normalizeOutput(res.stdout);
+        const expectedClean = normalizeOutput(tc.expectedOutput);
         const passed = res.status === 'accepted' && stdoutClean === expectedClean;
 
         if (!passed) {
